@@ -1,0 +1,13 @@
+import * as Prisma from './internal/prismaNamespaceBrowser';
+export { Prisma };
+export * as $Enums from './enums';
+export * from './enums';
+export type Office = Prisma.OfficeModel;
+export type User = Prisma.UserModel;
+export type Role = Prisma.RoleModel;
+export type Project = Prisma.ProjectModel;
+export type Task = Prisma.TaskModel;
+export type OtpCode = Prisma.OtpCodeModel;
+export type LoginAttempt = Prisma.LoginAttemptModel;
+export type ProjectAuditLog = Prisma.ProjectAuditLogModel;
+export type TaskAuditLog = Prisma.TaskAuditLogModel;

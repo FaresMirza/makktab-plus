@@ -1,0 +1,1197 @@
+import type * as runtime from "@prisma/client/runtime/library";
+import type * as $Enums from "../enums";
+import type * as Prisma from "../internal/prismaNamespace";
+export type OfficeModel = runtime.Types.Result.DefaultSelection<Prisma.$OfficePayload>;
+export type AggregateOffice = {
+    _count: OfficeCountAggregateOutputType | null;
+    _min: OfficeMinAggregateOutputType | null;
+    _max: OfficeMaxAggregateOutputType | null;
+};
+export type OfficeMinAggregateOutputType = {
+    id: string | null;
+    name: string | null;
+    ownerUserId: string | null;
+    status: $Enums.OfficeStatus | null;
+    createdAt: Date | null;
+};
+export type OfficeMaxAggregateOutputType = {
+    id: string | null;
+    name: string | null;
+    ownerUserId: string | null;
+    status: $Enums.OfficeStatus | null;
+    createdAt: Date | null;
+};
+export type OfficeCountAggregateOutputType = {
+    id: number;
+    name: number;
+    ownerUserId: number;
+    status: number;
+    createdAt: number;
+    _all: number;
+};
+export type OfficeMinAggregateInputType = {
+    id?: true;
+    name?: true;
+    ownerUserId?: true;
+    status?: true;
+    createdAt?: true;
+};
+export type OfficeMaxAggregateInputType = {
+    id?: true;
+    name?: true;
+    ownerUserId?: true;
+    status?: true;
+    createdAt?: true;
+};
+export type OfficeCountAggregateInputType = {
+    id?: true;
+    name?: true;
+    ownerUserId?: true;
+    status?: true;
+    createdAt?: true;
+    _all?: true;
+};
+export type OfficeAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.OfficeWhereInput;
+    orderBy?: Prisma.OfficeOrderByWithRelationInput | Prisma.OfficeOrderByWithRelationInput[];
+    cursor?: Prisma.OfficeWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    _count?: true | OfficeCountAggregateInputType;
+    _min?: OfficeMinAggregateInputType;
+    _max?: OfficeMaxAggregateInputType;
+};
+export type GetOfficeAggregateType<T extends OfficeAggregateArgs> = {
+    [P in keyof T & keyof AggregateOffice]: P extends '_count' | 'count' ? T[P] extends true ? number : Prisma.GetScalarType<T[P], AggregateOffice[P]> : Prisma.GetScalarType<T[P], AggregateOffice[P]>;
+};
+export type OfficeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.OfficeWhereInput;
+    orderBy?: Prisma.OfficeOrderByWithAggregationInput | Prisma.OfficeOrderByWithAggregationInput[];
+    by: Prisma.OfficeScalarFieldEnum[] | Prisma.OfficeScalarFieldEnum;
+    having?: Prisma.OfficeScalarWhereWithAggregatesInput;
+    take?: number;
+    skip?: number;
+    _count?: OfficeCountAggregateInputType | true;
+    _min?: OfficeMinAggregateInputType;
+    _max?: OfficeMaxAggregateInputType;
+};
+export type OfficeGroupByOutputType = {
+    id: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt: Date;
+    _count: OfficeCountAggregateOutputType | null;
+    _min: OfficeMinAggregateOutputType | null;
+    _max: OfficeMaxAggregateOutputType | null;
+};
+type GetOfficeGroupByPayload<T extends OfficeGroupByArgs> = Prisma.PrismaPromise<Array<Prisma.PickEnumerable<OfficeGroupByOutputType, T['by']> & {
+    [P in ((keyof T) & (keyof OfficeGroupByOutputType))]: P extends '_count' ? T[P] extends boolean ? number : Prisma.GetScalarType<T[P], OfficeGroupByOutputType[P]> : Prisma.GetScalarType<T[P], OfficeGroupByOutputType[P]>;
+}>>;
+export type OfficeWhereInput = {
+    AND?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[];
+    OR?: Prisma.OfficeWhereInput[];
+    NOT?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[];
+    id?: Prisma.StringFilter<"Office"> | string;
+    name?: Prisma.StringFilter<"Office"> | string;
+    ownerUserId?: Prisma.StringFilter<"Office"> | string;
+    status?: Prisma.EnumOfficeStatusFilter<"Office"> | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFilter<"Office"> | Date | string;
+    owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    users?: Prisma.UserListRelationFilter;
+    projects?: Prisma.ProjectListRelationFilter;
+    otpCodes?: Prisma.OtpCodeListRelationFilter;
+    loginAttempts?: Prisma.LoginAttemptListRelationFilter;
+    projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter;
+    taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter;
+};
+export type OfficeOrderByWithRelationInput = {
+    id?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
+    ownerUserId?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    owner?: Prisma.UserOrderByWithRelationInput;
+    users?: Prisma.UserOrderByRelationAggregateInput;
+    projects?: Prisma.ProjectOrderByRelationAggregateInput;
+    otpCodes?: Prisma.OtpCodeOrderByRelationAggregateInput;
+    loginAttempts?: Prisma.LoginAttemptOrderByRelationAggregateInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogOrderByRelationAggregateInput;
+    taskAuditLogs?: Prisma.TaskAuditLogOrderByRelationAggregateInput;
+};
+export type OfficeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string;
+    ownerUserId?: string;
+    AND?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[];
+    OR?: Prisma.OfficeWhereInput[];
+    NOT?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[];
+    name?: Prisma.StringFilter<"Office"> | string;
+    status?: Prisma.EnumOfficeStatusFilter<"Office"> | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFilter<"Office"> | Date | string;
+    owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    users?: Prisma.UserListRelationFilter;
+    projects?: Prisma.ProjectListRelationFilter;
+    otpCodes?: Prisma.OtpCodeListRelationFilter;
+    loginAttempts?: Prisma.LoginAttemptListRelationFilter;
+    projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter;
+    taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter;
+}, "id" | "ownerUserId">;
+export type OfficeOrderByWithAggregationInput = {
+    id?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
+    ownerUserId?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    _count?: Prisma.OfficeCountOrderByAggregateInput;
+    _max?: Prisma.OfficeMaxOrderByAggregateInput;
+    _min?: Prisma.OfficeMinOrderByAggregateInput;
+};
+export type OfficeScalarWhereWithAggregatesInput = {
+    AND?: Prisma.OfficeScalarWhereWithAggregatesInput | Prisma.OfficeScalarWhereWithAggregatesInput[];
+    OR?: Prisma.OfficeScalarWhereWithAggregatesInput[];
+    NOT?: Prisma.OfficeScalarWhereWithAggregatesInput | Prisma.OfficeScalarWhereWithAggregatesInput[];
+    id?: Prisma.StringWithAggregatesFilter<"Office"> | string;
+    name?: Prisma.StringWithAggregatesFilter<"Office"> | string;
+    ownerUserId?: Prisma.StringWithAggregatesFilter<"Office"> | string;
+    status?: Prisma.EnumOfficeStatusWithAggregatesFilter<"Office"> | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeWithAggregatesFilter<"Office"> | Date | string;
+};
+export type OfficeCreateInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUpdateInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateManyInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+};
+export type OfficeUpdateManyMutationInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type OfficeUncheckedUpdateManyInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type OfficeCountOrderByAggregateInput = {
+    id?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
+    ownerUserId?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+};
+export type OfficeMaxOrderByAggregateInput = {
+    id?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
+    ownerUserId?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+};
+export type OfficeMinOrderByAggregateInput = {
+    id?: Prisma.SortOrder;
+    name?: Prisma.SortOrder;
+    ownerUserId?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+};
+export type OfficeListRelationFilter = {
+    every?: Prisma.OfficeWhereInput;
+    some?: Prisma.OfficeWhereInput;
+    none?: Prisma.OfficeWhereInput;
+};
+export type OfficeNullableScalarRelationFilter = {
+    is?: Prisma.OfficeWhereInput | null;
+    isNot?: Prisma.OfficeWhereInput | null;
+};
+export type OfficeOrderByRelationAggregateInput = {
+    _count?: Prisma.SortOrder;
+};
+export type OfficeScalarRelationFilter = {
+    is?: Prisma.OfficeWhereInput;
+    isNot?: Prisma.OfficeWhereInput;
+};
+export type StringFieldUpdateOperationsInput = {
+    set?: string;
+};
+export type EnumOfficeStatusFieldUpdateOperationsInput = {
+    set?: $Enums.OfficeStatus;
+};
+export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string;
+};
+export type OfficeCreateNestedManyWithoutUsersInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput> | Prisma.OfficeCreateWithoutUsersInput[] | Prisma.OfficeUncheckedCreateWithoutUsersInput[];
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutUsersInput | Prisma.OfficeCreateOrConnectWithoutUsersInput[];
+    connect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+};
+export type OfficeCreateNestedOneWithoutOwnerInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOwnerInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput> | Prisma.OfficeCreateWithoutUsersInput[] | Prisma.OfficeUncheckedCreateWithoutUsersInput[];
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutUsersInput | Prisma.OfficeCreateOrConnectWithoutUsersInput[];
+    connect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+};
+export type OfficeUncheckedCreateNestedOneWithoutOwnerInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOwnerInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateManyWithoutUsersNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput> | Prisma.OfficeCreateWithoutUsersInput[] | Prisma.OfficeUncheckedCreateWithoutUsersInput[];
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutUsersInput | Prisma.OfficeCreateOrConnectWithoutUsersInput[];
+    upsert?: Prisma.OfficeUpsertWithWhereUniqueWithoutUsersInput | Prisma.OfficeUpsertWithWhereUniqueWithoutUsersInput[];
+    set?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    disconnect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    delete?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    connect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    update?: Prisma.OfficeUpdateWithWhereUniqueWithoutUsersInput | Prisma.OfficeUpdateWithWhereUniqueWithoutUsersInput[];
+    updateMany?: Prisma.OfficeUpdateManyWithWhereWithoutUsersInput | Prisma.OfficeUpdateManyWithWhereWithoutUsersInput[];
+    deleteMany?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[];
+};
+export type OfficeUpdateOneWithoutOwnerNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOwnerInput;
+    upsert?: Prisma.OfficeUpsertWithoutOwnerInput;
+    disconnect?: Prisma.OfficeWhereInput | boolean;
+    delete?: Prisma.OfficeWhereInput | boolean;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutOwnerInput, Prisma.OfficeUpdateWithoutOwnerInput>, Prisma.OfficeUncheckedUpdateWithoutOwnerInput>;
+};
+export type OfficeUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput> | Prisma.OfficeCreateWithoutUsersInput[] | Prisma.OfficeUncheckedCreateWithoutUsersInput[];
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutUsersInput | Prisma.OfficeCreateOrConnectWithoutUsersInput[];
+    upsert?: Prisma.OfficeUpsertWithWhereUniqueWithoutUsersInput | Prisma.OfficeUpsertWithWhereUniqueWithoutUsersInput[];
+    set?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    disconnect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    delete?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    connect?: Prisma.OfficeWhereUniqueInput | Prisma.OfficeWhereUniqueInput[];
+    update?: Prisma.OfficeUpdateWithWhereUniqueWithoutUsersInput | Prisma.OfficeUpdateWithWhereUniqueWithoutUsersInput[];
+    updateMany?: Prisma.OfficeUpdateManyWithWhereWithoutUsersInput | Prisma.OfficeUpdateManyWithWhereWithoutUsersInput[];
+    deleteMany?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[];
+};
+export type OfficeUncheckedUpdateOneWithoutOwnerNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOwnerInput;
+    upsert?: Prisma.OfficeUpsertWithoutOwnerInput;
+    disconnect?: Prisma.OfficeWhereInput | boolean;
+    delete?: Prisma.OfficeWhereInput | boolean;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutOwnerInput, Prisma.OfficeUpdateWithoutOwnerInput>, Prisma.OfficeUncheckedUpdateWithoutOwnerInput>;
+};
+export type OfficeCreateNestedOneWithoutProjectsInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutProjectsInput, Prisma.OfficeUncheckedCreateWithoutProjectsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutProjectsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateOneRequiredWithoutProjectsNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutProjectsInput, Prisma.OfficeUncheckedCreateWithoutProjectsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutProjectsInput;
+    upsert?: Prisma.OfficeUpsertWithoutProjectsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutProjectsInput, Prisma.OfficeUpdateWithoutProjectsInput>, Prisma.OfficeUncheckedUpdateWithoutProjectsInput>;
+};
+export type OfficeCreateNestedOneWithoutOtpCodesInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOtpCodesInput, Prisma.OfficeUncheckedCreateWithoutOtpCodesInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOtpCodesInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateOneRequiredWithoutOtpCodesNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutOtpCodesInput, Prisma.OfficeUncheckedCreateWithoutOtpCodesInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOtpCodesInput;
+    upsert?: Prisma.OfficeUpsertWithoutOtpCodesInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutOtpCodesInput, Prisma.OfficeUpdateWithoutOtpCodesInput>, Prisma.OfficeUncheckedUpdateWithoutOtpCodesInput>;
+};
+export type OfficeCreateNestedOneWithoutLoginAttemptsInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutLoginAttemptsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutLoginAttemptsInput;
+    upsert?: Prisma.OfficeUpsertWithoutLoginAttemptsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutLoginAttemptsInput, Prisma.OfficeUpdateWithoutLoginAttemptsInput>, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>;
+};
+export type OfficeCreateNestedOneWithoutProjectAuditLogsInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutProjectAuditLogsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutProjectAuditLogsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateOneRequiredWithoutProjectAuditLogsNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutProjectAuditLogsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutProjectAuditLogsInput;
+    upsert?: Prisma.OfficeUpsertWithoutProjectAuditLogsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutProjectAuditLogsInput, Prisma.OfficeUpdateWithoutProjectAuditLogsInput>, Prisma.OfficeUncheckedUpdateWithoutProjectAuditLogsInput>;
+};
+export type OfficeCreateNestedOneWithoutTaskAuditLogsInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutTaskAuditLogsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutTaskAuditLogsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateOneRequiredWithoutTaskAuditLogsNestedInput = {
+    create?: Prisma.XOR<Prisma.OfficeCreateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutTaskAuditLogsInput>;
+    connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutTaskAuditLogsInput;
+    upsert?: Prisma.OfficeUpsertWithoutTaskAuditLogsInput;
+    connect?: Prisma.OfficeWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutTaskAuditLogsInput, Prisma.OfficeUpdateWithoutTaskAuditLogsInput>, Prisma.OfficeUncheckedUpdateWithoutTaskAuditLogsInput>;
+};
+export type OfficeCreateWithoutUsersInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutUsersInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutUsersInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput>;
+};
+export type OfficeCreateWithoutOwnerInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutOwnerInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutOwnerInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+};
+export type OfficeUpsertWithWhereUniqueWithoutUsersInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutUsersInput, Prisma.OfficeUncheckedUpdateWithoutUsersInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutUsersInput, Prisma.OfficeUncheckedCreateWithoutUsersInput>;
+};
+export type OfficeUpdateWithWhereUniqueWithoutUsersInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutUsersInput, Prisma.OfficeUncheckedUpdateWithoutUsersInput>;
+};
+export type OfficeUpdateManyWithWhereWithoutUsersInput = {
+    where: Prisma.OfficeScalarWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateManyMutationInput, Prisma.OfficeUncheckedUpdateManyWithoutUsersInput>;
+};
+export type OfficeScalarWhereInput = {
+    AND?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[];
+    OR?: Prisma.OfficeScalarWhereInput[];
+    NOT?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[];
+    id?: Prisma.StringFilter<"Office"> | string;
+    name?: Prisma.StringFilter<"Office"> | string;
+    ownerUserId?: Prisma.StringFilter<"Office"> | string;
+    status?: Prisma.EnumOfficeStatusFilter<"Office"> | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFilter<"Office"> | Date | string;
+};
+export type OfficeUpsertWithoutOwnerInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutOwnerInput, Prisma.OfficeUncheckedUpdateWithoutOwnerInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutOwnerInput, Prisma.OfficeUncheckedCreateWithoutOwnerInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutOwnerInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutOwnerInput, Prisma.OfficeUncheckedUpdateWithoutOwnerInput>;
+};
+export type OfficeUpdateWithoutOwnerInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutOwnerInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateWithoutProjectsInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutProjectsInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutProjectsInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutProjectsInput, Prisma.OfficeUncheckedCreateWithoutProjectsInput>;
+};
+export type OfficeUpsertWithoutProjectsInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutProjectsInput, Prisma.OfficeUncheckedUpdateWithoutProjectsInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutProjectsInput, Prisma.OfficeUncheckedCreateWithoutProjectsInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutProjectsInput, Prisma.OfficeUncheckedUpdateWithoutProjectsInput>;
+};
+export type OfficeUpdateWithoutProjectsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutProjectsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateWithoutOtpCodesInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutOtpCodesInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutOtpCodesInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutOtpCodesInput, Prisma.OfficeUncheckedCreateWithoutOtpCodesInput>;
+};
+export type OfficeUpsertWithoutOtpCodesInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutOtpCodesInput, Prisma.OfficeUncheckedUpdateWithoutOtpCodesInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutOtpCodesInput, Prisma.OfficeUncheckedCreateWithoutOtpCodesInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutOtpCodesInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutOtpCodesInput, Prisma.OfficeUncheckedUpdateWithoutOtpCodesInput>;
+};
+export type OfficeUpdateWithoutOtpCodesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutOtpCodesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateWithoutLoginAttemptsInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutLoginAttemptsInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutLoginAttemptsInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>;
+};
+export type OfficeUpsertWithoutLoginAttemptsInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutLoginAttemptsInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>;
+};
+export type OfficeUpdateWithoutLoginAttemptsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutLoginAttemptsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateWithoutProjectAuditLogsInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutProjectAuditLogsInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutProjectAuditLogsInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutProjectAuditLogsInput>;
+};
+export type OfficeUpsertWithoutProjectAuditLogsInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedUpdateWithoutProjectAuditLogsInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutProjectAuditLogsInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutProjectAuditLogsInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedUpdateWithoutProjectAuditLogsInput>;
+};
+export type OfficeUpdateWithoutProjectAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutProjectAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeCreateWithoutTaskAuditLogsInput = {
+    id?: string;
+    name: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput;
+    users?: Prisma.UserCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeUncheckedCreateWithoutTaskAuditLogsInput = {
+    id?: string;
+    name: string;
+    ownerUserId: string;
+    status: $Enums.OfficeStatus;
+    createdAt?: Date | string;
+    users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput;
+    projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput;
+    otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput;
+};
+export type OfficeCreateOrConnectWithoutTaskAuditLogsInput = {
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutTaskAuditLogsInput>;
+};
+export type OfficeUpsertWithoutTaskAuditLogsInput = {
+    update: Prisma.XOR<Prisma.OfficeUpdateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedUpdateWithoutTaskAuditLogsInput>;
+    create: Prisma.XOR<Prisma.OfficeCreateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutTaskAuditLogsInput>;
+    where?: Prisma.OfficeWhereInput;
+};
+export type OfficeUpdateToOneWithWhereWithoutTaskAuditLogsInput = {
+    where?: Prisma.OfficeWhereInput;
+    data: Prisma.XOR<Prisma.OfficeUpdateWithoutTaskAuditLogsInput, Prisma.OfficeUncheckedUpdateWithoutTaskAuditLogsInput>;
+};
+export type OfficeUpdateWithoutTaskAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    users?: Prisma.UserUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutTaskAuditLogsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUpdateWithoutUsersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput;
+    projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateWithoutUsersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput;
+    otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput;
+    loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput;
+    projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+    taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput;
+};
+export type OfficeUncheckedUpdateManyWithoutUsersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type OfficeCountOutputType = {
+    users: number;
+    projects: number;
+    otpCodes: number;
+    loginAttempts: number;
+    projectAuditLogs: number;
+    taskAuditLogs: number;
+};
+export type OfficeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    users?: boolean | OfficeCountOutputTypeCountUsersArgs;
+    projects?: boolean | OfficeCountOutputTypeCountProjectsArgs;
+    otpCodes?: boolean | OfficeCountOutputTypeCountOtpCodesArgs;
+    loginAttempts?: boolean | OfficeCountOutputTypeCountLoginAttemptsArgs;
+    projectAuditLogs?: boolean | OfficeCountOutputTypeCountProjectAuditLogsArgs;
+    taskAuditLogs?: boolean | OfficeCountOutputTypeCountTaskAuditLogsArgs;
+};
+export type OfficeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeCountOutputTypeSelect<ExtArgs> | null;
+};
+export type OfficeCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.UserWhereInput;
+};
+export type OfficeCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.ProjectWhereInput;
+};
+export type OfficeCountOutputTypeCountOtpCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.OtpCodeWhereInput;
+};
+export type OfficeCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.LoginAttemptWhereInput;
+};
+export type OfficeCountOutputTypeCountProjectAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.ProjectAuditLogWhereInput;
+};
+export type OfficeCountOutputTypeCountTaskAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.TaskAuditLogWhereInput;
+};
+export type OfficeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    id?: boolean;
+    name?: boolean;
+    ownerUserId?: boolean;
+    status?: boolean;
+    createdAt?: boolean;
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    users?: boolean | Prisma.Office$usersArgs<ExtArgs>;
+    projects?: boolean | Prisma.Office$projectsArgs<ExtArgs>;
+    otpCodes?: boolean | Prisma.Office$otpCodesArgs<ExtArgs>;
+    loginAttempts?: boolean | Prisma.Office$loginAttemptsArgs<ExtArgs>;
+    projectAuditLogs?: boolean | Prisma.Office$projectAuditLogsArgs<ExtArgs>;
+    taskAuditLogs?: boolean | Prisma.Office$taskAuditLogsArgs<ExtArgs>;
+    _count?: boolean | Prisma.OfficeCountOutputTypeDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["office"]>;
+export type OfficeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    id?: boolean;
+    name?: boolean;
+    ownerUserId?: boolean;
+    status?: boolean;
+    createdAt?: boolean;
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["office"]>;
+export type OfficeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    id?: boolean;
+    name?: boolean;
+    ownerUserId?: boolean;
+    status?: boolean;
+    createdAt?: boolean;
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["office"]>;
+export type OfficeSelectScalar = {
+    id?: boolean;
+    name?: boolean;
+    ownerUserId?: boolean;
+    status?: boolean;
+    createdAt?: boolean;
+};
+export type OfficeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "ownerUserId" | "status" | "createdAt", ExtArgs["result"]["office"]>;
+export type OfficeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    users?: boolean | Prisma.Office$usersArgs<ExtArgs>;
+    projects?: boolean | Prisma.Office$projectsArgs<ExtArgs>;
+    otpCodes?: boolean | Prisma.Office$otpCodesArgs<ExtArgs>;
+    loginAttempts?: boolean | Prisma.Office$loginAttemptsArgs<ExtArgs>;
+    projectAuditLogs?: boolean | Prisma.Office$projectAuditLogsArgs<ExtArgs>;
+    taskAuditLogs?: boolean | Prisma.Office$taskAuditLogsArgs<ExtArgs>;
+    _count?: boolean | Prisma.OfficeCountOutputTypeDefaultArgs<ExtArgs>;
+};
+export type OfficeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+};
+export type OfficeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+};
+export type $OfficePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    name: "Office";
+    objects: {
+        owner: Prisma.$UserPayload<ExtArgs>;
+        users: Prisma.$UserPayload<ExtArgs>[];
+        projects: Prisma.$ProjectPayload<ExtArgs>[];
+        otpCodes: Prisma.$OtpCodePayload<ExtArgs>[];
+        loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[];
+        projectAuditLogs: Prisma.$ProjectAuditLogPayload<ExtArgs>[];
+        taskAuditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[];
+    };
+    scalars: runtime.Types.Extensions.GetPayloadResult<{
+        id: string;
+        name: string;
+        ownerUserId: string;
+        status: $Enums.OfficeStatus;
+        createdAt: Date;
+    }, ExtArgs["result"]["office"]>;
+    composites: {};
+};
+export type OfficeGetPayload<S extends boolean | null | undefined | OfficeDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$OfficePayload, S>;
+export type OfficeCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = Omit<OfficeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: OfficeCountAggregateInputType | true;
+};
+export interface OfficeDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: {
+        types: Prisma.TypeMap<ExtArgs>['model']['Office'];
+        meta: {
+            name: 'Office';
+        };
+    };
+    findUnique<T extends OfficeFindUniqueArgs>(args: Prisma.SelectSubset<T, OfficeFindUniqueArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    findUniqueOrThrow<T extends OfficeFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, OfficeFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    findFirst<T extends OfficeFindFirstArgs>(args?: Prisma.SelectSubset<T, OfficeFindFirstArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    findFirstOrThrow<T extends OfficeFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, OfficeFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    findMany<T extends OfficeFindManyArgs>(args?: Prisma.SelectSubset<T, OfficeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>;
+    create<T extends OfficeCreateArgs>(args: Prisma.SelectSubset<T, OfficeCreateArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    createMany<T extends OfficeCreateManyArgs>(args?: Prisma.SelectSubset<T, OfficeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    createManyAndReturn<T extends OfficeCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, OfficeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>;
+    delete<T extends OfficeDeleteArgs>(args: Prisma.SelectSubset<T, OfficeDeleteArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    update<T extends OfficeUpdateArgs>(args: Prisma.SelectSubset<T, OfficeUpdateArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    deleteMany<T extends OfficeDeleteManyArgs>(args?: Prisma.SelectSubset<T, OfficeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    updateMany<T extends OfficeUpdateManyArgs>(args: Prisma.SelectSubset<T, OfficeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    updateManyAndReturn<T extends OfficeUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, OfficeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>;
+    upsert<T extends OfficeUpsertArgs>(args: Prisma.SelectSubset<T, OfficeUpsertArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    count<T extends OfficeCountArgs>(args?: Prisma.Subset<T, OfficeCountArgs>): Prisma.PrismaPromise<T extends runtime.Types.Utils.Record<'select', any> ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], OfficeCountAggregateOutputType> : number>;
+    aggregate<T extends OfficeAggregateArgs>(args: Prisma.Subset<T, OfficeAggregateArgs>): Prisma.PrismaPromise<GetOfficeAggregateType<T>>;
+    groupBy<T extends OfficeGroupByArgs, HasSelectOrTake extends Prisma.Or<Prisma.Extends<'skip', Prisma.Keys<T>>, Prisma.Extends<'take', Prisma.Keys<T>>>, OrderByArg extends Prisma.True extends HasSelectOrTake ? {
+        orderBy: OfficeGroupByArgs['orderBy'];
+    } : {
+        orderBy?: OfficeGroupByArgs['orderBy'];
+    }, OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>, ByFields extends Prisma.MaybeTupleToUnion<T['by']>, ByValid extends Prisma.Has<ByFields, OrderFields>, HavingFields extends Prisma.GetHavingFields<T['having']>, HavingValid extends Prisma.Has<ByFields, HavingFields>, ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False, InputErrors extends ByEmpty extends Prisma.True ? `Error: "by" must not be empty.` : HavingValid extends Prisma.False ? {
+        [P in HavingFields]: P extends ByFields ? never : P extends string ? `Error: Field "${P}" used in "having" needs to be provided in "by".` : [
+            Error,
+            'Field ',
+            P,
+            ` in "having" needs to be provided in "by"`
+        ];
+    }[HavingFields] : 'take' extends Prisma.Keys<T> ? 'orderBy' extends Prisma.Keys<T> ? ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields] : 'Error: If you provide "take", you also need to provide "orderBy"' : 'skip' extends Prisma.Keys<T> ? 'orderBy' extends Prisma.Keys<T> ? ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields] : 'Error: If you provide "skip", you also need to provide "orderBy"' : ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields]>(args: Prisma.SubsetIntersection<T, OfficeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfficeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>;
+    readonly fields: OfficeFieldRefs;
+}
+export interface Prisma__OfficeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise";
+    owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    users<T extends Prisma.Office$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    projects<T extends Prisma.Office$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    otpCodes<T extends Prisma.Office$otpCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$otpCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OtpCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    loginAttempts<T extends Prisma.Office$loginAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    projectAuditLogs<T extends Prisma.Office$projectAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$projectAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    taskAuditLogs<T extends Prisma.Office$taskAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$taskAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
+    finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
+}
+export interface OfficeFieldRefs {
+    readonly id: Prisma.FieldRef<"Office", 'String'>;
+    readonly name: Prisma.FieldRef<"Office", 'String'>;
+    readonly ownerUserId: Prisma.FieldRef<"Office", 'String'>;
+    readonly status: Prisma.FieldRef<"Office", 'OfficeStatus'>;
+    readonly createdAt: Prisma.FieldRef<"Office", 'DateTime'>;
+}
+export type OfficeFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where?: Prisma.OfficeWhereInput;
+    orderBy?: Prisma.OfficeOrderByWithRelationInput | Prisma.OfficeOrderByWithRelationInput[];
+    cursor?: Prisma.OfficeWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.OfficeScalarFieldEnum | Prisma.OfficeScalarFieldEnum[];
+};
+export type OfficeFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where?: Prisma.OfficeWhereInput;
+    orderBy?: Prisma.OfficeOrderByWithRelationInput | Prisma.OfficeOrderByWithRelationInput[];
+    cursor?: Prisma.OfficeWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.OfficeScalarFieldEnum | Prisma.OfficeScalarFieldEnum[];
+};
+export type OfficeFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where?: Prisma.OfficeWhereInput;
+    orderBy?: Prisma.OfficeOrderByWithRelationInput | Prisma.OfficeOrderByWithRelationInput[];
+    cursor?: Prisma.OfficeWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.OfficeScalarFieldEnum | Prisma.OfficeScalarFieldEnum[];
+};
+export type OfficeCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.OfficeCreateInput, Prisma.OfficeUncheckedCreateInput>;
+};
+export type OfficeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    data: Prisma.OfficeCreateManyInput | Prisma.OfficeCreateManyInput[];
+    skipDuplicates?: boolean;
+};
+export type OfficeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelectCreateManyAndReturn<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    data: Prisma.OfficeCreateManyInput | Prisma.OfficeCreateManyInput[];
+    skipDuplicates?: boolean;
+    include?: Prisma.OfficeIncludeCreateManyAndReturn<ExtArgs> | null;
+};
+export type OfficeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.OfficeUpdateInput, Prisma.OfficeUncheckedUpdateInput>;
+    where: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    data: Prisma.XOR<Prisma.OfficeUpdateManyMutationInput, Prisma.OfficeUncheckedUpdateManyInput>;
+    where?: Prisma.OfficeWhereInput;
+    limit?: number;
+};
+export type OfficeUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelectUpdateManyAndReturn<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.OfficeUpdateManyMutationInput, Prisma.OfficeUncheckedUpdateManyInput>;
+    where?: Prisma.OfficeWhereInput;
+    limit?: number;
+    include?: Prisma.OfficeIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
+export type OfficeUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where: Prisma.OfficeWhereUniqueInput;
+    create: Prisma.XOR<Prisma.OfficeCreateInput, Prisma.OfficeUncheckedCreateInput>;
+    update: Prisma.XOR<Prisma.OfficeUpdateInput, Prisma.OfficeUncheckedUpdateInput>;
+};
+export type OfficeDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+    where: Prisma.OfficeWhereUniqueInput;
+};
+export type OfficeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.OfficeWhereInput;
+    limit?: number;
+};
+export type Office$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.UserSelect<ExtArgs> | null;
+    omit?: Prisma.UserOmit<ExtArgs> | null;
+    include?: Prisma.UserInclude<ExtArgs> | null;
+    where?: Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[];
+    cursor?: Prisma.UserWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[];
+};
+export type Office$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.ProjectSelect<ExtArgs> | null;
+    omit?: Prisma.ProjectOmit<ExtArgs> | null;
+    include?: Prisma.ProjectInclude<ExtArgs> | null;
+    where?: Prisma.ProjectWhereInput;
+    orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[];
+    cursor?: Prisma.ProjectWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[];
+};
+export type Office$otpCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OtpCodeSelect<ExtArgs> | null;
+    omit?: Prisma.OtpCodeOmit<ExtArgs> | null;
+    include?: Prisma.OtpCodeInclude<ExtArgs> | null;
+    where?: Prisma.OtpCodeWhereInput;
+    orderBy?: Prisma.OtpCodeOrderByWithRelationInput | Prisma.OtpCodeOrderByWithRelationInput[];
+    cursor?: Prisma.OtpCodeWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.OtpCodeScalarFieldEnum | Prisma.OtpCodeScalarFieldEnum[];
+};
+export type Office$loginAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.LoginAttemptSelect<ExtArgs> | null;
+    omit?: Prisma.LoginAttemptOmit<ExtArgs> | null;
+    include?: Prisma.LoginAttemptInclude<ExtArgs> | null;
+    where?: Prisma.LoginAttemptWhereInput;
+    orderBy?: Prisma.LoginAttemptOrderByWithRelationInput | Prisma.LoginAttemptOrderByWithRelationInput[];
+    cursor?: Prisma.LoginAttemptWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.LoginAttemptScalarFieldEnum | Prisma.LoginAttemptScalarFieldEnum[];
+};
+export type Office$projectAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.ProjectAuditLogSelect<ExtArgs> | null;
+    omit?: Prisma.ProjectAuditLogOmit<ExtArgs> | null;
+    include?: Prisma.ProjectAuditLogInclude<ExtArgs> | null;
+    where?: Prisma.ProjectAuditLogWhereInput;
+    orderBy?: Prisma.ProjectAuditLogOrderByWithRelationInput | Prisma.ProjectAuditLogOrderByWithRelationInput[];
+    cursor?: Prisma.ProjectAuditLogWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.ProjectAuditLogScalarFieldEnum | Prisma.ProjectAuditLogScalarFieldEnum[];
+};
+export type Office$taskAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.TaskAuditLogSelect<ExtArgs> | null;
+    omit?: Prisma.TaskAuditLogOmit<ExtArgs> | null;
+    include?: Prisma.TaskAuditLogInclude<ExtArgs> | null;
+    where?: Prisma.TaskAuditLogWhereInput;
+    orderBy?: Prisma.TaskAuditLogOrderByWithRelationInput | Prisma.TaskAuditLogOrderByWithRelationInput[];
+    cursor?: Prisma.TaskAuditLogWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.TaskAuditLogScalarFieldEnum | Prisma.TaskAuditLogScalarFieldEnum[];
+};
+export type OfficeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.OfficeSelect<ExtArgs> | null;
+    omit?: Prisma.OfficeOmit<ExtArgs> | null;
+    include?: Prisma.OfficeInclude<ExtArgs> | null;
+};
+export {};
