@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const prisma_module_1 = require("./modules/prisma/prisma.module");
 const users_module_1 = require("./modules/users/users.module");
+const offices_module_1 = require("./modules/offices/offices.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), prisma_module_1.PrismaModule, users_module_1.UsersModule],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), prisma_module_1.PrismaModule, users_module_1.UsersModule, offices_module_1.OfficesModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
