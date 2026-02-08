@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client"
+  output="src/generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Office {
+  id          String       @id @default(uuid())
+  name        String
+  ownerUserId String       @unique
+  status      OfficeStatus
+  createdAt   DateTime     @default(now())
+
+  owner            User              @relation("OfficeOwner", fields: [ownerUserId], references: [id])
+  users            User[]
+  projects         Project[]
+  otpCodes         OtpCode[]
+  loginAttempts    LoginAttempt[]
+  projectAuditLogs ProjectAuditLog[]
+  taskAuditLogs    TaskAuditLog[]
+}
+
+model User {
+  id           String     @id @default(uuid())
+  fullName     String
+  email        String     @unique
+  phone        String
+  username     String     @unique
+  passwordHash String
+  roles        String[]
+  status       UserStatus
+  createdAt    DateTime   @default(now())
+
+  offices          Office[]
+  ownedOffice      Office?           @relation("OfficeOwner")
+  createdProjects  Project[]         @relation("CreatedProjects")
+  managedProjects  Project[]         @relation("ManagedProjects")
+  createdTasks     Task[]            @relation("CreatedTasks")
+  assignedTasks    Task[]            @relation("AssignedTasks")
+  otpCodes         OtpCode[]
+  loginAttempts    LoginAttempt[]
+  projectAuditLogs ProjectAuditLog[]
+  taskAuditLogs    TaskAuditLog[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  scope       String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Project {
+  id                   String        @id @default(uuid())
+  officeId             String
+  createdByUserId      String
+  projectManagerUserId String
+  name                 String
+  description          String?
+  status               ProjectStatus
+  createdAt            DateTime      @default(now())
+
+  office         Office            @relation(fields: [officeId], references: [id])
+  createdBy      User              @relation("CreatedProjects", fields: [createdByUserId], references: [id])
+  projectManager User              @relation("ManagedProjects", fields: [projectManagerUserId], references: [id])
+  tasks          Task[]
+  auditLogs      ProjectAuditLog[]
+}
+
+model Task {
+  id               String     @id @default(uuid())
+  projectId        String
+  createdByUserId  String
+  assignedToUserId String
+  title            String
+  description      String?
+  status           TaskStatus
+  dueDate          DateTime?
+  createdAt        DateTime   @default(now())
+
+  project    Project        @relation(fields: [projectId], references: [id])
+  createdBy  User           @relation("CreatedTasks", fields: [createdByUserId], references: [id])
+  assignedTo User           @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
+  auditLogs  TaskAuditLog[]
+}
+
+model OtpCode {
+  id                String     @id @default(uuid())
+  userId            String
+  officeId          String
+  purpose           OtpPurpose
+  channel           OtpChannel
+  codeHash          String
+  attempts          Int
+  deviceFingerprint String?
+  ip                String?
+  userAgent         String?
+  emailSnapshot     String?
+  phoneSnapshot     String?
+  expiresAt         DateTime
+  usedAt            DateTime?
+  createdAt         DateTime   @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  office Office @relation(fields: [officeId], references: [id])
+}
+
+model LoginAttempt {
+  id                String      @id @default(uuid())
+  userId            String
+  officeId          String
+  success           Boolean
+  method            LoginMethod
+  ip                String?
+  userAgent         String?
+  deviceFingerprint String?
+  geo               String?
+  failReason        String?
+  createdAt         DateTime    @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  office Office @relation(fields: [officeId], references: [id])
+}
+
+model ProjectAuditLog {
+  id                String        @id @default(uuid())
+  officeId          String
+  projectId         String
+  actorUserId       String
+  action            ProjectAction
+  fieldName         String?
+  oldValue          String?
+  newValue          String?
+  ip                String?
+  deviceFingerprint String?
+  geo               String?
+  createdAt         DateTime      @default(now())
+
+  office  Office  @relation(fields: [officeId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+  actor   User    @relation(fields: [actorUserId], references: [id])
+}
+
+model TaskAuditLog {
+  id                String     @id @default(uuid())
+  officeId          String
+  taskId            String
+  actorUserId       String
+  action            TaskAction
+  fieldName         String?
+  oldValue          String?
+  newValue          String?
+  ip                String?
+  deviceFingerprint String?
+  geo               String?
+  createdAt         DateTime   @default(now())
+
+  office Office @relation(fields: [officeId], references: [id])
+  task   Task   @relation(fields: [taskId], references: [id])
+  actor  User   @relation(fields: [actorUserId], references: [id])
+}
+
+enum OfficeStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  DEACTIVATED
+}
+
+enum ProjectStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum OtpPurpose {
+  FIRST_LOGIN
+  LOGIN
+  RESET_PASSWORD
+  CHANGE_DETAILS
+}
+
+enum OtpChannel {
+  SMS
+  EMAIL
+}
+
+enum LoginMethod {
+  PASSWORD
+  OTP
+}
+
+enum ProjectAction {
+  CREATE
+  UPDATE
+  DELETE
+  STATUS_CHANGE
+}
+
+enum TaskAction {
+  CREATE
+  UPDATE
+  DELETE
+  STATUS_CHANGE
+  ASSIGN
+  DUE_DATE_CHANGE
+}
