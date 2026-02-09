@@ -57,7 +57,8 @@ export const ModelName = {
   OtpCode: 'OtpCode',
   LoginAttempt: 'LoginAttempt',
   ProjectAuditLog: 'ProjectAuditLog',
-  TaskAuditLog: 'TaskAuditLog'
+  TaskAuditLog: 'TaskAuditLog',
+  AuthAuditLog: 'AuthAuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -94,6 +95,8 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   username: 'username',
   passwordHash: 'passwordHash',
+  refreshTokenHash: 'refreshTokenHash',
+  lastPasswordChange: 'lastPasswordChange',
   roles: 'roles',
   status: 'status',
   createdAt: 'createdAt'
@@ -215,6 +218,21 @@ export const TaskAuditLogScalarFieldEnum = {
 } as const
 
 export type TaskAuditLogScalarFieldEnum = (typeof TaskAuditLogScalarFieldEnum)[keyof typeof TaskAuditLogScalarFieldEnum]
+
+
+export const AuthAuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  event: 'event',
+  reason: 'reason',
+  ip: 'ip',
+  deviceFingerprint: 'deviceFingerprint',
+  country: 'country',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthAuditLogScalarFieldEnum = (typeof AuthAuditLogScalarFieldEnum)[keyof typeof AuthAuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

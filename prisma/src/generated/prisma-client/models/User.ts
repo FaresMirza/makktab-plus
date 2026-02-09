@@ -31,6 +31,8 @@ export type UserMinAggregateOutputType = {
   phone: string | null
   username: string | null
   passwordHash: string | null
+  refreshTokenHash: string | null
+  lastPasswordChange: Date | null
   status: $Enums.UserStatus | null
   createdAt: Date | null
 }
@@ -42,6 +44,8 @@ export type UserMaxAggregateOutputType = {
   phone: string | null
   username: string | null
   passwordHash: string | null
+  refreshTokenHash: string | null
+  lastPasswordChange: Date | null
   status: $Enums.UserStatus | null
   createdAt: Date | null
 }
@@ -53,6 +57,8 @@ export type UserCountAggregateOutputType = {
   phone: number
   username: number
   passwordHash: number
+  refreshTokenHash: number
+  lastPasswordChange: number
   roles: number
   status: number
   createdAt: number
@@ -67,6 +73,8 @@ export type UserMinAggregateInputType = {
   phone?: true
   username?: true
   passwordHash?: true
+  refreshTokenHash?: true
+  lastPasswordChange?: true
   status?: true
   createdAt?: true
 }
@@ -78,6 +86,8 @@ export type UserMaxAggregateInputType = {
   phone?: true
   username?: true
   passwordHash?: true
+  refreshTokenHash?: true
+  lastPasswordChange?: true
   status?: true
   createdAt?: true
 }
@@ -89,6 +99,8 @@ export type UserCountAggregateInputType = {
   phone?: true
   username?: true
   passwordHash?: true
+  refreshTokenHash?: true
+  lastPasswordChange?: true
   roles?: true
   status?: true
   createdAt?: true
@@ -174,6 +186,8 @@ export type UserGroupByOutputType = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash: string | null
+  lastPasswordChange: Date | null
   roles: string[]
   status: $Enums.UserStatus
   createdAt: Date
@@ -207,6 +221,8 @@ export type UserWhereInput = {
   phone?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
+  lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -218,6 +234,7 @@ export type UserWhereInput = {
   assignedTasks?: Prisma.TaskListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
   loginAttempts?: Prisma.LoginAttemptListRelationFilter
+  authAuditLogs?: Prisma.AuthAuditLogListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
 }
@@ -229,6 +246,8 @@ export type UserOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastPasswordChange?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -240,6 +259,7 @@ export type UserOrderByWithRelationInput = {
   assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
   otpCodes?: Prisma.OtpCodeOrderByRelationAggregateInput
   loginAttempts?: Prisma.LoginAttemptOrderByRelationAggregateInput
+  authAuditLogs?: Prisma.AuthAuditLogOrderByRelationAggregateInput
   projectAuditLogs?: Prisma.ProjectAuditLogOrderByRelationAggregateInput
   taskAuditLogs?: Prisma.TaskAuditLogOrderByRelationAggregateInput
 }
@@ -254,6 +274,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   fullName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
+  lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -265,6 +287,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   assignedTasks?: Prisma.TaskListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
   loginAttempts?: Prisma.LoginAttemptListRelationFilter
+  authAuditLogs?: Prisma.AuthAuditLogListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
 }, "id" | "email" | "username">
@@ -276,6 +299,8 @@ export type UserOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastPasswordChange?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,6 +319,8 @@ export type UserScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
+  refreshTokenHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  lastPasswordChange?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -306,6 +333,8 @@ export type UserCreateInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -317,6 +346,7 @@ export type UserCreateInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -328,6 +358,8 @@ export type UserUncheckedCreateInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -339,6 +371,7 @@ export type UserUncheckedCreateInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -350,6 +383,8 @@ export type UserUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +396,7 @@ export type UserUpdateInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -372,6 +408,8 @@ export type UserUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -383,6 +421,7 @@ export type UserUncheckedUpdateInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -394,6 +433,8 @@ export type UserCreateManyInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -406,6 +447,8 @@ export type UserUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +461,8 @@ export type UserUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +498,8 @@ export type UserCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  lastPasswordChange?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -465,6 +512,8 @@ export type UserMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  lastPasswordChange?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -476,8 +525,15 @@ export type UserMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  refreshTokenHash?: Prisma.SortOrder
+  lastPasswordChange?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type UserCreateNestedOneWithoutOwnedOfficeInput = {
@@ -534,6 +590,14 @@ export type UserUncheckedUpdateManyWithoutOfficesNestedInput = {
 
 export type UserCreaterolesInput = {
   set: string[]
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserUpdaterolesInput = {
@@ -657,6 +721,22 @@ export type UserUpdateOneRequiredWithoutTaskAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTaskAuditLogsInput, Prisma.UserUpdateWithoutTaskAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutTaskAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutAuthAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuthAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthAuditLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAuthAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuthAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthAuditLogsInput
+  upsert?: Prisma.UserUpsertWithoutAuthAuditLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuthAuditLogsInput, Prisma.UserUpdateWithoutAuthAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuthAuditLogsInput>
+}
+
 export type UserCreateWithoutOwnedOfficeInput = {
   id?: string
   fullName: string
@@ -664,6 +744,8 @@ export type UserCreateWithoutOwnedOfficeInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -674,6 +756,7 @@ export type UserCreateWithoutOwnedOfficeInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -685,6 +768,8 @@ export type UserUncheckedCreateWithoutOwnedOfficeInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -695,6 +780,7 @@ export type UserUncheckedCreateWithoutOwnedOfficeInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -711,6 +797,8 @@ export type UserCreateWithoutOfficesInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -721,6 +809,7 @@ export type UserCreateWithoutOfficesInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -732,6 +821,8 @@ export type UserUncheckedCreateWithoutOfficesInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -742,6 +833,7 @@ export type UserUncheckedCreateWithoutOfficesInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -769,6 +861,8 @@ export type UserUpdateWithoutOwnedOfficeInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -779,6 +873,7 @@ export type UserUpdateWithoutOwnedOfficeInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -790,6 +885,8 @@ export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -800,6 +897,7 @@ export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -830,6 +928,8 @@ export type UserScalarWhereInput = {
   phone?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  refreshTokenHash?: Prisma.StringNullableFilter<"User"> | string | null
+  lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -842,6 +942,8 @@ export type UserCreateWithoutCreatedProjectsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -852,6 +954,7 @@ export type UserCreateWithoutCreatedProjectsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -863,6 +966,8 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -873,6 +978,7 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -889,6 +995,8 @@ export type UserCreateWithoutManagedProjectsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -899,6 +1007,7 @@ export type UserCreateWithoutManagedProjectsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -910,6 +1019,8 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -920,6 +1031,7 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -947,6 +1059,8 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -957,6 +1071,7 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -968,6 +1083,8 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -978,6 +1095,7 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1000,6 +1118,8 @@ export type UserUpdateWithoutManagedProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1010,6 +1130,7 @@ export type UserUpdateWithoutManagedProjectsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1021,6 +1142,8 @@ export type UserUncheckedUpdateWithoutManagedProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1031,6 +1154,7 @@ export type UserUncheckedUpdateWithoutManagedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1042,6 +1166,8 @@ export type UserCreateWithoutCreatedTasksInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1052,6 +1178,7 @@ export type UserCreateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -1063,6 +1190,8 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1073,6 +1202,7 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -1089,6 +1219,8 @@ export type UserCreateWithoutAssignedTasksInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1099,6 +1231,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -1110,6 +1243,8 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1120,6 +1255,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -1147,6 +1283,8 @@ export type UserUpdateWithoutCreatedTasksInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1157,6 +1295,7 @@ export type UserUpdateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1168,6 +1307,8 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1178,6 +1319,7 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1200,6 +1342,8 @@ export type UserUpdateWithoutAssignedTasksInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1210,6 +1354,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1221,6 +1366,8 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1231,6 +1378,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1242,6 +1390,8 @@ export type UserCreateWithoutOtpCodesInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1252,6 +1402,7 @@ export type UserCreateWithoutOtpCodesInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -1263,6 +1414,8 @@ export type UserUncheckedCreateWithoutOtpCodesInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1273,6 +1426,7 @@ export type UserUncheckedCreateWithoutOtpCodesInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -1300,6 +1454,8 @@ export type UserUpdateWithoutOtpCodesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1310,6 +1466,7 @@ export type UserUpdateWithoutOtpCodesInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1321,6 +1478,8 @@ export type UserUncheckedUpdateWithoutOtpCodesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1331,6 +1490,7 @@ export type UserUncheckedUpdateWithoutOtpCodesInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1342,6 +1502,8 @@ export type UserCreateWithoutLoginAttemptsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1352,6 +1514,7 @@ export type UserCreateWithoutLoginAttemptsInput = {
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
@@ -1363,6 +1526,8 @@ export type UserUncheckedCreateWithoutLoginAttemptsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1373,6 +1538,7 @@ export type UserUncheckedCreateWithoutLoginAttemptsInput = {
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
@@ -1400,6 +1566,8 @@ export type UserUpdateWithoutLoginAttemptsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1410,6 +1578,7 @@ export type UserUpdateWithoutLoginAttemptsInput = {
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1421,6 +1590,8 @@ export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1431,6 +1602,7 @@ export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1442,6 +1614,8 @@ export type UserCreateWithoutProjectAuditLogsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1453,6 +1627,7 @@ export type UserCreateWithoutProjectAuditLogsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
 }
 
@@ -1463,6 +1638,8 @@ export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1474,6 +1651,7 @@ export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
@@ -1500,6 +1678,8 @@ export type UserUpdateWithoutProjectAuditLogsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1511,6 +1691,7 @@ export type UserUpdateWithoutProjectAuditLogsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
 
@@ -1521,6 +1702,8 @@ export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1532,6 +1715,7 @@ export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
@@ -1542,6 +1726,8 @@ export type UserCreateWithoutTaskAuditLogsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1553,6 +1739,7 @@ export type UserCreateWithoutTaskAuditLogsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
 }
 
@@ -1563,6 +1750,8 @@ export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
   phone: string
   username: string
   passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
   createdAt?: Date | string
@@ -1574,6 +1763,7 @@ export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
@@ -1600,6 +1790,120 @@ export type UserUpdateWithoutTaskAuditLogsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
+  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
+  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutAuthAuditLogsInput = {
+  id?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  createdAt?: Date | string
+  offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
+  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutAuthAuditLogsInput = {
+  id?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  createdAt?: Date | string
+  offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
+  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutAuthAuditLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuthAuditLogsInput>
+}
+
+export type UserUpsertWithoutAuthAuditLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuthAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuthAuditLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuthAuditLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuthAuditLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuthAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuthAuditLogsInput>
+}
+
+export type UserUpdateWithoutAuthAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1612,15 +1916,18 @@ export type UserUpdateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
 
-export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
+export type UserUncheckedUpdateWithoutAuthAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1633,6 +1940,7 @@ export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserUpdateWithoutOfficesInput = {
@@ -1642,6 +1950,8 @@ export type UserUpdateWithoutOfficesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1652,6 +1962,7 @@ export type UserUpdateWithoutOfficesInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
 }
@@ -1663,6 +1974,8 @@ export type UserUncheckedUpdateWithoutOfficesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1673,6 +1986,7 @@ export type UserUncheckedUpdateWithoutOfficesInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -1684,6 +1998,8 @@ export type UserUncheckedUpdateManyWithoutOfficesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1702,6 +2018,7 @@ export type UserCountOutputType = {
   assignedTasks: number
   otpCodes: number
   loginAttempts: number
+  authAuditLogs: number
   projectAuditLogs: number
   taskAuditLogs: number
 }
@@ -1714,6 +2031,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
   otpCodes?: boolean | UserCountOutputTypeCountOtpCodesArgs
   loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
+  authAuditLogs?: boolean | UserCountOutputTypeCountAuthAuditLogsArgs
   projectAuditLogs?: boolean | UserCountOutputTypeCountProjectAuditLogsArgs
   taskAuditLogs?: boolean | UserCountOutputTypeCountTaskAuditLogsArgs
 }
@@ -1780,6 +2098,13 @@ export type UserCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountAuthAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuthAuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountProjectAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProjectAuditLogWhereInput
 }
@@ -1799,6 +2124,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   username?: boolean
   passwordHash?: boolean
+  refreshTokenHash?: boolean
+  lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
   createdAt?: boolean
@@ -1810,6 +2137,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   otpCodes?: boolean | Prisma.User$otpCodesArgs<ExtArgs>
   loginAttempts?: boolean | Prisma.User$loginAttemptsArgs<ExtArgs>
+  authAuditLogs?: boolean | Prisma.User$authAuditLogsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.User$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.User$taskAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1822,6 +2150,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   username?: boolean
   passwordHash?: boolean
+  refreshTokenHash?: boolean
+  lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
   createdAt?: boolean
@@ -1834,6 +2164,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   username?: boolean
   passwordHash?: boolean
+  refreshTokenHash?: boolean
+  lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
   createdAt?: boolean
@@ -1846,12 +2178,14 @@ export type UserSelectScalar = {
   phone?: boolean
   username?: boolean
   passwordHash?: boolean
+  refreshTokenHash?: boolean
+  lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "email" | "phone" | "username" | "passwordHash" | "roles" | "status" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "email" | "phone" | "username" | "passwordHash" | "refreshTokenHash" | "lastPasswordChange" | "roles" | "status" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   offices?: boolean | Prisma.User$officesArgs<ExtArgs>
   ownedOffice?: boolean | Prisma.User$ownedOfficeArgs<ExtArgs>
@@ -1861,6 +2195,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   otpCodes?: boolean | Prisma.User$otpCodesArgs<ExtArgs>
   loginAttempts?: boolean | Prisma.User$loginAttemptsArgs<ExtArgs>
+  authAuditLogs?: boolean | Prisma.User$authAuditLogsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.User$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.User$taskAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1879,6 +2214,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
     otpCodes: Prisma.$OtpCodePayload<ExtArgs>[]
     loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
+    authAuditLogs: Prisma.$AuthAuditLogPayload<ExtArgs>[]
     projectAuditLogs: Prisma.$ProjectAuditLogPayload<ExtArgs>[]
     taskAuditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[]
   }
@@ -1889,6 +2225,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phone: string
     username: string
     passwordHash: string
+    refreshTokenHash: string | null
+    lastPasswordChange: Date | null
     roles: string[]
     status: $Enums.UserStatus
     createdAt: Date
@@ -2294,6 +2632,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   assignedTasks<T extends Prisma.User$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otpCodes<T extends Prisma.User$otpCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$otpCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OtpCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loginAttempts<T extends Prisma.User$loginAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  authAuditLogs<T extends Prisma.User$authAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$authAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectAuditLogs<T extends Prisma.User$projectAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskAuditLogs<T extends Prisma.User$taskAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2331,6 +2670,8 @@ export interface UserFieldRefs {
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly username: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly refreshTokenHash: Prisma.FieldRef<"User", 'String'>
+  readonly lastPasswordChange: Prisma.FieldRef<"User", 'DateTime'>
   readonly roles: Prisma.FieldRef<"User", 'String[]'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2906,6 +3247,30 @@ export type User$loginAttemptsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LoginAttemptScalarFieldEnum | Prisma.LoginAttemptScalarFieldEnum[]
+}
+
+/**
+ * User.authAuditLogs
+ */
+export type User$authAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthAuditLog
+   */
+  select?: Prisma.AuthAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuthAuditLog
+   */
+  omit?: Prisma.AuthAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthAuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuthAuditLogWhereInput
+  orderBy?: Prisma.AuthAuditLogOrderByWithRelationInput | Prisma.AuthAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuthAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuthAuditLogScalarFieldEnum | Prisma.AuthAuditLogScalarFieldEnum[]
 }
 
 /**

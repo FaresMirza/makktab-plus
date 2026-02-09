@@ -1,7 +1,8 @@
+
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class ForgotPasswordDto {
+export class RefreshTokenDto {
     @IsString()
     @IsNotEmpty()
-    username: string;
+    refreshToken: string;
 }

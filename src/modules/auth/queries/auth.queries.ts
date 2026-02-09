@@ -156,4 +156,26 @@ export class AuthRepository {
             },
         });
     }
+
+
+
+    /**
+     * Update user refresh token hash
+     */
+    async updateRefreshTokenHash(userId: string, refreshTokenHash: string | null) {
+        return this.prisma.user.update({
+            where: { id: userId },
+            data: { refreshTokenHash },
+        });
+    }
+
+    /**
+     * Find user by ID
+     */
+    async findUserById(userId: string) {
+        return this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+    }
 }
+

@@ -91,3 +91,15 @@ export const TaskAction = {
 } as const
 
 export type TaskAction = (typeof TaskAction)[keyof typeof TaskAction]
+
+
+export const AuthAuditEvent = {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  INVALID_OTP: 'INVALID_OTP',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  PASSWORD_RESET: 'PASSWORD_RESET',
+  PASSWORD_CHANGED: 'PASSWORD_CHANGED',
+  TOKEN_REVOKED: 'TOKEN_REVOKED'
+} as const
+
+export type AuthAuditEvent = (typeof AuthAuditEvent)[keyof typeof AuthAuditEvent]

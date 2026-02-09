@@ -32,10 +32,12 @@ model User {
   email        String     @unique
   phone        String
   username     String     @unique
-  passwordHash String
-  roles        String[]
-  status       UserStatus
-  createdAt    DateTime   @default(now())
+  passwordHash       String
+  refreshTokenHash   String?
+  lastPasswordChange DateTime?
+  roles              String[]
+  status             UserStatus
+  createdAt          DateTime   @default(now())
 
   offices          Office[]
   ownedOffice      Office?           @relation("OfficeOwner")
@@ -45,6 +47,7 @@ model User {
   assignedTasks    Task[]            @relation("AssignedTasks")
   otpCodes         OtpCode[]
   loginAttempts    LoginAttempt[]
+  authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
 }
@@ -223,4 +226,27 @@ enum TaskAction {
   STATUS_CHANGE
   ASSIGN
   DUE_DATE_CHANGE
+}
+
+enum AuthAuditEvent {
+  INVALID_CREDENTIALS
+  INVALID_OTP
+  LOGIN_SUCCESS
+  PASSWORD_RESET
+  PASSWORD_CHANGED
+  TOKEN_REVOKED
+}
+
+model AuthAuditLog {
+  id                String         @id @default(uuid())
+  userId            String?
+  event             AuthAuditEvent
+  reason            String?
+  ip                String?
+  deviceFingerprint String?
+  country           String?
+  userAgent         String?
+  createdAt         DateTime       @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
 }

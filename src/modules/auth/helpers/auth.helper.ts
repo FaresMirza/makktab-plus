@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException, BadRequestException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { createHash } from 'crypto';
 import { AuthRepository } from '../queries/auth.queries';
 import { OtpPurpose } from 'prisma/src/generated/prisma-client/client';
 
@@ -147,5 +148,29 @@ export class AuthHelper {
      */
     throwInvalidCredentials(): never {
         throw new UnauthorizedException('Invalid credentials');
+    }
+
+    /**
+     * Generate Refresh Token (random string)
+     */
+    generateRefreshToken(): string {
+        return bcrypt.genSaltSync(20); // Using salt gen as random string, perfectly valid for opaque tokens
+    }
+
+    /**
+     * Hash Refresh Token
+     */
+    async hashRefreshToken(token: string): Promise<string> {
+        // Pre-hash with SHA256 to handle long tokens (bcrypt has 72 byte limit)
+        const sha256 = createHash('sha256').update(token).digest('hex');
+        return bcrypt.hash(sha256, 10);
+    }
+
+    /**
+     * Validate Refresh Token
+     */
+    async validateRefreshToken(token: string, hash: string): Promise<boolean> {
+        const sha256 = createHash('sha256').update(token).digest('hex');
+        return bcrypt.compare(sha256, hash);
     }
 }

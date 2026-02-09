@@ -1,84 +1,68 @@
-import { Controller, Post, Body, Ip, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Ip, Req, Headers, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { VerifyResetPasswordOtpDto } from './dto/verify-reset-password-otp.dto';
+import { ResetPasswordWithOtpDto } from './dto/reset-password-with-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
-    /**
-     * Step 1: Login - Validate credentials and send OTP
-     * Validates username and password, then sends OTP to email
-     * POST /auth/login
-     */
     @Post('login')
-    async login(
-        @Body() loginDto: LoginDto,
-        @Ip() ip: string,
-        @Headers('user-agent') userAgent: string,
-    ) {
-        return this.authService.login(loginDto, {
-            ip,
-            userAgent,
-        });
+    async login(@Body() loginDto: LoginDto, @Ip() ip: string, @Req() req: any) {
+        return this.authService.login(loginDto, ip, req.headers['user-agent']);
     }
 
-    /**
-     * Step 2: Verify Login OTP
-     * POST /auth/verify-login-otp
-     */
-    @Post('verify-login-otp')
-    async verifyLoginOtp(
-        @Body() verifyLoginOtpDto: VerifyLoginOtpDto,
+    @Post('login/verify')
+    async verifyLogin(
+        @Body() dto: VerifyLoginOtpDto,
         @Ip() ip: string,
-        @Headers('user-agent') userAgent: string,
+        @Req() req: any,
+        @Headers('x-device-fingerprint') deviceFingerprint: string
     ) {
-        return this.authService.verifyLoginOtp(verifyLoginOtpDto, {
-            ip,
-            userAgent,
-        });
+        return this.authService.verifyLogin(dto, ip, req.headers['user-agent'], deviceFingerprint);
     }
 
-    /**
-     * Step 1: Forgot Password - Send OTP
-     * POST /auth/forgot-password
-     */
     @Post('forgot-password')
     async forgotPassword(
-        @Body() forgotPasswordDto: ForgotPasswordDto,
+        @Body() dto: ForgotPasswordDto,
         @Ip() ip: string,
-        @Headers('user-agent') userAgent: string,
+        @Req() req: any
     ) {
-        return this.authService.forgotPassword(forgotPasswordDto, {
-            ip,
-            userAgent,
-        });
+        return this.authService.forgotPassword(dto, ip, req.headers['user-agent']);
     }
 
-    /**
-     * Step 2: Verify Reset Password OTP
-     * POST /auth/verify-reset-password-otp
-     */
-    @Post('verify-forgot-password-otp')
-    async verifyForgotPasswordOtp(@Body() verifyForgotPasswordOtpDto: VerifyResetPasswordOtpDto) {
-        return this.authService.verifyForgotPasswordOtp(verifyForgotPasswordOtpDto);
+    @Post('forgot-password/verify')
+    async verifyForgotPassword(
+        @Body() dto: ResetPasswordWithOtpDto,
+        @Ip() ip: string,
+        @Req() req: any,
+        @Headers('x-device-fingerprint') deviceFingerprint: string
+    ) {
+        return this.authService.verifyForgotPassword(dto, ip, req.headers['user-agent'], deviceFingerprint);
     }
 
-    /**
-     * Step 3: Reset Password
-     * POST /auth/reset-password
-     */
+    @UseGuards(AuthGuard('jwt'))
     @Post('reset-password')
-    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-        return this.authService.resetPassword(resetPasswordDto);
+    async resetPassword(
+        @Body() dto: ResetPasswordDto,
+        @Req() req: any,
+        @Ip() ip: string,
+        @Headers('x-device-fingerprint') deviceFingerprint: string
+    ) {
+        return this.authService.resetPassword(req.user.userId, dto, ip, req.headers['user-agent'], deviceFingerprint);
     }
 
- 
-
-
+    @Post('refresh')
+    async refresh(
+        @Body() dto: RefreshTokenDto,
+        @Ip() ip: string,
+        @Req() req: any
+    ) {
+        return this.authService.refresh(dto, ip, req.headers['user-agent']);
+    }
 }

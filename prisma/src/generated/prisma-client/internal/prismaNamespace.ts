@@ -398,7 +398,8 @@ export const ModelName = {
   OtpCode: 'OtpCode',
   LoginAttempt: 'LoginAttempt',
   ProjectAuditLog: 'ProjectAuditLog',
-  TaskAuditLog: 'TaskAuditLog'
+  TaskAuditLog: 'TaskAuditLog',
+  AuthAuditLog: 'AuthAuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "office" | "user" | "role" | "project" | "task" | "otpCode" | "loginAttempt" | "projectAuditLog" | "taskAuditLog"
+    modelProps: "office" | "user" | "role" | "project" | "task" | "otpCode" | "loginAttempt" | "projectAuditLog" | "taskAuditLog" | "authAuditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1084,6 +1085,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AuthAuditLog: {
+      payload: Prisma.$AuthAuditLogPayload<ExtArgs>
+      fields: Prisma.AuthAuditLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthAuditLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthAuditLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AuthAuditLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthAuditLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        findMany: {
+          args: Prisma.AuthAuditLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>[]
+        }
+        create: {
+          args: Prisma.AuthAuditLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        createMany: {
+          args: Prisma.AuthAuditLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthAuditLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AuthAuditLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        update: {
+          args: Prisma.AuthAuditLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthAuditLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthAuditLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthAuditLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthAuditLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthAuditLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AuthAuditLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthAuditLog>
+        }
+        groupBy: {
+          args: Prisma.AuthAuditLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthAuditLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthAuditLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthAuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1141,6 +1216,8 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   username: 'username',
   passwordHash: 'passwordHash',
+  refreshTokenHash: 'refreshTokenHash',
+  lastPasswordChange: 'lastPasswordChange',
   roles: 'roles',
   status: 'status',
   createdAt: 'createdAt'
@@ -1262,6 +1339,21 @@ export const TaskAuditLogScalarFieldEnum = {
 } as const
 
 export type TaskAuditLogScalarFieldEnum = (typeof TaskAuditLogScalarFieldEnum)[keyof typeof TaskAuditLogScalarFieldEnum]
+
+
+export const AuthAuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  event: 'event',
+  reason: 'reason',
+  ip: 'ip',
+  deviceFingerprint: 'deviceFingerprint',
+  country: 'country',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthAuditLogScalarFieldEnum = (typeof AuthAuditLogScalarFieldEnum)[keyof typeof AuthAuditLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1470,6 +1562,20 @@ export type ListEnumTaskActionFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'AuthAuditEvent'
+ */
+export type EnumAuthAuditEventFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthAuditEvent'>
+    
+
+
+/**
+ * Reference to a field of type 'AuthAuditEvent[]'
+ */
+export type ListEnumAuthAuditEventFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthAuditEvent[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1578,6 +1684,7 @@ export type GlobalOmitConfig = {
   loginAttempt?: Prisma.LoginAttemptOmit
   projectAuditLog?: Prisma.ProjectAuditLogOmit
   taskAuditLog?: Prisma.TaskAuditLogOmit
+  authAuditLog?: Prisma.AuthAuditLogOmit
 }
 
 /* Types for Logging */

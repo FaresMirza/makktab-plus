@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma, ProjectAction, LoginMethod, TaskAction } from '../../../../prisma/src/generated/prisma-client/client';
+import { Prisma, ProjectAction, LoginMethod, TaskAction, AuthAuditEvent } from '../../../../prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuditRepository {
@@ -275,4 +275,32 @@ export class AuditRepository {
             where: { id },
         });
     }
+
+    // --- Auth Audit Logs ---
+
+    async createAuthLog(data: Prisma.AuthAuditLogUncheckedCreateInput) {
+        return this.prisma.authAuditLog.create({
+            data,
+        });
+    }
+
+    async findAllAuthLogs() {
+        return this.prisma.authAuditLog.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    async findAuthLogById(id: string) {
+        return this.prisma.authAuditLog.findUnique({
+            where: { id },
+        });
+    }
+
+    async findAuthLogsByUser(userId: string) {
+        return this.prisma.authAuditLog.findMany({
+            where: { userId },
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
 }
