@@ -55,7 +55,6 @@ export const ModelName = {
   Project: 'Project',
   Task: 'Task',
   OtpCode: 'OtpCode',
-  LoginAttempt: 'LoginAttempt',
   ProjectAuditLog: 'ProjectAuditLog',
   TaskAuditLog: 'TaskAuditLog',
   AuthAuditLog: 'AuthAuditLog'
@@ -165,23 +164,6 @@ export const OtpCodeScalarFieldEnum = {
 } as const
 
 export type OtpCodeScalarFieldEnum = (typeof OtpCodeScalarFieldEnum)[keyof typeof OtpCodeScalarFieldEnum]
-
-
-export const LoginAttemptScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  officeId: 'officeId',
-  success: 'success',
-  method: 'method',
-  ip: 'ip',
-  userAgent: 'userAgent',
-  deviceFingerprint: 'deviceFingerprint',
-  geo: 'geo',
-  failReason: 'failReason',
-  createdAt: 'createdAt'
-} as const
-
-export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
 
 
 export const ProjectAuditLogScalarFieldEnum = {

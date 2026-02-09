@@ -186,7 +186,6 @@ export type OfficeWhereInput = {
   users?: Prisma.UserListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
-  loginAttempts?: Prisma.LoginAttemptListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
 }
@@ -201,7 +200,6 @@ export type OfficeOrderByWithRelationInput = {
   users?: Prisma.UserOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   otpCodes?: Prisma.OtpCodeOrderByRelationAggregateInput
-  loginAttempts?: Prisma.LoginAttemptOrderByRelationAggregateInput
   projectAuditLogs?: Prisma.ProjectAuditLogOrderByRelationAggregateInput
   taskAuditLogs?: Prisma.TaskAuditLogOrderByRelationAggregateInput
 }
@@ -219,7 +217,6 @@ export type OfficeWhereUniqueInput = Prisma.AtLeast<{
   users?: Prisma.UserListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
-  loginAttempts?: Prisma.LoginAttemptListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
 }, "id" | "ownerUserId">
@@ -255,7 +252,6 @@ export type OfficeCreateInput = {
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
@@ -269,7 +265,6 @@ export type OfficeUncheckedCreateInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
@@ -283,7 +278,6 @@ export type OfficeUpdateInput = {
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
@@ -297,7 +291,6 @@ export type OfficeUncheckedUpdateInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
@@ -479,20 +472,6 @@ export type OfficeUpdateOneRequiredWithoutOtpCodesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutOtpCodesInput, Prisma.OfficeUpdateWithoutOtpCodesInput>, Prisma.OfficeUncheckedUpdateWithoutOtpCodesInput>
 }
 
-export type OfficeCreateNestedOneWithoutLoginAttemptsInput = {
-  create?: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>
-  connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutLoginAttemptsInput
-  connect?: Prisma.OfficeWhereUniqueInput
-}
-
-export type OfficeUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
-  create?: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>
-  connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutLoginAttemptsInput
-  upsert?: Prisma.OfficeUpsertWithoutLoginAttemptsInput
-  connect?: Prisma.OfficeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutLoginAttemptsInput, Prisma.OfficeUpdateWithoutLoginAttemptsInput>, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>
-}
-
 export type OfficeCreateNestedOneWithoutProjectAuditLogsInput = {
   create?: Prisma.XOR<Prisma.OfficeCreateWithoutProjectAuditLogsInput, Prisma.OfficeUncheckedCreateWithoutProjectAuditLogsInput>
   connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutProjectAuditLogsInput
@@ -529,7 +508,6 @@ export type OfficeCreateWithoutUsersInput = {
   owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
@@ -542,7 +520,6 @@ export type OfficeUncheckedCreateWithoutUsersInput = {
   createdAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
@@ -560,7 +537,6 @@ export type OfficeCreateWithoutOwnerInput = {
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
@@ -573,7 +549,6 @@ export type OfficeUncheckedCreateWithoutOwnerInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
@@ -629,7 +604,6 @@ export type OfficeUpdateWithoutOwnerInput = {
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
@@ -642,7 +616,6 @@ export type OfficeUncheckedUpdateWithoutOwnerInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
@@ -655,7 +628,6 @@ export type OfficeCreateWithoutProjectsInput = {
   owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
@@ -668,7 +640,6 @@ export type OfficeUncheckedCreateWithoutProjectsInput = {
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
@@ -697,7 +668,6 @@ export type OfficeUpdateWithoutProjectsInput = {
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
@@ -710,7 +680,6 @@ export type OfficeUncheckedUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
@@ -723,7 +692,6 @@ export type OfficeCreateWithoutOtpCodesInput = {
   owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
@@ -736,7 +704,6 @@ export type OfficeUncheckedCreateWithoutOtpCodesInput = {
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
@@ -765,7 +732,6 @@ export type OfficeUpdateWithoutOtpCodesInput = {
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
@@ -778,75 +744,6 @@ export type OfficeUncheckedUpdateWithoutOtpCodesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
-  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
-  taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
-}
-
-export type OfficeCreateWithoutLoginAttemptsInput = {
-  id?: string
-  name: string
-  status: $Enums.OfficeStatus
-  createdAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedOfficeInput
-  users?: Prisma.UserCreateNestedManyWithoutOfficesInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
-  otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
-  taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
-}
-
-export type OfficeUncheckedCreateWithoutLoginAttemptsInput = {
-  id?: string
-  name: string
-  ownerUserId: string
-  status: $Enums.OfficeStatus
-  createdAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
-  otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
-  taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
-}
-
-export type OfficeCreateOrConnectWithoutLoginAttemptsInput = {
-  where: Prisma.OfficeWhereUniqueInput
-  create: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>
-}
-
-export type OfficeUpsertWithoutLoginAttemptsInput = {
-  update: Prisma.XOR<Prisma.OfficeUpdateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>
-  create: Prisma.XOR<Prisma.OfficeCreateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedCreateWithoutLoginAttemptsInput>
-  where?: Prisma.OfficeWhereInput
-}
-
-export type OfficeUpdateToOneWithWhereWithoutLoginAttemptsInput = {
-  where?: Prisma.OfficeWhereInput
-  data: Prisma.XOR<Prisma.OfficeUpdateWithoutLoginAttemptsInput, Prisma.OfficeUncheckedUpdateWithoutLoginAttemptsInput>
-}
-
-export type OfficeUpdateWithoutLoginAttemptsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput
-  users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
-  otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
-  taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
-}
-
-export type OfficeUncheckedUpdateWithoutLoginAttemptsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
-  otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
@@ -860,7 +757,6 @@ export type OfficeCreateWithoutProjectAuditLogsInput = {
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutOfficeInput
 }
 
@@ -873,7 +769,6 @@ export type OfficeUncheckedCreateWithoutProjectAuditLogsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
 
@@ -902,7 +797,6 @@ export type OfficeUpdateWithoutProjectAuditLogsInput = {
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
 
@@ -915,7 +809,6 @@ export type OfficeUncheckedUpdateWithoutProjectAuditLogsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
 
@@ -928,7 +821,6 @@ export type OfficeCreateWithoutTaskAuditLogsInput = {
   users?: Prisma.UserCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutOfficeInput
 }
 
@@ -941,7 +833,6 @@ export type OfficeUncheckedCreateWithoutTaskAuditLogsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutOfficeInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedCreateNestedManyWithoutOfficeInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutOfficeInput
 }
 
@@ -970,7 +861,6 @@ export type OfficeUpdateWithoutTaskAuditLogsInput = {
   users?: Prisma.UserUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
 }
 
@@ -983,7 +873,6 @@ export type OfficeUncheckedUpdateWithoutTaskAuditLogsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
 
@@ -995,7 +884,6 @@ export type OfficeUpdateWithoutUsersInput = {
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedOfficeNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutOfficeNestedInput
 }
@@ -1008,7 +896,6 @@ export type OfficeUncheckedUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutOfficeNestedInput
-  loginAttempts?: Prisma.LoginAttemptUncheckedUpdateManyWithoutOfficeNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutOfficeNestedInput
 }
@@ -1030,7 +917,6 @@ export type OfficeCountOutputType = {
   users: number
   projects: number
   otpCodes: number
-  loginAttempts: number
   projectAuditLogs: number
   taskAuditLogs: number
 }
@@ -1039,7 +925,6 @@ export type OfficeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   users?: boolean | OfficeCountOutputTypeCountUsersArgs
   projects?: boolean | OfficeCountOutputTypeCountProjectsArgs
   otpCodes?: boolean | OfficeCountOutputTypeCountOtpCodesArgs
-  loginAttempts?: boolean | OfficeCountOutputTypeCountLoginAttemptsArgs
   projectAuditLogs?: boolean | OfficeCountOutputTypeCountProjectAuditLogsArgs
   taskAuditLogs?: boolean | OfficeCountOutputTypeCountTaskAuditLogsArgs
 }
@@ -1078,13 +963,6 @@ export type OfficeCountOutputTypeCountOtpCodesArgs<ExtArgs extends runtime.Types
 /**
  * OfficeCountOutputType without action
  */
-export type OfficeCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LoginAttemptWhereInput
-}
-
-/**
- * OfficeCountOutputType without action
- */
 export type OfficeCountOutputTypeCountProjectAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProjectAuditLogWhereInput
 }
@@ -1107,7 +985,6 @@ export type OfficeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   users?: boolean | Prisma.Office$usersArgs<ExtArgs>
   projects?: boolean | Prisma.Office$projectsArgs<ExtArgs>
   otpCodes?: boolean | Prisma.Office$otpCodesArgs<ExtArgs>
-  loginAttempts?: boolean | Prisma.Office$loginAttemptsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.Office$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.Office$taskAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.OfficeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1145,7 +1022,6 @@ export type OfficeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   users?: boolean | Prisma.Office$usersArgs<ExtArgs>
   projects?: boolean | Prisma.Office$projectsArgs<ExtArgs>
   otpCodes?: boolean | Prisma.Office$otpCodesArgs<ExtArgs>
-  loginAttempts?: boolean | Prisma.Office$loginAttemptsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.Office$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.Office$taskAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.OfficeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1164,7 +1040,6 @@ export type $OfficePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     users: Prisma.$UserPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     otpCodes: Prisma.$OtpCodePayload<ExtArgs>[]
-    loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     projectAuditLogs: Prisma.$ProjectAuditLogPayload<ExtArgs>[]
     taskAuditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[]
   }
@@ -1572,7 +1447,6 @@ export interface Prisma__OfficeClient<T, Null = never, ExtArgs extends runtime.T
   users<T extends Prisma.Office$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Office$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otpCodes<T extends Prisma.Office$otpCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$otpCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OtpCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  loginAttempts<T extends Prisma.Office$loginAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectAuditLogs<T extends Prisma.Office$projectAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$projectAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskAuditLogs<T extends Prisma.Office$taskAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Office$taskAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2074,30 +1948,6 @@ export type Office$otpCodesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.OtpCodeScalarFieldEnum | Prisma.OtpCodeScalarFieldEnum[]
-}
-
-/**
- * Office.loginAttempts
- */
-export type Office$loginAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the LoginAttempt
-   */
-  select?: Prisma.LoginAttemptSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the LoginAttempt
-   */
-  omit?: Prisma.LoginAttemptOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.LoginAttemptInclude<ExtArgs> | null
-  where?: Prisma.LoginAttemptWhereInput
-  orderBy?: Prisma.LoginAttemptOrderByWithRelationInput | Prisma.LoginAttemptOrderByWithRelationInput[]
-  cursor?: Prisma.LoginAttemptWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.LoginAttemptScalarFieldEnum | Prisma.LoginAttemptScalarFieldEnum[]
 }
 
 /**

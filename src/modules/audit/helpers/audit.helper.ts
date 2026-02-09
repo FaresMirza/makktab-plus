@@ -41,11 +41,7 @@ export class AuditHelper {
         return log;
     }
 
-    async validateLoginAttemptExists(id: string) {
-        const log = await this.auditRepository.findLoginAttemptById(id);
-        if (!log) throw new NotFoundException(`Login attempt with ID ${id} not found`);
-        return log;
-    }
+
 
     async validateTaskLogExists(id: string) {
         const log = await this.auditRepository.findTaskLogById(id);

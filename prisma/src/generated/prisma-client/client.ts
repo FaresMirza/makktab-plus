@@ -73,11 +73,6 @@ export type Task = Prisma.TaskModel
  */
 export type OtpCode = Prisma.OtpCodeModel
 /**
- * Model LoginAttempt
- * 
- */
-export type LoginAttempt = Prisma.LoginAttemptModel
-/**
  * Model ProjectAuditLog
  * 
  */

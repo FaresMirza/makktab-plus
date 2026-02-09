@@ -63,14 +63,6 @@ export const OtpChannel = {
 export type OtpChannel = (typeof OtpChannel)[keyof typeof OtpChannel]
 
 
-export const LoginMethod = {
-  PASSWORD: 'PASSWORD',
-  OTP: 'OTP'
-} as const
-
-export type LoginMethod = (typeof LoginMethod)[keyof typeof LoginMethod]
-
-
 export const ProjectAction = {
   CREATE: 'CREATE',
   UPDATE: 'UPDATE',

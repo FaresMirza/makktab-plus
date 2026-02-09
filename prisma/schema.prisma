@@ -21,7 +21,7 @@ model Office {
   users            User[]
   projects         Project[]
   otpCodes         OtpCode[]
-  loginAttempts    LoginAttempt[]
+
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
 }
@@ -46,7 +46,7 @@ model User {
   createdTasks     Task[]            @relation("CreatedTasks")
   assignedTasks    Task[]            @relation("AssignedTasks")
   otpCodes         OtpCode[]
-  loginAttempts    LoginAttempt[]
+
   authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
@@ -116,22 +116,7 @@ model OtpCode {
   office Office @relation(fields: [officeId], references: [id])
 }
 
-model LoginAttempt {
-  id                String      @id @default(uuid())
-  userId            String
-  officeId          String
-  success           Boolean
-  method            LoginMethod
-  ip                String?
-  userAgent         String?
-  deviceFingerprint String?
-  geo               String?
-  failReason        String?
-  createdAt         DateTime    @default(now())
 
-  user   User   @relation(fields: [userId], references: [id])
-  office Office @relation(fields: [officeId], references: [id])
-}
 
 model ProjectAuditLog {
   id                String        @id @default(uuid())
@@ -207,10 +192,7 @@ enum OtpChannel {
   EMAIL
 }
 
-enum LoginMethod {
-  PASSWORD
-  OTP
-}
+
 
 enum ProjectAction {
   CREATE

@@ -6,8 +6,7 @@ import { OtpPurpose } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuthHelper {
-    private readonly MAX_LOGIN_ATTEMPTS = 5;
-    private readonly LOCKOUT_DURATION_MINUTES = 15;
+
     private readonly OTP_EXPIRY_MINUTES = 10;
     private readonly MAX_OTP_ATTEMPTS = 3;
 
@@ -78,21 +77,7 @@ export class AuthHelper {
         return user;
     }
 
-    /**
-     * Check if user is locked out due to failed login attempts
-     */
-    async checkLoginLockout(userId: string): Promise<void> {
-        const failedAttempts = await this.authRepository.getRecentFailedLoginAttempts(
-            userId,
-            this.LOCKOUT_DURATION_MINUTES,
-        );
 
-        if (failedAttempts >= this.MAX_LOGIN_ATTEMPTS) {
-            throw new UnauthorizedException(
-                `Account temporarily locked due to too many failed login attempts. Please try again in ${this.LOCKOUT_DURATION_MINUTES} minutes.`,
-            );
-        }
-    }
 
     /**
      * Validate OTP and check attempts

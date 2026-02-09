@@ -264,36 +264,6 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntFilter<$PrismaModel>
 }
 
-export type BoolFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
-}
-
-export type EnumLoginMethodFilter<$PrismaModel = never> = {
-  equals?: $Enums.LoginMethod | Prisma.EnumLoginMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel> | $Enums.LoginMethod
-}
-
-export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedBoolFilter<$PrismaModel>
-  _max?: Prisma.NestedBoolFilter<$PrismaModel>
-}
-
-export type EnumLoginMethodWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LoginMethod | Prisma.EnumLoginMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLoginMethodWithAggregatesFilter<$PrismaModel> | $Enums.LoginMethod
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel>
-}
-
 export type EnumProjectActionFilter<$PrismaModel = never> = {
   equals?: $Enums.ProjectAction | Prisma.EnumProjectActionFieldRefInput<$PrismaModel>
   in?: $Enums.ProjectAction[] | Prisma.ListEnumProjectActionFieldRefInput<$PrismaModel>
@@ -606,36 +576,6 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
-}
-
-export type NestedBoolFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
-}
-
-export type NestedEnumLoginMethodFilter<$PrismaModel = never> = {
-  equals?: $Enums.LoginMethod | Prisma.EnumLoginMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel> | $Enums.LoginMethod
-}
-
-export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedBoolFilter<$PrismaModel>
-  _max?: Prisma.NestedBoolFilter<$PrismaModel>
-}
-
-export type NestedEnumLoginMethodWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.LoginMethod | Prisma.EnumLoginMethodFieldRefInput<$PrismaModel>
-  in?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  notIn?: $Enums.LoginMethod[] | Prisma.ListEnumLoginMethodFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumLoginMethodWithAggregatesFilter<$PrismaModel> | $Enums.LoginMethod
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumLoginMethodFilter<$PrismaModel>
 }
 
 export type NestedEnumProjectActionFilter<$PrismaModel = never> = {

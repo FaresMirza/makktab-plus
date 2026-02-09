@@ -121,41 +121,9 @@ export class AuthRepository {
         });
     }
 
-    /**
-     * Create login attempt record
-     */
-    async createLoginAttempt(data: {
-        userId: string;
-        officeId: string;
-        success: boolean;
-        method: any;
-        ip?: string;
-        userAgent?: string;
-        deviceFingerprint?: string;
-        geo?: string;
-        failReason?: string;
-    }) {
-        return this.prisma.loginAttempt.create({
-            data,
-        });
-    }
 
-    /**
-     * Get recent failed login attempts
-     */
-    async getRecentFailedLoginAttempts(userId: string, minutes: number = 15) {
-        const since = new Date(Date.now() - minutes * 60 * 1000);
 
-        return this.prisma.loginAttempt.count({
-            where: {
-                userId,
-                success: false,
-                createdAt: {
-                    gte: since,
-                },
-            },
-        });
-    }
+
 
 
 
