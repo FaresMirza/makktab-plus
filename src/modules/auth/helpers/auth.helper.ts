@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, BadRequestException, NotFoundExcepti
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
 import { AuthRepository } from '../queries/auth.queries';
+import { UsersRepository } from '../../users/queries/users.queries';
 import { OtpPurpose } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
@@ -10,7 +11,10 @@ export class AuthHelper {
     private readonly OTP_EXPIRY_MINUTES = 10;
     private readonly MAX_OTP_ATTEMPTS = 3;
 
-    constructor(private readonly authRepository: AuthRepository) { }
+    constructor(
+        private readonly authRepository: AuthRepository,
+        private readonly usersRepository: UsersRepository,
+    ) { }
 
     /**
      * Hash password using bcrypt
@@ -59,7 +63,7 @@ export class AuthHelper {
      * Validate user exists by email
      */
     async validateUserExistsByEmail(email: string) {
-        const user = await this.authRepository.findUserByEmail(email);
+        const user = await this.usersRepository.findByEmail(email);
         if (!user) {
             throw new NotFoundException(`User with email ${email} not found`);
         }
@@ -70,7 +74,7 @@ export class AuthHelper {
      * Validate user exists by username
      */
     async validateUserExistsByUsername(username: string) {
-        const user = await this.authRepository.findUserByUsername(username);
+        const user = await this.usersRepository.findByUsername(username);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }

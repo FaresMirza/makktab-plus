@@ -5,6 +5,7 @@ import { AuthHelper } from './helpers/auth.helper';
 import { AuthRepository } from './queries/auth.queries';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuditModule } from '../audit/audit.module';
+import { UsersModule } from '../users/users.module'; // Import UsersModule
 
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -20,6 +21,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
             signOptions: { expiresIn: '15m' },
         }),
         AuditModule,
+        UsersModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, AuthHelper, AuthRepository, JwtStrategy],

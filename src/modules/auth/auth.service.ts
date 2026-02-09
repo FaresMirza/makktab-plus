@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import { AuthHelper } from './helpers/auth.helper';
 import { AuthRepository } from './queries/auth.queries';
+import { UsersRepository } from '../users/queries/users.queries';
 import { AuditRepository } from '../audit/queries/audit.queries';
 import { LoginDto } from './dto/login.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
@@ -16,6 +17,7 @@ export class AuthService {
     constructor(
         private readonly authHelper: AuthHelper,
         private readonly authRepository: AuthRepository,
+        private readonly usersRepository: UsersRepository,
         private readonly auditRepository: AuditRepository,
         private readonly jwtService: JwtService,
     ) { }
@@ -135,7 +137,7 @@ export class AuthService {
 
         const refreshTokenHash = await this.authHelper.hashRefreshToken(refreshToken);
 
-        await this.authRepository.updateRefreshTokenHash(user.id, refreshTokenHash);
+        await this.usersRepository.updateRefreshTokenHash(user.id, refreshTokenHash);
 
         // Audit Login Success
         await this.logAudit({
@@ -164,7 +166,7 @@ export class AuthService {
         const usernameOrEmail = dto.username;
 
         // Check if user exists (silently)
-        const user = await this.authRepository.findUserByUsername(usernameOrEmail) || await this.authRepository.findUserByEmail(usernameOrEmail);
+        const user = await this.usersRepository.findByUsername(usernameOrEmail) || await this.usersRepository.findByEmail(usernameOrEmail);
 
         if (user) {
             const otpCode = this.authHelper.generateOtpCode();
@@ -198,7 +200,7 @@ export class AuthService {
             throw new BadRequestException('Passwords do not match');
         }
 
-        const user = await this.authRepository.findUserByUsername(username) || await this.authRepository.findUserByEmail(username);
+        const user = await this.usersRepository.findByUsername(username) || await this.usersRepository.findByEmail(username);
         if (!user) {
             throw new BadRequestException('Invalid request');
         }
@@ -223,10 +225,10 @@ export class AuthService {
 
         // Update password & Revoke tokens & Log
         // Note: In real app, use transaction. Queries are separate here but logic holds.
-        await this.authRepository.updatePassword(user.id, passwordHash);
+        await this.usersRepository.updatePassword(user.id, passwordHash);
 
         // Revoke all tokens
-        await this.authRepository.updateRefreshTokenHash(user.id, null);
+        await this.usersRepository.updateRefreshTokenHash(user.id, null);
 
         // Audit
         await this.logAudit({
@@ -247,7 +249,7 @@ export class AuthService {
      */
     async resetPassword(userId: string, dto: ResetPasswordDto, ip: string, userAgent: string, deviceFingerprint: string) {
         // Validate Access Token - handled by Guard in Controller, so userId is valid.
-        const user = await this.authRepository.findUserById(userId);
+        const user = await this.usersRepository.findByIdSimple(userId);
         if (!user) throw new UnauthorizedException();
 
         const { newPassword } = dto;
@@ -268,8 +270,8 @@ export class AuthService {
 
         const passwordHash = await this.authHelper.hashPassword(newPassword);
 
-        await this.authRepository.updatePassword(user.id, passwordHash);
-        await this.authRepository.updateRefreshTokenHash(user.id, null); // Global logout
+        await this.usersRepository.updatePassword(user.id, passwordHash);
+        await this.usersRepository.updateRefreshTokenHash(user.id, null); // Global logout
 
         await this.logAudit({
             userId: user.id,
@@ -324,7 +326,7 @@ export class AuthService {
             throw new UnauthorizedException('Invalid token format');
         }
 
-        const user = await this.authRepository.findUserById(userId);
+        const user = await this.usersRepository.findByIdSimple(userId);
         if (!user || !user.refreshTokenHash) {
             throw new UnauthorizedException('Invalid refresh token');
         }

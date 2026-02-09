@@ -104,6 +104,13 @@ export class UsersRepository {
         });
     }
 
+    async updateRefreshTokenHash(id: string, refreshTokenHash: string | null) {
+        return this.prisma.user.update({
+            where: { id },
+            data: { refreshTokenHash },
+        });
+    }
+
     async findByOffice(officeId: string) {
         return this.prisma.user.findMany({
             where: {

@@ -6,51 +6,9 @@ import { OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/clien
 export class AuthRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-    /**
-     * Find user by email (simple find for validation)
-     */
-    async findUserByEmailSimple(email: string) {
-        return this.prisma.user.findUnique({
-            where: { email },
-            select: { id: true, email: true },
-        });
-    }
 
-    /**
-     * Find user by email with full details
-     */
-    async findUserByEmail(email: string) {
-        return this.prisma.user.findUnique({
-            where: { email },
-            include: {
-                offices: true,
-                ownedOffice: true,
-            },
-        });
-    }
 
-    /**
-     * Find user by username with full details
-     */
-    async findUserByUsername(username: string) {
-        return this.prisma.user.findUnique({
-            where: { username },
-            include: {
-                offices: true,
-                ownedOffice: true,
-            },
-        });
-    }
 
-    /**
-     * Update user password
-     */
-    async updatePassword(userId: string, passwordHash: string) {
-        return this.prisma.user.update({
-            where: { id: userId },
-            data: { passwordHash },
-        });
-    }
 
     /**
      * Create OTP code
@@ -127,23 +85,6 @@ export class AuthRepository {
 
 
 
-    /**
-     * Update user refresh token hash
-     */
-    async updateRefreshTokenHash(userId: string, refreshTokenHash: string | null) {
-        return this.prisma.user.update({
-            where: { id: userId },
-            data: { refreshTokenHash },
-        });
-    }
 
-    /**
-     * Find user by ID
-     */
-    async findUserById(userId: string) {
-        return this.prisma.user.findUnique({
-            where: { id: userId },
-        });
-    }
 }
 
