@@ -37,7 +37,9 @@ model User {
   lastPasswordChange DateTime?
   roles              String[]
   status             UserStatus
+  lockedUntil        DateTime?
   createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
   offices          Office[]
   ownedOffice      Office?           @relation("OfficeOwner")
@@ -99,10 +101,13 @@ model OtpCode {
   id                String     @id @default(uuid())
   userId            String
   officeId          String
+  email             String
   purpose           OtpPurpose
   channel           OtpChannel
   codeHash          String
-  attempts          Int
+  attempts          Int        @default(0)
+  maxAttempts       Int        @default(3)
+  status            OtpStatus  @default(PENDING)
   deviceFingerprint String?
   ip                String?
   userAgent         String?
@@ -164,6 +169,8 @@ enum OfficeStatus {
 enum UserStatus {
   PENDING
   ACTIVE
+  LOCKED
+  SUSPENDED
   DEACTIVATED
 }
 
@@ -190,6 +197,13 @@ enum OtpPurpose {
 enum OtpChannel {
   SMS
   EMAIL
+}
+
+enum OtpStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+  BLOCKED
 }
 
 

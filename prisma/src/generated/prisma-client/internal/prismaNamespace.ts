@@ -1145,7 +1145,9 @@ export const UserScalarFieldEnum = {
   lastPasswordChange: 'lastPasswordChange',
   roles: 'roles',
   status: 'status',
-  createdAt: 'createdAt'
+  lockedUntil: 'lockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1196,10 +1198,13 @@ export const OtpCodeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   officeId: 'officeId',
+  email: 'email',
   purpose: 'purpose',
   channel: 'channel',
   codeHash: 'codeHash',
   attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  status: 'status',
   deviceFingerprint: 'deviceFingerprint',
   ip: 'ip',
   userAgent: 'userAgent',
@@ -1417,6 +1422,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OtpStatus'
+ */
+export type EnumOtpStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OtpStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OtpStatus[]'
+ */
+export type ListEnumOtpStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OtpStatus[]'>
     
 
 

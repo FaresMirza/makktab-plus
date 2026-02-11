@@ -228,6 +228,13 @@ export type IntFilter<$PrismaModel = never> = {
   not?: Prisma.NestedIntFilter<$PrismaModel> | number
 }
 
+export type EnumOtpStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.OtpStatus | Prisma.EnumOtpStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel> | $Enums.OtpStatus
+}
+
 export type EnumOtpPurposeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.OtpPurpose | Prisma.EnumOtpPurposeFieldRefInput<$PrismaModel>
   in?: $Enums.OtpPurpose[] | Prisma.ListEnumOtpPurposeFieldRefInput<$PrismaModel>
@@ -262,6 +269,16 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedIntFilter<$PrismaModel>
   _max?: Prisma.NestedIntFilter<$PrismaModel>
+}
+
+export type EnumOtpStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OtpStatus | Prisma.EnumOtpStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOtpStatusWithAggregatesFilter<$PrismaModel> | $Enums.OtpStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel>
 }
 
 export type EnumProjectActionFilter<$PrismaModel = never> = {
@@ -531,6 +548,13 @@ export type NestedEnumOtpChannelFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumOtpChannelFilter<$PrismaModel> | $Enums.OtpChannel
 }
 
+export type NestedEnumOtpStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.OtpStatus | Prisma.EnumOtpStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel> | $Enums.OtpStatus
+}
+
 export type NestedEnumOtpPurposeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.OtpPurpose | Prisma.EnumOtpPurposeFieldRefInput<$PrismaModel>
   in?: $Enums.OtpPurpose[] | Prisma.ListEnumOtpPurposeFieldRefInput<$PrismaModel>
@@ -576,6 +600,16 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
+}
+
+export type NestedEnumOtpStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OtpStatus | Prisma.EnumOtpStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OtpStatus[] | Prisma.ListEnumOtpStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOtpStatusWithAggregatesFilter<$PrismaModel> | $Enums.OtpStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOtpStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumProjectActionFilter<$PrismaModel = never> = {

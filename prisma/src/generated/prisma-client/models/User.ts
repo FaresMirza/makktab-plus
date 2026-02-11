@@ -34,7 +34,9 @@ export type UserMinAggregateOutputType = {
   refreshTokenHash: string | null
   lastPasswordChange: Date | null
   status: $Enums.UserStatus | null
+  lockedUntil: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -47,7 +49,9 @@ export type UserMaxAggregateOutputType = {
   refreshTokenHash: string | null
   lastPasswordChange: Date | null
   status: $Enums.UserStatus | null
+  lockedUntil: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -61,7 +65,9 @@ export type UserCountAggregateOutputType = {
   lastPasswordChange: number
   roles: number
   status: number
+  lockedUntil: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -76,7 +82,9 @@ export type UserMinAggregateInputType = {
   refreshTokenHash?: true
   lastPasswordChange?: true
   status?: true
+  lockedUntil?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -89,7 +97,9 @@ export type UserMaxAggregateInputType = {
   refreshTokenHash?: true
   lastPasswordChange?: true
   status?: true
+  lockedUntil?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -103,7 +113,9 @@ export type UserCountAggregateInputType = {
   lastPasswordChange?: true
   roles?: true
   status?: true
+  lockedUntil?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -190,7 +202,9 @@ export type UserGroupByOutputType = {
   lastPasswordChange: Date | null
   roles: string[]
   status: $Enums.UserStatus
+  lockedUntil: Date | null
   createdAt: Date
+  updatedAt: Date
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -225,7 +239,9 @@ export type UserWhereInput = {
   lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   offices?: Prisma.OfficeListRelationFilter
   ownedOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
   createdProjects?: Prisma.ProjectListRelationFilter
@@ -249,7 +265,9 @@ export type UserOrderByWithRelationInput = {
   lastPasswordChange?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   offices?: Prisma.OfficeOrderByRelationAggregateInput
   ownedOffice?: Prisma.OfficeOrderByWithRelationInput
   createdProjects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -276,7 +294,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   offices?: Prisma.OfficeListRelationFilter
   ownedOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
   createdProjects?: Prisma.ProjectListRelationFilter
@@ -300,7 +320,9 @@ export type UserOrderByWithAggregationInput = {
   lastPasswordChange?: Prisma.SortOrderInput | Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -320,7 +342,9 @@ export type UserScalarWhereWithAggregatesInput = {
   lastPasswordChange?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
+  lockedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
@@ -334,7 +358,9 @@ export type UserCreateInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -358,7 +384,9 @@ export type UserUncheckedCreateInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -382,7 +410,9 @@ export type UserUpdateInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -406,7 +436,9 @@ export type UserUncheckedUpdateInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -430,7 +462,9 @@ export type UserCreateManyInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -444,7 +478,9 @@ export type UserUpdateManyMutationInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -458,7 +494,9 @@ export type UserUncheckedUpdateManyInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserScalarRelationFilter = {
@@ -495,7 +533,9 @@ export type UserCountOrderByAggregateInput = {
   lastPasswordChange?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -508,7 +548,9 @@ export type UserMaxOrderByAggregateInput = {
   refreshTokenHash?: Prisma.SortOrder
   lastPasswordChange?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -521,7 +563,9 @@ export type UserMinOrderByAggregateInput = {
   refreshTokenHash?: Prisma.SortOrder
   lastPasswordChange?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -727,7 +771,9 @@ export type UserCreateWithoutOwnedOfficeInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
@@ -750,7 +796,9 @@ export type UserUncheckedCreateWithoutOwnedOfficeInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
@@ -778,7 +826,9 @@ export type UserCreateWithoutOfficesInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
@@ -801,7 +851,9 @@ export type UserUncheckedCreateWithoutOfficesInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
@@ -840,7 +892,9 @@ export type UserUpdateWithoutOwnedOfficeInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
@@ -863,7 +917,9 @@ export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
@@ -905,7 +961,9 @@ export type UserScalarWhereInput = {
   lastPasswordChange?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   roles?: Prisma.StringNullableListFilter<"User">
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
 export type UserCreateWithoutCreatedProjectsInput = {
@@ -919,7 +977,9 @@ export type UserCreateWithoutCreatedProjectsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
@@ -942,7 +1002,9 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
@@ -970,7 +1032,9 @@ export type UserCreateWithoutManagedProjectsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -993,7 +1057,9 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1032,7 +1098,9 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
@@ -1055,7 +1123,9 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
@@ -1089,7 +1159,9 @@ export type UserUpdateWithoutManagedProjectsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1112,7 +1184,9 @@ export type UserUncheckedUpdateWithoutManagedProjectsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1135,7 +1209,9 @@ export type UserCreateWithoutCreatedTasksInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1158,7 +1234,9 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1186,7 +1264,9 @@ export type UserCreateWithoutAssignedTasksInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1209,7 +1289,9 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1248,7 +1330,9 @@ export type UserUpdateWithoutCreatedTasksInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1271,7 +1355,9 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1305,7 +1391,9 @@ export type UserUpdateWithoutAssignedTasksInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1328,7 +1416,9 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1351,7 +1441,9 @@ export type UserCreateWithoutOtpCodesInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1374,7 +1466,9 @@ export type UserUncheckedCreateWithoutOtpCodesInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1413,7 +1507,9 @@ export type UserUpdateWithoutOtpCodesInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1436,7 +1532,9 @@ export type UserUncheckedUpdateWithoutOtpCodesInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1459,7 +1557,9 @@ export type UserCreateWithoutProjectAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1482,7 +1582,9 @@ export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1521,7 +1623,9 @@ export type UserUpdateWithoutProjectAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1544,7 +1648,9 @@ export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1567,7 +1673,9 @@ export type UserCreateWithoutTaskAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1590,7 +1698,9 @@ export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1629,7 +1739,9 @@ export type UserUpdateWithoutTaskAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1652,7 +1764,9 @@ export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1675,7 +1789,9 @@ export type UserCreateWithoutAuthAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
@@ -1698,7 +1814,9 @@ export type UserUncheckedCreateWithoutAuthAuditLogsInput = {
   lastPasswordChange?: Date | string | null
   roles?: Prisma.UserCreaterolesInput | string[]
   status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1737,7 +1855,9 @@ export type UserUpdateWithoutAuthAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
@@ -1760,7 +1880,9 @@ export type UserUncheckedUpdateWithoutAuthAuditLogsInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1783,7 +1905,9 @@ export type UserUpdateWithoutOfficesInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
@@ -1806,7 +1930,9 @@ export type UserUncheckedUpdateWithoutOfficesInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
@@ -1829,7 +1955,9 @@ export type UserUncheckedUpdateManyWithoutOfficesInput = {
   lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   roles?: Prisma.UserUpdaterolesInput | string[]
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1946,7 +2074,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
+  lockedUntil?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   offices?: boolean | Prisma.User$officesArgs<ExtArgs>
   ownedOffice?: boolean | Prisma.User$ownedOfficeArgs<ExtArgs>
   createdProjects?: boolean | Prisma.User$createdProjectsArgs<ExtArgs>
@@ -1971,7 +2101,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
+  lockedUntil?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1985,7 +2117,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
+  lockedUntil?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1999,10 +2133,12 @@ export type UserSelectScalar = {
   lastPasswordChange?: boolean
   roles?: boolean
   status?: boolean
+  lockedUntil?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "email" | "phone" | "username" | "passwordHash" | "refreshTokenHash" | "lastPasswordChange" | "roles" | "status" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "email" | "phone" | "username" | "passwordHash" | "refreshTokenHash" | "lastPasswordChange" | "roles" | "status" | "lockedUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   offices?: boolean | Prisma.User$officesArgs<ExtArgs>
   ownedOffice?: boolean | Prisma.User$ownedOfficeArgs<ExtArgs>
@@ -2044,7 +2180,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastPasswordChange: Date | null
     roles: string[]
     status: $Enums.UserStatus
+    lockedUntil: Date | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2488,7 +2626,9 @@ export interface UserFieldRefs {
   readonly lastPasswordChange: Prisma.FieldRef<"User", 'DateTime'>
   readonly roles: Prisma.FieldRef<"User", 'String[]'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
+  readonly lockedUntil: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 

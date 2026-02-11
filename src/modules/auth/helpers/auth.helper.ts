@@ -65,7 +65,7 @@ export class AuthHelper {
         return new Date(Date.now() + this.OTP_EXPIRY_MINUTES * AUTH_CONSTANTS.MILLISECONDS_PER_MINUTE);
     }
 
-    
+
 
     /**
      * Validate user exists by username
@@ -219,6 +219,7 @@ export class AuthHelper {
         await this.authRepository.createOtpCode({
             userId: user.id,
             officeId: this.getUserOfficeId(user),
+            email: user.email,
             purpose,
             channel,
             codeHash,

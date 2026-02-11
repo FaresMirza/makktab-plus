@@ -28,20 +28,25 @@ export type AggregateOtpCode = {
 
 export type OtpCodeAvgAggregateOutputType = {
   attempts: number | null
+  maxAttempts: number | null
 }
 
 export type OtpCodeSumAggregateOutputType = {
   attempts: number | null
+  maxAttempts: number | null
 }
 
 export type OtpCodeMinAggregateOutputType = {
   id: string | null
   userId: string | null
   officeId: string | null
+  email: string | null
   purpose: $Enums.OtpPurpose | null
   channel: $Enums.OtpChannel | null
   codeHash: string | null
   attempts: number | null
+  maxAttempts: number | null
+  status: $Enums.OtpStatus | null
   deviceFingerprint: string | null
   ip: string | null
   userAgent: string | null
@@ -56,10 +61,13 @@ export type OtpCodeMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   officeId: string | null
+  email: string | null
   purpose: $Enums.OtpPurpose | null
   channel: $Enums.OtpChannel | null
   codeHash: string | null
   attempts: number | null
+  maxAttempts: number | null
+  status: $Enums.OtpStatus | null
   deviceFingerprint: string | null
   ip: string | null
   userAgent: string | null
@@ -74,10 +82,13 @@ export type OtpCodeCountAggregateOutputType = {
   id: number
   userId: number
   officeId: number
+  email: number
   purpose: number
   channel: number
   codeHash: number
   attempts: number
+  maxAttempts: number
+  status: number
   deviceFingerprint: number
   ip: number
   userAgent: number
@@ -92,20 +103,25 @@ export type OtpCodeCountAggregateOutputType = {
 
 export type OtpCodeAvgAggregateInputType = {
   attempts?: true
+  maxAttempts?: true
 }
 
 export type OtpCodeSumAggregateInputType = {
   attempts?: true
+  maxAttempts?: true
 }
 
 export type OtpCodeMinAggregateInputType = {
   id?: true
   userId?: true
   officeId?: true
+  email?: true
   purpose?: true
   channel?: true
   codeHash?: true
   attempts?: true
+  maxAttempts?: true
+  status?: true
   deviceFingerprint?: true
   ip?: true
   userAgent?: true
@@ -120,10 +136,13 @@ export type OtpCodeMaxAggregateInputType = {
   id?: true
   userId?: true
   officeId?: true
+  email?: true
   purpose?: true
   channel?: true
   codeHash?: true
   attempts?: true
+  maxAttempts?: true
+  status?: true
   deviceFingerprint?: true
   ip?: true
   userAgent?: true
@@ -138,10 +157,13 @@ export type OtpCodeCountAggregateInputType = {
   id?: true
   userId?: true
   officeId?: true
+  email?: true
   purpose?: true
   channel?: true
   codeHash?: true
   attempts?: true
+  maxAttempts?: true
+  status?: true
   deviceFingerprint?: true
   ip?: true
   userAgent?: true
@@ -243,10 +265,13 @@ export type OtpCodeGroupByOutputType = {
   id: string
   userId: string
   officeId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
   attempts: number
+  maxAttempts: number
+  status: $Enums.OtpStatus
   deviceFingerprint: string | null
   ip: string | null
   userAgent: string | null
@@ -284,10 +309,13 @@ export type OtpCodeWhereInput = {
   id?: Prisma.StringFilter<"OtpCode"> | string
   userId?: Prisma.StringFilter<"OtpCode"> | string
   officeId?: Prisma.StringFilter<"OtpCode"> | string
+  email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
   codeHash?: Prisma.StringFilter<"OtpCode"> | string
   attempts?: Prisma.IntFilter<"OtpCode"> | number
+  maxAttempts?: Prisma.IntFilter<"OtpCode"> | number
+  status?: Prisma.EnumOtpStatusFilter<"OtpCode"> | $Enums.OtpStatus
   deviceFingerprint?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   ip?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   userAgent?: Prisma.StringNullableFilter<"OtpCode"> | string | null
@@ -304,10 +332,13 @@ export type OtpCodeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   deviceFingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   ip?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -327,10 +358,13 @@ export type OtpCodeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OtpCodeWhereInput | Prisma.OtpCodeWhereInput[]
   userId?: Prisma.StringFilter<"OtpCode"> | string
   officeId?: Prisma.StringFilter<"OtpCode"> | string
+  email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
   codeHash?: Prisma.StringFilter<"OtpCode"> | string
   attempts?: Prisma.IntFilter<"OtpCode"> | number
+  maxAttempts?: Prisma.IntFilter<"OtpCode"> | number
+  status?: Prisma.EnumOtpStatusFilter<"OtpCode"> | $Enums.OtpStatus
   deviceFingerprint?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   ip?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   userAgent?: Prisma.StringNullableFilter<"OtpCode"> | string | null
@@ -347,10 +381,13 @@ export type OtpCodeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   deviceFingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   ip?: Prisma.SortOrderInput | Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,10 +410,13 @@ export type OtpCodeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
   userId?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
   officeId?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
+  email?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeWithAggregatesFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelWithAggregatesFilter<"OtpCode"> | $Enums.OtpChannel
   codeHash?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
   attempts?: Prisma.IntWithAggregatesFilter<"OtpCode"> | number
+  maxAttempts?: Prisma.IntWithAggregatesFilter<"OtpCode"> | number
+  status?: Prisma.EnumOtpStatusWithAggregatesFilter<"OtpCode"> | $Enums.OtpStatus
   deviceFingerprint?: Prisma.StringNullableWithAggregatesFilter<"OtpCode"> | string | null
   ip?: Prisma.StringNullableWithAggregatesFilter<"OtpCode"> | string | null
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"OtpCode"> | string | null
@@ -389,10 +429,13 @@ export type OtpCodeScalarWhereWithAggregatesInput = {
 
 export type OtpCodeCreateInput = {
   id?: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -409,10 +452,13 @@ export type OtpCodeUncheckedCreateInput = {
   id?: string
   userId: string
   officeId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -425,10 +471,13 @@ export type OtpCodeUncheckedCreateInput = {
 
 export type OtpCodeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,10 +494,13 @@ export type OtpCodeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   officeId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -463,10 +515,13 @@ export type OtpCodeCreateManyInput = {
   id?: string
   userId: string
   officeId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -479,10 +534,13 @@ export type OtpCodeCreateManyInput = {
 
 export type OtpCodeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -497,10 +555,13 @@ export type OtpCodeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   officeId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -525,10 +586,13 @@ export type OtpCodeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   deviceFingerprint?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
@@ -541,16 +605,20 @@ export type OtpCodeCountOrderByAggregateInput = {
 
 export type OtpCodeAvgOrderByAggregateInput = {
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
 }
 
 export type OtpCodeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   deviceFingerprint?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
@@ -565,10 +633,13 @@ export type OtpCodeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   codeHash?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   deviceFingerprint?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
@@ -581,6 +652,7 @@ export type OtpCodeMinOrderByAggregateInput = {
 
 export type OtpCodeSumOrderByAggregateInput = {
   attempts?: Prisma.SortOrder
+  maxAttempts?: Prisma.SortOrder
 }
 
 export type OtpCodeCreateNestedManyWithoutOfficeInput = {
@@ -683,12 +755,19 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumOtpStatusFieldUpdateOperationsInput = {
+  set?: $Enums.OtpStatus
+}
+
 export type OtpCodeCreateWithoutOfficeInput = {
   id?: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -703,10 +782,13 @@ export type OtpCodeCreateWithoutOfficeInput = {
 export type OtpCodeUncheckedCreateWithoutOfficeInput = {
   id?: string
   userId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -750,10 +832,13 @@ export type OtpCodeScalarWhereInput = {
   id?: Prisma.StringFilter<"OtpCode"> | string
   userId?: Prisma.StringFilter<"OtpCode"> | string
   officeId?: Prisma.StringFilter<"OtpCode"> | string
+  email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
   codeHash?: Prisma.StringFilter<"OtpCode"> | string
   attempts?: Prisma.IntFilter<"OtpCode"> | number
+  maxAttempts?: Prisma.IntFilter<"OtpCode"> | number
+  status?: Prisma.EnumOtpStatusFilter<"OtpCode"> | $Enums.OtpStatus
   deviceFingerprint?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   ip?: Prisma.StringNullableFilter<"OtpCode"> | string | null
   userAgent?: Prisma.StringNullableFilter<"OtpCode"> | string | null
@@ -766,10 +851,13 @@ export type OtpCodeScalarWhereInput = {
 
 export type OtpCodeCreateWithoutUserInput = {
   id?: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -784,10 +872,13 @@ export type OtpCodeCreateWithoutUserInput = {
 export type OtpCodeUncheckedCreateWithoutUserInput = {
   id?: string
   officeId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -827,10 +918,13 @@ export type OtpCodeUpdateManyWithWhereWithoutUserInput = {
 export type OtpCodeCreateManyOfficeInput = {
   id?: string
   userId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -843,10 +937,13 @@ export type OtpCodeCreateManyOfficeInput = {
 
 export type OtpCodeUpdateWithoutOfficeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -861,10 +958,13 @@ export type OtpCodeUpdateWithoutOfficeInput = {
 export type OtpCodeUncheckedUpdateWithoutOfficeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -878,10 +978,13 @@ export type OtpCodeUncheckedUpdateWithoutOfficeInput = {
 export type OtpCodeUncheckedUpdateManyWithoutOfficeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -895,10 +998,13 @@ export type OtpCodeUncheckedUpdateManyWithoutOfficeInput = {
 export type OtpCodeCreateManyUserInput = {
   id?: string
   officeId: string
+  email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
   codeHash: string
-  attempts: number
+  attempts?: number
+  maxAttempts?: number
+  status?: $Enums.OtpStatus
   deviceFingerprint?: string | null
   ip?: string | null
   userAgent?: string | null
@@ -911,10 +1017,13 @@ export type OtpCodeCreateManyUserInput = {
 
 export type OtpCodeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -929,10 +1038,13 @@ export type OtpCodeUpdateWithoutUserInput = {
 export type OtpCodeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   officeId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -946,10 +1058,13 @@ export type OtpCodeUncheckedUpdateWithoutUserInput = {
 export type OtpCodeUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   officeId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -966,10 +1081,13 @@ export type OtpCodeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   userId?: boolean
   officeId?: boolean
+  email?: boolean
   purpose?: boolean
   channel?: boolean
   codeHash?: boolean
   attempts?: boolean
+  maxAttempts?: boolean
+  status?: boolean
   deviceFingerprint?: boolean
   ip?: boolean
   userAgent?: boolean
@@ -986,10 +1104,13 @@ export type OtpCodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   officeId?: boolean
+  email?: boolean
   purpose?: boolean
   channel?: boolean
   codeHash?: boolean
   attempts?: boolean
+  maxAttempts?: boolean
+  status?: boolean
   deviceFingerprint?: boolean
   ip?: boolean
   userAgent?: boolean
@@ -1006,10 +1127,13 @@ export type OtpCodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   officeId?: boolean
+  email?: boolean
   purpose?: boolean
   channel?: boolean
   codeHash?: boolean
   attempts?: boolean
+  maxAttempts?: boolean
+  status?: boolean
   deviceFingerprint?: boolean
   ip?: boolean
   userAgent?: boolean
@@ -1026,10 +1150,13 @@ export type OtpCodeSelectScalar = {
   id?: boolean
   userId?: boolean
   officeId?: boolean
+  email?: boolean
   purpose?: boolean
   channel?: boolean
   codeHash?: boolean
   attempts?: boolean
+  maxAttempts?: boolean
+  status?: boolean
   deviceFingerprint?: boolean
   ip?: boolean
   userAgent?: boolean
@@ -1040,7 +1167,7 @@ export type OtpCodeSelectScalar = {
   createdAt?: boolean
 }
 
-export type OtpCodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "officeId" | "purpose" | "channel" | "codeHash" | "attempts" | "deviceFingerprint" | "ip" | "userAgent" | "emailSnapshot" | "phoneSnapshot" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["otpCode"]>
+export type OtpCodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "officeId" | "email" | "purpose" | "channel" | "codeHash" | "attempts" | "maxAttempts" | "status" | "deviceFingerprint" | "ip" | "userAgent" | "emailSnapshot" | "phoneSnapshot" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["otpCode"]>
 export type OtpCodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
@@ -1064,10 +1191,13 @@ export type $OtpCodePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     userId: string
     officeId: string
+    email: string
     purpose: $Enums.OtpPurpose
     channel: $Enums.OtpChannel
     codeHash: string
     attempts: number
+    maxAttempts: number
+    status: $Enums.OtpStatus
     deviceFingerprint: string | null
     ip: string | null
     userAgent: string | null
@@ -1504,10 +1634,13 @@ export interface OtpCodeFieldRefs {
   readonly id: Prisma.FieldRef<"OtpCode", 'String'>
   readonly userId: Prisma.FieldRef<"OtpCode", 'String'>
   readonly officeId: Prisma.FieldRef<"OtpCode", 'String'>
+  readonly email: Prisma.FieldRef<"OtpCode", 'String'>
   readonly purpose: Prisma.FieldRef<"OtpCode", 'OtpPurpose'>
   readonly channel: Prisma.FieldRef<"OtpCode", 'OtpChannel'>
   readonly codeHash: Prisma.FieldRef<"OtpCode", 'String'>
   readonly attempts: Prisma.FieldRef<"OtpCode", 'Int'>
+  readonly maxAttempts: Prisma.FieldRef<"OtpCode", 'Int'>
+  readonly status: Prisma.FieldRef<"OtpCode", 'OtpStatus'>
   readonly deviceFingerprint: Prisma.FieldRef<"OtpCode", 'String'>
   readonly ip: Prisma.FieldRef<"OtpCode", 'String'>
   readonly userAgent: Prisma.FieldRef<"OtpCode", 'String'>

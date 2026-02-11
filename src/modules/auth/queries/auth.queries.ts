@@ -16,6 +16,7 @@ export class AuthRepository {
     async createOtpCode(data: {
         userId: string;
         officeId: string;
+        email: string;
         purpose: OtpPurpose;
         channel: OtpChannel;
         codeHash: string;

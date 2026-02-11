@@ -20,6 +20,8 @@ export type OfficeStatus = (typeof OfficeStatus)[keyof typeof OfficeStatus]
 export const UserStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
+  LOCKED: 'LOCKED',
+  SUSPENDED: 'SUSPENDED',
   DEACTIVATED: 'DEACTIVATED'
 } as const
 
@@ -61,6 +63,16 @@ export const OtpChannel = {
 } as const
 
 export type OtpChannel = (typeof OtpChannel)[keyof typeof OtpChannel]
+
+
+export const OtpStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  EXPIRED: 'EXPIRED',
+  BLOCKED: 'BLOCKED'
+} as const
+
+export type OtpStatus = (typeof OtpStatus)[keyof typeof OtpStatus]
 
 
 export const ProjectAction = {
