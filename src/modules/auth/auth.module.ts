@@ -5,7 +5,8 @@ import { AuthHelper } from './helpers/auth.helper';
 import { AuthRepository } from './queries/auth.queries';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuditModule } from '../audit/audit.module';
-import { UsersModule } from '../users/users.module'; // Import UsersModule
+import { UsersModule } from '../users/users.module';
+import { OtpModule } from '../otps/otps.module';
 
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -22,6 +23,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         }),
         AuditModule,
         UsersModule,
+        OtpModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, AuthHelper, AuthRepository, JwtStrategy],

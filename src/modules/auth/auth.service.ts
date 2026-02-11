@@ -1,26 +1,25 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthHelper } from './helpers/auth.helper';
-import { AuthRepository } from './queries/auth.queries';
 import { AUTH_MESSAGES } from './constants/messages.constant';
 import { UsersRepository } from '../users/queries/users.queries';
+import { OtpService } from '../otps/otps.service';
 import { LoginDto } from './dto/login.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordWithOtpDto } from './dto/reset-password-with-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { OtpPurpose, OtpChannel, AuthAuditEvent } from 'prisma/src/generated/prisma-client/client';
+import { OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly authHelper: AuthHelper,
-        private readonly authRepository: AuthRepository,
         private readonly usersRepository: UsersRepository,
+        private readonly otpService: OtpService,
         private readonly jwtService: JwtService,
     ) { }
-
 
     async login(loginDto: LoginDto, ip: string, userAgent: string) {
         let user;
@@ -36,17 +35,16 @@ export class AuthService {
             this.authHelper.throwInvalidCredentials();
         }
 
-        // Check password
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
-        // Generate and Save OTP
-        await this.authHelper.generateAndSaveOtp(user, OtpPurpose.LOGIN, OtpChannel.EMAIL, ip, userAgent);
-
+        await this.otpService.sendOtp(
+            { email: user.email, purpose: OtpPurpose.LOGIN, channel: OtpChannel.EMAIL },
+            ip,
+            userAgent,
+        );
 
         return { message: AUTH_MESSAGES.OTP_SENT };
     }
-
-
 
     async verifyLogin(dto: VerifyLoginOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
         const { username, password, otp } = dto as any;
@@ -61,38 +59,41 @@ export class AuthService {
 
         await this.authHelper.validatePassword(password, user, ip, userAgent, deviceFingerprint);
 
-        // Verify OTP
-        await this.authHelper.verifyAndUseOtp(user.id, otp, OtpPurpose.LOGIN, ip, userAgent, deviceFingerprint);
+        await this.otpService.verifyOtp(
+            { email: user.email, otp, purpose: OtpPurpose.LOGIN },
+            ip,
+            userAgent,
+        );
 
-        // Generate Tokens and Update User
         const tokens = await this.authHelper.generateTokens(user);
 
-        // Audit Login Success
         await this.authHelper.logAudit({
             userId: user.id,
             event: 'LOGIN_SUCCESS',
             ip,
             userAgent,
-            deviceFingerprint
+            deviceFingerprint,
         });
 
         return tokens;
     }
 
-
     async forgotPassword(dto: ForgotPasswordDto, ip: string, userAgent: string) {
         const usernameOrEmail = dto.username;
 
-        const user = await this.usersRepository.findByUsername(usernameOrEmail) || await this.usersRepository.findByEmail(usernameOrEmail);
+        const user = await this.usersRepository.findByUsername(usernameOrEmail)
+            || await this.usersRepository.findByEmail(usernameOrEmail);
 
         if (user) {
-            await this.authHelper.generateAndSaveOtp(user, OtpPurpose.RESET_PASSWORD, OtpChannel.EMAIL, ip, userAgent);
-
+            await this.otpService.sendOtp(
+                { email: user.email, purpose: OtpPurpose.RESET_PASSWORD, channel: OtpChannel.EMAIL },
+                ip,
+                userAgent,
+            );
         }
 
         return { message: AUTH_MESSAGES.OTP_SENT };
     }
-
 
     async verifyForgotPassword(dto: ResetPasswordWithOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
         const { username, otp, newPassword, confirmPassword } = dto;
@@ -101,12 +102,12 @@ export class AuthService {
             throw new BadRequestException(AUTH_MESSAGES.PASSWORDS_DO_NOT_MATCH);
         }
 
-        const user = await this.usersRepository.findByUsername(username) || await this.usersRepository.findByEmail(username);
+        const user = await this.usersRepository.findByUsername(username)
+            || await this.usersRepository.findByEmail(username);
         if (!user) {
             throw new BadRequestException(AUTH_MESSAGES.INVALID_REQUEST);
         }
 
-        // Check last password change < 48 hours
         this.authHelper.checkPasswordChangeAllowed(user.lastPasswordChange);
 
         const isSame = await this.authHelper.verifyPassword(newPassword, user.passwordHash);
@@ -114,28 +115,27 @@ export class AuthService {
             throw new BadRequestException(AUTH_MESSAGES.SAME_PASSWORD);
         }
 
-        await this.authHelper.verifyAndUseOtp(user.id, otp, OtpPurpose.RESET_PASSWORD, ip, userAgent, deviceFingerprint);
+        await this.otpService.verifyOtp(
+            { email: user.email, otp, purpose: OtpPurpose.RESET_PASSWORD },
+            ip,
+            userAgent,
+        );
 
         const passwordHash = await this.authHelper.hashPassword(newPassword);
-
-        // Update password & Revoke tokens & Log
         await this.usersRepository.updatePassword(user.id, passwordHash);
-
 
         await this.authHelper.logAudit({
             userId: user.id,
             event: 'PASSWORD_CHANGED',
             ip,
             userAgent,
-            deviceFingerprint
+            deviceFingerprint,
         });
 
         return { message: AUTH_MESSAGES.PASSWORD_CHANGED };
     }
 
-
     async resetPassword(userId: string, dto: ResetPasswordDto, ip: string, userAgent: string, deviceFingerprint: string) {
-        // Validate Access Token - handled by Guard in Controller, so userId is valid.
         const user = await this.usersRepository.findByIdSimple(userId);
         if (!user) throw new UnauthorizedException();
 
@@ -149,21 +149,18 @@ export class AuthService {
         this.authHelper.checkPasswordChangeAllowed(user.lastPasswordChange);
 
         const passwordHash = await this.authHelper.hashPassword(newPassword);
-
         await this.usersRepository.updatePassword(user.id, passwordHash);
-
 
         await this.authHelper.logAudit({
             userId: user.id,
             event: 'PASSWORD_RESET',
             ip,
             userAgent,
-            deviceFingerprint
+            deviceFingerprint,
         });
 
         return { message: AUTH_MESSAGES.PASSWORD_RESET };
     }
-
 
     async refresh(dto: RefreshTokenDto, ip: string, userAgent: string) {
         let userId: string;
@@ -184,14 +181,9 @@ export class AuthService {
             throw new UnauthorizedException(AUTH_MESSAGES.INVALID_REFRESH_TOKEN);
         }
 
-        // Issue new Access Token only
         const payload = { sub: user.id, username: user.username, roles: user.roles };
         const accessToken = await this.jwtService.signAsync(payload);
 
         return { access_token: accessToken };
     }
-
-
-
-
 }
