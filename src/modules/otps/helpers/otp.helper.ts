@@ -6,14 +6,18 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { OtpRepository } from '../queries/otp.queries';
+import { AuditRepository } from '../../audit/queries/audit.queries';
 import { OTP_CONSTANTS, OTP_MESSAGES } from '../constants/otp.constants';
-import { OtpPurpose, OtpChannel, UserStatus } from 'prisma/src/generated/prisma-client/client';
+import { OtpPurpose, OtpChannel, UserStatus, AuthAuditEvent } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class OtpHelper {
     private readonly logger = new Logger(OtpHelper.name);
 
-    constructor(private readonly otpRepository: OtpRepository) { }
+    constructor(
+        private readonly otpRepository: OtpRepository,
+        private readonly auditRepository: AuditRepository,
+    ) { }
 
     // ─── USER VALIDATION ──────────────────────────────────────────
 
@@ -48,6 +52,11 @@ export class OtpHelper {
             const now = new Date();
 
             if (user.lockedUntil > now) {
+                await this.auditRepository.createAuthLog({
+                    userId: user.id,
+                    event: AuthAuditEvent.BLOCKED_ACCESS,
+                    reason: 'Locked user attempted OTP request',
+                });
                 throw new ForbiddenException(OTP_MESSAGES.USER_LOCKED);
             }
 
@@ -67,6 +76,11 @@ export class OtpHelper {
             && new Date(user.lockedUntil) > new Date();
 
         if (isBlocked) {
+            this.auditRepository.createAuthLog({
+                userId: user.id,
+                event: AuthAuditEvent.BLOCKED_ACCESS,
+                reason: 'Blocked user attempted OTP verification',
+            });
             throw new ForbiddenException(OTP_MESSAGES.USER_LOCKED);
         }
     }
@@ -88,6 +102,12 @@ export class OtpHelper {
         if (recentCount >= maxRequests) {
             const lockedUntil = new Date(Date.now() + lockDurationMs);
             await this.otpRepository.lockUser(userId, lockedUntil);
+
+            await this.auditRepository.createAuthLog({
+                userId,
+                event: AuthAuditEvent.RATE_LIMIT_EXCEEDED,
+                reason: `Exceeded ${maxRequests} OTP requests in ${OTP_CONSTANTS.RATE_LIMIT_WINDOW_MINUTES}min. Locked for ${OTP_CONSTANTS.LOCK_DURATION_MINUTES}min.`,
+            });
 
             this.logger.warn(`User ${userId} locked: exceeded ${maxRequests} OTP requests in ${OTP_CONSTANTS.RATE_LIMIT_WINDOW_MINUTES}min.`);
             throw new ForbiddenException(OTP_MESSAGES.RATE_LIMIT_EXCEEDED);
@@ -228,6 +248,7 @@ export class OtpHelper {
 
         if (!isValid) {
             await this.otpRepository.incrementAttempts(otpRecord.id);
+            await this.logInvalidOtpAudit(user, otpRecord);
         }
 
         const newAttempts = otpRecord.attempts + 1;
@@ -236,12 +257,36 @@ export class OtpHelper {
         if (isBlocked) {
             await this.otpRepository.blockOtp(otpRecord.id);
             await this.lockUserForDuration(user.id);
+
+            await this.auditRepository.createAuthLog({
+                userId: user.id,
+                event: AuthAuditEvent.OTP_MAX_ATTEMPTS,
+                reason: `Max OTP attempts exceeded (${otpRecord.maxAttempts}/${otpRecord.maxAttempts}). Account locked.`,
+                ip: otpRecord.ip,
+                userAgent: otpRecord.userAgent,
+                deviceFingerprint: otpRecord.deviceFingerprint,
+            });
+
             throw new BadRequestException(OTP_MESSAGES.OTP_BLOCKED);
         }
 
         if (!isValid) {
             throw new BadRequestException(OTP_MESSAGES.OTP_INVALID);
         }
+    }
+
+    /**
+     * Log an INVALID_OTP audit event.
+     */
+    private async logInvalidOtpAudit(user: any, otpRecord: any): Promise<void> {
+        await this.auditRepository.createAuthLog({
+            userId: user.id,
+            event: AuthAuditEvent.INVALID_OTP,
+            reason: `Failed OTP attempt (attempt ${otpRecord.attempts + 1}/${otpRecord.maxAttempts})`,
+            ip: otpRecord.ip,
+            userAgent: otpRecord.userAgent,
+            deviceFingerprint: otpRecord.deviceFingerprint,
+        });
     }
 
     // ─── PRIVATE UTILITIES ────────────────────────────────────────
