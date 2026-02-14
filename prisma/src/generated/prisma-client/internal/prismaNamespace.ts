@@ -391,6 +391,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Office: 'Office',
+  OfficeRequest: 'OfficeRequest',
   User: 'User',
   Role: 'Role',
   Project: 'Project',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "office" | "user" | "role" | "project" | "task" | "otpCode" | "projectAuditLog" | "taskAuditLog" | "authAuditLog"
+    modelProps: "office" | "officeRequest" | "user" | "role" | "project" | "task" | "otpCode" | "projectAuditLog" | "taskAuditLog" | "authAuditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -489,6 +490,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OfficeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OfficeCountAggregateOutputType> | number
+        }
+      }
+    }
+    OfficeRequest: {
+      payload: Prisma.$OfficeRequestPayload<ExtArgs>
+      fields: Prisma.OfficeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfficeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfficeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.OfficeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfficeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.OfficeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.OfficeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.OfficeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfficeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.OfficeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        update: {
+          args: Prisma.OfficeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.OfficeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfficeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfficeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.OfficeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.OfficeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfficeRequest>
+        }
+        groupBy: {
+          args: Prisma.OfficeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfficeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficeRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -1135,6 +1210,21 @@ export const OfficeScalarFieldEnum = {
 export type OfficeScalarFieldEnum = (typeof OfficeScalarFieldEnum)[keyof typeof OfficeScalarFieldEnum]
 
 
+export const OfficeRequestScalarFieldEnum = {
+  id: 'id',
+  officeName: 'officeName',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  username: 'username',
+  passwordHash: 'passwordHash',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type OfficeRequestScalarFieldEnum = (typeof OfficeRequestScalarFieldEnum)[keyof typeof OfficeRequestScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   publicId: 'publicId',
@@ -1357,6 +1447,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1587,6 +1684,7 @@ export interface PrismaClientOptions {
 }
 export type GlobalOmitConfig = {
   office?: Prisma.OfficeOmit
+  officeRequest?: Prisma.OfficeRequestOmit
   user?: Prisma.UserOmit
   role?: Prisma.RoleOmit
   project?: Prisma.ProjectOmit

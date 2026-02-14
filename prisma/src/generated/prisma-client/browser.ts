@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type Office = Prisma.OfficeModel
 /**
+ * Model OfficeRequest
+ * 
+ */
+export type OfficeRequest = Prisma.OfficeRequestModel
+/**
  * Model User
  * 
  */

@@ -27,11 +27,23 @@ model Office {
   taskAuditLogs    TaskAuditLog[]
 }
 
+model OfficeRequest {
+  id           Int      @id @default(autoincrement())
+  officeName   String
+  fullName     String
+  email        String
+  phone        String
+  username     String
+  passwordHash String
+  status       Boolean?
+  createdAt    DateTime @default(now())
+}
+
 model User {
   id                 Int        @id @default(autoincrement())
   publicId           String     @unique @default(uuid())
   fullName           String
-  email              String     @unique
+  email              String
   phone              String
   username           String     @unique
   passwordHash       String
@@ -50,6 +62,7 @@ model User {
   createdTasks     Task[]            @relation("CreatedTasks")
   assignedTasks    Task[]            @relation("AssignedTasks")
   otpCodes         OtpCode[]
+
 
   authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]

@@ -50,6 +50,7 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 export const ModelName = {
   Office: 'Office',
+  OfficeRequest: 'OfficeRequest',
   User: 'User',
   Role: 'Role',
   Project: 'Project',
@@ -86,6 +87,21 @@ export const OfficeScalarFieldEnum = {
 } as const
 
 export type OfficeScalarFieldEnum = (typeof OfficeScalarFieldEnum)[keyof typeof OfficeScalarFieldEnum]
+
+
+export const OfficeRequestScalarFieldEnum = {
+  id: 'id',
+  officeName: 'officeName',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  username: 'username',
+  passwordHash: 'passwordHash',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type OfficeRequestScalarFieldEnum = (typeof OfficeRequestScalarFieldEnum)[keyof typeof OfficeRequestScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

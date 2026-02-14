@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Office'
+export type * from './models/OfficeRequest'
 export type * from './models/User'
 export type * from './models/Role'
 export type * from './models/Project'
