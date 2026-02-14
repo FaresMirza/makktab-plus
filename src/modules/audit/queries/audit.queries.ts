@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma, ProjectAction,  TaskAction, AuthAuditEvent } from '../../../../prisma/src/generated/prisma-client/client';
+import { Prisma, ProjectAction, TaskAction, AuthAuditEvent } from '../../../../prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuditRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-  
+
     // --- Auth Audit Logs ---
 
     async createAuthLog(data: Prisma.AuthAuditLogUncheckedCreateInput) {
@@ -21,13 +21,13 @@ export class AuditRepository {
         });
     }
 
-    async findAuthLogById(id: string) {
+    async findAuthLogById(id: number) {
         return this.prisma.authAuditLog.findUnique({
             where: { id },
         });
     }
 
-    async findAuthLogsByUser(userId: string) {
+    async findAuthLogsByUser(userId: number) {
         return this.prisma.authAuditLog.findMany({
             where: { userId },
             orderBy: { createdAt: 'desc' },

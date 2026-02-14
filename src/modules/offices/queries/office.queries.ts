@@ -7,6 +7,7 @@ export class OfficesRepository {
     private get ownerSelect(): Prisma.UserSelect {
         return {
             id: true,
+            publicId: true,
             fullName: true,
             email: true,
             username: true,
@@ -59,6 +60,7 @@ export class OfficesRepository {
             users: {
                 select: {
                     id: true,
+                    publicId: true,
                     fullName: true,
                     email: true,
                     username: true,
@@ -69,6 +71,7 @@ export class OfficesRepository {
             projects: {
                 select: {
                     id: true,
+                    publicId: true,
                     name: true,
                     description: true,
                     status: true,
@@ -100,40 +103,67 @@ export class OfficesRepository {
         });
     }
 
-    async findById(id: string) {
+    async findById(id: number) {
         return this.prisma.office.findUnique({
             where: { id },
             include: this.officeDetailInclude,
         });
     }
 
-    async findByIdWithCounts(id: string) {
+    async findByPublicId(publicId: string) {
+        return this.prisma.office.findUnique({
+            where: { publicId },
+            include: this.officeDetailInclude,
+        });
+    }
+
+    async findByIdWithCounts(id: number) {
         return this.prisma.office.findUnique({
             where: { id },
             include: this.officeCountInclude,
         });
     }
 
-    async findByIdWithStatistics(id: string) {
+    async findByPublicIdWithCounts(publicId: string) {
+        return this.prisma.office.findUnique({
+            where: { publicId },
+            include: this.officeCountInclude,
+        });
+    }
+
+    async findByIdWithStatistics(id: number) {
         return this.prisma.office.findUnique({
             where: { id },
             include: this.officeStatisticsInclude,
         });
     }
 
-    async findByIdSimple(id: string) {
+    async findByPublicIdWithStatistics(publicId: string) {
+        return this.prisma.office.findUnique({
+            where: { publicId },
+            include: this.officeStatisticsInclude,
+        });
+    }
+
+    async findByIdSimple(id: number) {
         return this.prisma.office.findUnique({
             where: { id },
         });
     }
 
-    async findByOwnerSimple(ownerUserId: string) {
+    async findByPublicIdSimple(publicId: string) {
+        return this.prisma.office.findUnique({
+            where: { publicId },
+        });
+    }
+
+    async findByOwnerSimple(ownerUserId: number) {
         return this.prisma.office.findUnique({
             where: { ownerUserId },
         });
     }
 
-    async findByOwner(ownerUserId: string) { // Original method
+    async findByOwner(ownerUserId: number) {
         return this.prisma.office.findUnique({
             where: { ownerUserId },
             include: this.officeListInclude,
@@ -150,7 +180,7 @@ export class OfficesRepository {
         });
     }
 
-    async update(id: string, data: Prisma.OfficeUncheckedUpdateInput) {
+    async update(id: number, data: Prisma.OfficeUncheckedUpdateInput) {
         return this.prisma.office.update({
             where: { id },
             data,
@@ -158,13 +188,13 @@ export class OfficesRepository {
         });
     }
 
-    async delete(id: string) {
+    async delete(id: number) {
         return this.prisma.office.delete({
             where: { id },
         });
     }
 
-    async softDelete(id: string) {
+    async softDelete(id: number) {
         return this.prisma.office.update({
             where: { id },
             data: { status: OfficeStatus.SUSPENDED },

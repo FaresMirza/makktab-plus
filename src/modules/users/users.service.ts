@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersHelper } from './helpers/users.helper';
 import { UsersRepository } from './queries/users.queries';
+import { OfficesRepository } from '../offices/queries/office.queries';
 import { UserStatus } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class UsersService {
   constructor(
     private readonly usersHelper: UsersHelper,
     private readonly usersRepository: UsersRepository,
+    private readonly officesRepository: OfficesRepository,
   ) { }
 
   /**
@@ -17,7 +19,7 @@ export class UsersService {
    * - Validates username and email uniqueness
    * - Hashes the password before storing
    * - Sets default status to PENDING if not provided
-   * - Connects user to office if officeId is provided
+   * - Connects user to office if officeId (publicId) is provided
    */
   async create(createUserDto: CreateUserDto) {
     const { password, email, username, officeId, ...rest } = createUserDto;
@@ -39,10 +41,15 @@ export class UsersService {
       roles: rest.roles || [],
     };
 
-    // Add office connection if officeId is provided
+    // Add office connection if officeId (publicId) is provided
     if (officeId) {
+      // Resolve office publicId to internal entity
+      const office = await this.officesRepository.findByPublicIdSimple(officeId);
+      if (!office) {
+        throw new NotFoundException(`Office with ID ${officeId} not found`);
+      }
       userData.offices = {
-        connect: { id: officeId },
+        connect: { id: office.id },
       };
     }
 
@@ -62,15 +69,15 @@ export class UsersService {
   }
 
   /**
-   * Get a specific user by ID
+   * Get a specific user by publicId
    * - Excludes passwordHash from response
    * - Includes related data
    */
-  async findOne(id: string) {
-    const user = await this.usersRepository.findById(id);
+  async findOne(publicId: string) {
+    const user = await this.usersRepository.findByPublicId(publicId);
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${publicId} not found`);
     }
 
     return this.usersHelper.formatUser(user);
@@ -107,25 +114,25 @@ export class UsersService {
 
   /**
    * Update a user
+   * - Accepts publicId
    * - Validates username and email uniqueness if changed
    * - Hashes password if provided in update
    * - Excludes passwordHash from response
    */
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    // Check if user exists
-    // Check if user exists
-    const existingUser = await this.usersHelper.validateUserExists(id);
+  async update(publicId: string, updateUserDto: UpdateUserDto) {
+    // Validate user exists and get internal entity
+    const existingUser = await this.usersHelper.validateUserExists(publicId);
 
     const { password, email, username, ...rest } = updateUserDto;
 
     // Check username uniqueness if being updated
     if (username && username !== existingUser.username) {
-      await this.usersHelper.validateUsernameUnique(username, id);
+      await this.usersHelper.validateUsernameUnique(username, publicId);
     }
 
     // Check email uniqueness if being updated
     if (email && email !== existingUser.email) {
-      await this.usersHelper.validateEmailUnique(email, id);
+      await this.usersHelper.validateEmailUnique(email, publicId);
     }
 
     // Prepare update data
@@ -139,27 +146,26 @@ export class UsersService {
       updateData.passwordHash = await this.usersHelper.hashPassword(password);
     }
 
-    const updatedUser = await this.usersRepository.update(id, updateData);
+    const updatedUser = await this.usersRepository.update(existingUser.id, updateData);
     return this.usersHelper.formatUser(updatedUser);
   }
 
   /**
    * Delete/Deactivate a user
+   * - Accepts publicId
    * - Soft delete: Sets status to DEACTIVATED
    * - Hard delete: Permanently removes user (use with caution)
    */
-  async remove(id: string, hardDelete = false) {
-    // Check if user exists
-    // Check if user exists
-    await this.usersHelper.validateUserExists(id);
+  async remove(publicId: string, hardDelete = false) {
+    const user = await this.usersHelper.validateUserExists(publicId);
 
     if (hardDelete) {
       // Hard delete - permanently remove user
-      await this.usersRepository.delete(id);
+      await this.usersRepository.delete(user.id);
       return { message: 'User permanently deleted' };
     } else {
       // Soft delete - deactivate user
-      const deactivatedUser = await this.usersRepository.softDelete(id);
+      const deactivatedUser = await this.usersRepository.softDelete(user.id);
       return this.usersHelper.formatUser(deactivatedUser);
     }
   }
@@ -175,10 +181,11 @@ export class UsersService {
 
   /**
    * Change user password
+   * - Accepts publicId
    * - Requires old password verification
    */
-  async changePassword(id: string, oldPassword: string, newPassword: string) {
-    const user = await this.usersHelper.validateUserExists(id);
+  async changePassword(publicId: string, oldPassword: string, newPassword: string) {
+    const user = await this.usersHelper.validateUserExists(publicId);
 
     // Verify old password
     const isValidPassword = await this.usersHelper.verifyPassword(oldPassword, user.passwordHash);
@@ -189,17 +196,21 @@ export class UsersService {
     // Hash new password
     const newPasswordHash = await this.usersHelper.hashPassword(newPassword);
 
-    await this.usersRepository.updatePassword(id, newPasswordHash);
+    await this.usersRepository.updatePassword(user.id, newPasswordHash);
 
     return { message: 'Password changed successfully' };
   }
 
   /**
-   * Get users by office
+   * Get users by office (by office publicId)
    * - Returns all users belonging to a specific office
    */
-  async findByOffice(officeId: string) {
-    const users = await this.usersRepository.findByOffice(officeId);
+  async findByOffice(officePublicId: string) {
+    const office = await this.officesRepository.findByPublicIdSimple(officePublicId);
+    if (!office) {
+      throw new NotFoundException(`Office with ID ${officePublicId} not found`);
+    }
+    const users = await this.usersRepository.findByOffice(office.id);
     return users.map((user) => this.usersHelper.formatUser(user));
   }
 

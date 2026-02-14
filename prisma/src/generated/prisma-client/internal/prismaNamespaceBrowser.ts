@@ -78,6 +78,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const OfficeScalarFieldEnum = {
   id: 'id',
+  publicId: 'publicId',
   name: 'name',
   ownerUserId: 'ownerUserId',
   status: 'status',
@@ -89,6 +90,7 @@ export type OfficeScalarFieldEnum = (typeof OfficeScalarFieldEnum)[keyof typeof 
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  publicId: 'publicId',
   fullName: 'fullName',
   email: 'email',
   phone: 'phone',
@@ -108,6 +110,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const RoleScalarFieldEnum = {
   id: 'id',
+  publicId: 'publicId',
   key: 'key',
   scope: 'scope',
   name: 'name',
@@ -120,6 +123,7 @@ export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof Role
 
 export const ProjectScalarFieldEnum = {
   id: 'id',
+  publicId: 'publicId',
   officeId: 'officeId',
   createdByUserId: 'createdByUserId',
   projectManagerUserId: 'projectManagerUserId',
@@ -134,6 +138,7 @@ export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeo
 
 export const TaskScalarFieldEnum = {
   id: 'id',
+  publicId: 'publicId',
   projectId: 'projectId',
   createdByUserId: 'createdByUserId',
   assignedToUserId: 'assignedToUserId',

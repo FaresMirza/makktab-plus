@@ -1,10 +1,10 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Param, 
-  Patch, 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
   Delete,
   Query,
   HttpCode,
@@ -18,13 +18,13 @@ import { UpdateOfficeDto } from './dto/update-office.dto';
 import { OfficeStatus } from 'prisma/src/generated/prisma-client/client';
 
 @Controller('offices')
-@UsePipes(new ValidationPipe({ 
-  whitelist: true, 
+@UsePipes(new ValidationPipe({
+  whitelist: true,
   forbidNonWhitelisted: true,
-  transform: true 
+  transform: true
 }))
 export class OfficesController {
-  constructor(private readonly officesService: OfficesService) {}
+  constructor(private readonly officesService: OfficesService) { }
 
   /**
    * Create a new office
@@ -41,9 +41,7 @@ export class OfficesController {
    * GET /offices?status=xxx
    */
   @Get()
-  findAll(
-    @Query('status') status?: OfficeStatus,
-  ) {
+  findAll(@Query('status') status?: OfficeStatus) {
     if (status) {
       return this.officesService.findByStatus(status);
     }
@@ -51,7 +49,7 @@ export class OfficesController {
   }
 
   /**
-   * Get office by owner user ID
+   * Get office by owner (publicId)
    * GET /offices/owner/:ownerUserId
    */
   @Get('owner/:ownerUserId')
@@ -69,7 +67,7 @@ export class OfficesController {
   }
 
   /**
-   * Get a specific office by ID
+   * Get a specific office by publicId
    * GET /offices/:id
    */
   @Get(':id')

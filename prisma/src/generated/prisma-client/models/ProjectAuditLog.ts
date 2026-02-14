@@ -20,15 +20,31 @@ export type ProjectAuditLogModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateProjectAuditLog = {
   _count: ProjectAuditLogCountAggregateOutputType | null
+  _avg: ProjectAuditLogAvgAggregateOutputType | null
+  _sum: ProjectAuditLogSumAggregateOutputType | null
   _min: ProjectAuditLogMinAggregateOutputType | null
   _max: ProjectAuditLogMaxAggregateOutputType | null
 }
 
+export type ProjectAuditLogAvgAggregateOutputType = {
+  id: number | null
+  officeId: number | null
+  projectId: number | null
+  actorUserId: number | null
+}
+
+export type ProjectAuditLogSumAggregateOutputType = {
+  id: number | null
+  officeId: number | null
+  projectId: number | null
+  actorUserId: number | null
+}
+
 export type ProjectAuditLogMinAggregateOutputType = {
-  id: string | null
-  officeId: string | null
-  projectId: string | null
-  actorUserId: string | null
+  id: number | null
+  officeId: number | null
+  projectId: number | null
+  actorUserId: number | null
   action: $Enums.ProjectAction | null
   fieldName: string | null
   oldValue: string | null
@@ -40,10 +56,10 @@ export type ProjectAuditLogMinAggregateOutputType = {
 }
 
 export type ProjectAuditLogMaxAggregateOutputType = {
-  id: string | null
-  officeId: string | null
-  projectId: string | null
-  actorUserId: string | null
+  id: number | null
+  officeId: number | null
+  projectId: number | null
+  actorUserId: number | null
   action: $Enums.ProjectAction | null
   fieldName: string | null
   oldValue: string | null
@@ -70,6 +86,20 @@ export type ProjectAuditLogCountAggregateOutputType = {
   _all: number
 }
 
+
+export type ProjectAuditLogAvgAggregateInputType = {
+  id?: true
+  officeId?: true
+  projectId?: true
+  actorUserId?: true
+}
+
+export type ProjectAuditLogSumAggregateInputType = {
+  id?: true
+  officeId?: true
+  projectId?: true
+  actorUserId?: true
+}
 
 export type ProjectAuditLogMinAggregateInputType = {
   id?: true
@@ -155,6 +185,18 @@ export type ProjectAuditLogAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ProjectAuditLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ProjectAuditLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ProjectAuditLogMinAggregateInputType
@@ -185,15 +227,17 @@ export type ProjectAuditLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: ProjectAuditLogCountAggregateInputType | true
+  _avg?: ProjectAuditLogAvgAggregateInputType
+  _sum?: ProjectAuditLogSumAggregateInputType
   _min?: ProjectAuditLogMinAggregateInputType
   _max?: ProjectAuditLogMaxAggregateInputType
 }
 
 export type ProjectAuditLogGroupByOutputType = {
-  id: string
-  officeId: string
-  projectId: string
-  actorUserId: string
+  id: number
+  officeId: number
+  projectId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName: string | null
   oldValue: string | null
@@ -203,6 +247,8 @@ export type ProjectAuditLogGroupByOutputType = {
   geo: string | null
   createdAt: Date
   _count: ProjectAuditLogCountAggregateOutputType | null
+  _avg: ProjectAuditLogAvgAggregateOutputType | null
+  _sum: ProjectAuditLogSumAggregateOutputType | null
   _min: ProjectAuditLogMinAggregateOutputType | null
   _max: ProjectAuditLogMaxAggregateOutputType | null
 }
@@ -226,10 +272,10 @@ export type ProjectAuditLogWhereInput = {
   AND?: Prisma.ProjectAuditLogWhereInput | Prisma.ProjectAuditLogWhereInput[]
   OR?: Prisma.ProjectAuditLogWhereInput[]
   NOT?: Prisma.ProjectAuditLogWhereInput | Prisma.ProjectAuditLogWhereInput[]
-  id?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  officeId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  projectId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"ProjectAuditLog"> | string
+  id?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  officeId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  projectId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"ProjectAuditLog"> | number
   action?: Prisma.EnumProjectActionFilter<"ProjectAuditLog"> | $Enums.ProjectAction
   fieldName?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
@@ -262,13 +308,13 @@ export type ProjectAuditLogOrderByWithRelationInput = {
 }
 
 export type ProjectAuditLogWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   AND?: Prisma.ProjectAuditLogWhereInput | Prisma.ProjectAuditLogWhereInput[]
   OR?: Prisma.ProjectAuditLogWhereInput[]
   NOT?: Prisma.ProjectAuditLogWhereInput | Prisma.ProjectAuditLogWhereInput[]
-  officeId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  projectId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"ProjectAuditLog"> | string
+  officeId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  projectId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"ProjectAuditLog"> | number
   action?: Prisma.EnumProjectActionFilter<"ProjectAuditLog"> | $Enums.ProjectAction
   fieldName?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
@@ -296,18 +342,20 @@ export type ProjectAuditLogOrderByWithAggregationInput = {
   geo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ProjectAuditLogCountOrderByAggregateInput
+  _avg?: Prisma.ProjectAuditLogAvgOrderByAggregateInput
   _max?: Prisma.ProjectAuditLogMaxOrderByAggregateInput
   _min?: Prisma.ProjectAuditLogMinOrderByAggregateInput
+  _sum?: Prisma.ProjectAuditLogSumOrderByAggregateInput
 }
 
 export type ProjectAuditLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.ProjectAuditLogScalarWhereWithAggregatesInput | Prisma.ProjectAuditLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.ProjectAuditLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProjectAuditLogScalarWhereWithAggregatesInput | Prisma.ProjectAuditLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"ProjectAuditLog"> | string
-  officeId?: Prisma.StringWithAggregatesFilter<"ProjectAuditLog"> | string
-  projectId?: Prisma.StringWithAggregatesFilter<"ProjectAuditLog"> | string
-  actorUserId?: Prisma.StringWithAggregatesFilter<"ProjectAuditLog"> | string
+  id?: Prisma.IntWithAggregatesFilter<"ProjectAuditLog"> | number
+  officeId?: Prisma.IntWithAggregatesFilter<"ProjectAuditLog"> | number
+  projectId?: Prisma.IntWithAggregatesFilter<"ProjectAuditLog"> | number
+  actorUserId?: Prisma.IntWithAggregatesFilter<"ProjectAuditLog"> | number
   action?: Prisma.EnumProjectActionWithAggregatesFilter<"ProjectAuditLog"> | $Enums.ProjectAction
   fieldName?: Prisma.StringNullableWithAggregatesFilter<"ProjectAuditLog"> | string | null
   oldValue?: Prisma.StringNullableWithAggregatesFilter<"ProjectAuditLog"> | string | null
@@ -319,7 +367,6 @@ export type ProjectAuditLogScalarWhereWithAggregatesInput = {
 }
 
 export type ProjectAuditLogCreateInput = {
-  id?: string
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -334,10 +381,10 @@ export type ProjectAuditLogCreateInput = {
 }
 
 export type ProjectAuditLogUncheckedCreateInput = {
-  id?: string
-  officeId: string
-  projectId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  projectId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -349,7 +396,6 @@ export type ProjectAuditLogUncheckedCreateInput = {
 }
 
 export type ProjectAuditLogUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -364,10 +410,10 @@ export type ProjectAuditLogUpdateInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -379,10 +425,10 @@ export type ProjectAuditLogUncheckedUpdateInput = {
 }
 
 export type ProjectAuditLogCreateManyInput = {
-  id?: string
-  officeId: string
-  projectId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  projectId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -394,7 +440,6 @@ export type ProjectAuditLogCreateManyInput = {
 }
 
 export type ProjectAuditLogUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,10 +451,10 @@ export type ProjectAuditLogUpdateManyMutationInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,6 +490,13 @@ export type ProjectAuditLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type ProjectAuditLogAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  officeId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  actorUserId?: Prisma.SortOrder
+}
+
 export type ProjectAuditLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
@@ -473,6 +525,13 @@ export type ProjectAuditLogMinOrderByAggregateInput = {
   deviceFingerprint?: Prisma.SortOrder
   geo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type ProjectAuditLogSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  officeId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  actorUserId?: Prisma.SortOrder
 }
 
 export type ProjectAuditLogCreateNestedManyWithoutOfficeInput = {
@@ -606,7 +665,6 @@ export type EnumProjectActionFieldUpdateOperationsInput = {
 }
 
 export type ProjectAuditLogCreateWithoutOfficeInput = {
-  id?: string
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -620,9 +678,9 @@ export type ProjectAuditLogCreateWithoutOfficeInput = {
 }
 
 export type ProjectAuditLogUncheckedCreateWithoutOfficeInput = {
-  id?: string
-  projectId: string
-  actorUserId: string
+  id?: number
+  projectId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -663,10 +721,10 @@ export type ProjectAuditLogScalarWhereInput = {
   AND?: Prisma.ProjectAuditLogScalarWhereInput | Prisma.ProjectAuditLogScalarWhereInput[]
   OR?: Prisma.ProjectAuditLogScalarWhereInput[]
   NOT?: Prisma.ProjectAuditLogScalarWhereInput | Prisma.ProjectAuditLogScalarWhereInput[]
-  id?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  officeId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  projectId?: Prisma.StringFilter<"ProjectAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"ProjectAuditLog"> | string
+  id?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  officeId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  projectId?: Prisma.IntFilter<"ProjectAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"ProjectAuditLog"> | number
   action?: Prisma.EnumProjectActionFilter<"ProjectAuditLog"> | $Enums.ProjectAction
   fieldName?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"ProjectAuditLog"> | string | null
@@ -678,7 +736,6 @@ export type ProjectAuditLogScalarWhereInput = {
 }
 
 export type ProjectAuditLogCreateWithoutActorInput = {
-  id?: string
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -692,9 +749,9 @@ export type ProjectAuditLogCreateWithoutActorInput = {
 }
 
 export type ProjectAuditLogUncheckedCreateWithoutActorInput = {
-  id?: string
-  officeId: string
-  projectId: string
+  id?: number
+  officeId: number
+  projectId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -732,7 +789,6 @@ export type ProjectAuditLogUpdateManyWithWhereWithoutActorInput = {
 }
 
 export type ProjectAuditLogCreateWithoutProjectInput = {
-  id?: string
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -746,9 +802,9 @@ export type ProjectAuditLogCreateWithoutProjectInput = {
 }
 
 export type ProjectAuditLogUncheckedCreateWithoutProjectInput = {
-  id?: string
-  officeId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -786,9 +842,9 @@ export type ProjectAuditLogUpdateManyWithWhereWithoutProjectInput = {
 }
 
 export type ProjectAuditLogCreateManyOfficeInput = {
-  id?: string
-  projectId: string
-  actorUserId: string
+  id?: number
+  projectId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -800,7 +856,6 @@ export type ProjectAuditLogCreateManyOfficeInput = {
 }
 
 export type ProjectAuditLogUpdateWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -814,9 +869,9 @@ export type ProjectAuditLogUpdateWithoutOfficeInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -828,9 +883,9 @@ export type ProjectAuditLogUncheckedUpdateWithoutOfficeInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateManyWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -842,9 +897,9 @@ export type ProjectAuditLogUncheckedUpdateManyWithoutOfficeInput = {
 }
 
 export type ProjectAuditLogCreateManyActorInput = {
-  id?: string
-  officeId: string
-  projectId: string
+  id?: number
+  officeId: number
+  projectId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -856,7 +911,6 @@ export type ProjectAuditLogCreateManyActorInput = {
 }
 
 export type ProjectAuditLogUpdateWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -870,9 +924,9 @@ export type ProjectAuditLogUpdateWithoutActorInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -884,9 +938,9 @@ export type ProjectAuditLogUncheckedUpdateWithoutActorInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateManyWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -898,9 +952,9 @@ export type ProjectAuditLogUncheckedUpdateManyWithoutActorInput = {
 }
 
 export type ProjectAuditLogCreateManyProjectInput = {
-  id?: string
-  officeId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  actorUserId: number
   action: $Enums.ProjectAction
   fieldName?: string | null
   oldValue?: string | null
@@ -912,7 +966,6 @@ export type ProjectAuditLogCreateManyProjectInput = {
 }
 
 export type ProjectAuditLogUpdateWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -926,9 +979,9 @@ export type ProjectAuditLogUpdateWithoutProjectInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -940,9 +993,9 @@ export type ProjectAuditLogUncheckedUpdateWithoutProjectInput = {
 }
 
 export type ProjectAuditLogUncheckedUpdateManyWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumProjectActionFieldUpdateOperationsInput | $Enums.ProjectAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1049,10 +1102,10 @@ export type $ProjectAuditLogPayload<ExtArgs extends runtime.Types.Extensions.Int
     actor: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
-    officeId: string
-    projectId: string
-    actorUserId: string
+    id: number
+    officeId: number
+    projectId: number
+    actorUserId: number
     action: $Enums.ProjectAction
     fieldName: string | null
     oldValue: string | null
@@ -1487,10 +1540,10 @@ export interface Prisma__ProjectAuditLogClient<T, Null = never, ExtArgs extends 
  * Fields of the ProjectAuditLog model
  */
 export interface ProjectAuditLogFieldRefs {
-  readonly id: Prisma.FieldRef<"ProjectAuditLog", 'String'>
-  readonly officeId: Prisma.FieldRef<"ProjectAuditLog", 'String'>
-  readonly projectId: Prisma.FieldRef<"ProjectAuditLog", 'String'>
-  readonly actorUserId: Prisma.FieldRef<"ProjectAuditLog", 'String'>
+  readonly id: Prisma.FieldRef<"ProjectAuditLog", 'Int'>
+  readonly officeId: Prisma.FieldRef<"ProjectAuditLog", 'Int'>
+  readonly projectId: Prisma.FieldRef<"ProjectAuditLog", 'Int'>
+  readonly actorUserId: Prisma.FieldRef<"ProjectAuditLog", 'Int'>
   readonly action: Prisma.FieldRef<"ProjectAuditLog", 'ProjectAction'>
   readonly fieldName: Prisma.FieldRef<"ProjectAuditLog", 'String'>
   readonly oldValue: Prisma.FieldRef<"ProjectAuditLog", 'String'>

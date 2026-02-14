@@ -1,24 +1,26 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { OfficesRepository } from '../queries/office.queries';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../users/queries/users.queries';
+import { OfficesRepository } from '../queries/office.queries';
 
 @Injectable()
 export class OfficesHelper {
     constructor(
-        private readonly officesRepository: OfficesRepository,
         private readonly usersRepository: UsersRepository,
+        private readonly officesRepository: OfficesRepository,
     ) { }
 
     /**
-     * Validate that a user exists by ID
+     * Validate that a user exists by publicId
      * Throws NotFoundException if user doesn't exist
+     * Returns the user entity (with internal id)
      */
-    async validateUserExists(userId: string) {
-        const user = await this.usersRepository.findByIdSimple(userId);
+    async validateUserExists(userPublicId: string) {
+        const user = await this.usersRepository.findByPublicIdSimple(userPublicId);
 
         if (!user) {
-            throw new NotFoundException(`User with ID ${userId} not found`);
+            throw new NotFoundException(`User with ID ${userPublicId} not found`);
         }
+
         return user;
     }
 
@@ -26,52 +28,44 @@ export class OfficesHelper {
      * Validate that a user does not already own an office
      * Throws ConflictException if user already owns an office
      */
-    async validateUserDoesNotOwnOffice(userId: string) {
-        const existingOffice = await this.officesRepository.findByOwnerSimple(userId);
+    async validateUserDoesNotOwnOffice(userPublicId: string) {
+        const user = await this.validateUserExists(userPublicId);
+        const existingOffice = await this.officesRepository.findByOwnerSimple(user.id);
 
         if (existingOffice) {
-            throw new ConflictException('User already owns an office');
+            throw new ConflictException('This user already owns an office');
         }
+
+        return user;
     }
 
     /**
-     * Validate that an office exists by ID
+     * Validate that an office exists by publicId
      * Throws NotFoundException if office doesn't exist
-     * Returns validation result (boolean) or throws
+     * Returns the office entity (with internal id)
      */
-    async validateOfficeExists(officeId: string) {
-        const office = await this.officesRepository.findByIdSimple(officeId);
+    async validateOfficeExists(officePublicId: string) {
+        const office = await this.officesRepository.findByPublicIdSimple(officePublicId);
 
         if (!office) {
-            throw new NotFoundException(`Office with ID ${officeId} not found`);
+            throw new NotFoundException(`Office with ID ${officePublicId} not found`);
         }
+
         return office;
     }
 
     /**
-     * Validate office deletion
-     * Throws ConflictException if office has users or projects
-     */
-    validateDeleteCondition(office: any) {
-        if (office._count.users > 0 || office._count.projects > 0) {
-            throw new ConflictException(
-                'Cannot permanently delete office with existing users or projects. Please remove them first.',
-            );
-        }
-    }
-
-    /**
-     * Format office statistics response
+     * Format statistics response
      */
     formatStatistics(office: any) {
         return {
-            officeId: office.id,
+            officeId: office.publicId,
             officeName: office.name,
             status: office.status,
             statistics: {
-                totalUsers: office._count.users,
-                totalProjects: office._count.projects,
-                totalOtpCodes: office._count.otpCodes,
+                totalUsers: office._count?.users ?? 0,
+                totalProjects: office._count?.projects ?? 0,
+                totalOtpCodes: office._count?.otpCodes ?? 0,
             },
         };
     }

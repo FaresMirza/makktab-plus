@@ -20,13 +20,25 @@ export type AuthAuditLogModel = runtime.Types.Result.DefaultSelection<Prisma.$Au
 
 export type AggregateAuthAuditLog = {
   _count: AuthAuditLogCountAggregateOutputType | null
+  _avg: AuthAuditLogAvgAggregateOutputType | null
+  _sum: AuthAuditLogSumAggregateOutputType | null
   _min: AuthAuditLogMinAggregateOutputType | null
   _max: AuthAuditLogMaxAggregateOutputType | null
 }
 
+export type AuthAuditLogAvgAggregateOutputType = {
+  id: number | null
+  userId: number | null
+}
+
+export type AuthAuditLogSumAggregateOutputType = {
+  id: number | null
+  userId: number | null
+}
+
 export type AuthAuditLogMinAggregateOutputType = {
-  id: string | null
-  userId: string | null
+  id: number | null
+  userId: number | null
   event: $Enums.AuthAuditEvent | null
   reason: string | null
   ip: string | null
@@ -37,8 +49,8 @@ export type AuthAuditLogMinAggregateOutputType = {
 }
 
 export type AuthAuditLogMaxAggregateOutputType = {
-  id: string | null
-  userId: string | null
+  id: number | null
+  userId: number | null
   event: $Enums.AuthAuditEvent | null
   reason: string | null
   ip: string | null
@@ -61,6 +73,16 @@ export type AuthAuditLogCountAggregateOutputType = {
   _all: number
 }
 
+
+export type AuthAuditLogAvgAggregateInputType = {
+  id?: true
+  userId?: true
+}
+
+export type AuthAuditLogSumAggregateInputType = {
+  id?: true
+  userId?: true
+}
 
 export type AuthAuditLogMinAggregateInputType = {
   id?: true
@@ -137,6 +159,18 @@ export type AuthAuditLogAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: AuthAuditLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: AuthAuditLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: AuthAuditLogMinAggregateInputType
@@ -167,13 +201,15 @@ export type AuthAuditLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: AuthAuditLogCountAggregateInputType | true
+  _avg?: AuthAuditLogAvgAggregateInputType
+  _sum?: AuthAuditLogSumAggregateInputType
   _min?: AuthAuditLogMinAggregateInputType
   _max?: AuthAuditLogMaxAggregateInputType
 }
 
 export type AuthAuditLogGroupByOutputType = {
-  id: string
-  userId: string | null
+  id: number
+  userId: number | null
   event: $Enums.AuthAuditEvent
   reason: string | null
   ip: string | null
@@ -182,6 +218,8 @@ export type AuthAuditLogGroupByOutputType = {
   userAgent: string | null
   createdAt: Date
   _count: AuthAuditLogCountAggregateOutputType | null
+  _avg: AuthAuditLogAvgAggregateOutputType | null
+  _sum: AuthAuditLogSumAggregateOutputType | null
   _min: AuthAuditLogMinAggregateOutputType | null
   _max: AuthAuditLogMaxAggregateOutputType | null
 }
@@ -205,8 +243,8 @@ export type AuthAuditLogWhereInput = {
   AND?: Prisma.AuthAuditLogWhereInput | Prisma.AuthAuditLogWhereInput[]
   OR?: Prisma.AuthAuditLogWhereInput[]
   NOT?: Prisma.AuthAuditLogWhereInput | Prisma.AuthAuditLogWhereInput[]
-  id?: Prisma.StringFilter<"AuthAuditLog"> | string
-  userId?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
+  id?: Prisma.IntFilter<"AuthAuditLog"> | number
+  userId?: Prisma.IntNullableFilter<"AuthAuditLog"> | number | null
   event?: Prisma.EnumAuthAuditEventFilter<"AuthAuditLog"> | $Enums.AuthAuditEvent
   reason?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
   ip?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
@@ -231,11 +269,11 @@ export type AuthAuditLogOrderByWithRelationInput = {
 }
 
 export type AuthAuditLogWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   AND?: Prisma.AuthAuditLogWhereInput | Prisma.AuthAuditLogWhereInput[]
   OR?: Prisma.AuthAuditLogWhereInput[]
   NOT?: Prisma.AuthAuditLogWhereInput | Prisma.AuthAuditLogWhereInput[]
-  userId?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
+  userId?: Prisma.IntNullableFilter<"AuthAuditLog"> | number | null
   event?: Prisma.EnumAuthAuditEventFilter<"AuthAuditLog"> | $Enums.AuthAuditEvent
   reason?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
   ip?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
@@ -257,16 +295,18 @@ export type AuthAuditLogOrderByWithAggregationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AuthAuditLogCountOrderByAggregateInput
+  _avg?: Prisma.AuthAuditLogAvgOrderByAggregateInput
   _max?: Prisma.AuthAuditLogMaxOrderByAggregateInput
   _min?: Prisma.AuthAuditLogMinOrderByAggregateInput
+  _sum?: Prisma.AuthAuditLogSumOrderByAggregateInput
 }
 
 export type AuthAuditLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.AuthAuditLogScalarWhereWithAggregatesInput | Prisma.AuthAuditLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.AuthAuditLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AuthAuditLogScalarWhereWithAggregatesInput | Prisma.AuthAuditLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"AuthAuditLog"> | string
-  userId?: Prisma.StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+  id?: Prisma.IntWithAggregatesFilter<"AuthAuditLog"> | number
+  userId?: Prisma.IntNullableWithAggregatesFilter<"AuthAuditLog"> | number | null
   event?: Prisma.EnumAuthAuditEventWithAggregatesFilter<"AuthAuditLog"> | $Enums.AuthAuditEvent
   reason?: Prisma.StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
   ip?: Prisma.StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
@@ -277,7 +317,6 @@ export type AuthAuditLogScalarWhereWithAggregatesInput = {
 }
 
 export type AuthAuditLogCreateInput = {
-  id?: string
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -289,8 +328,8 @@ export type AuthAuditLogCreateInput = {
 }
 
 export type AuthAuditLogUncheckedCreateInput = {
-  id?: string
-  userId?: string | null
+  id?: number
+  userId?: number | null
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -301,7 +340,6 @@ export type AuthAuditLogUncheckedCreateInput = {
 }
 
 export type AuthAuditLogUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -313,8 +351,8 @@ export type AuthAuditLogUpdateInput = {
 }
 
 export type AuthAuditLogUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -325,8 +363,8 @@ export type AuthAuditLogUncheckedUpdateInput = {
 }
 
 export type AuthAuditLogCreateManyInput = {
-  id?: string
-  userId?: string | null
+  id?: number
+  userId?: number | null
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -337,7 +375,6 @@ export type AuthAuditLogCreateManyInput = {
 }
 
 export type AuthAuditLogUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -348,8 +385,8 @@ export type AuthAuditLogUpdateManyMutationInput = {
 }
 
 export type AuthAuditLogUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -381,6 +418,11 @@ export type AuthAuditLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type AuthAuditLogAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+}
+
 export type AuthAuditLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -403,6 +445,11 @@ export type AuthAuditLogMinOrderByAggregateInput = {
   country?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type AuthAuditLogSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type AuthAuditLogCreateNestedManyWithoutUserInput = {
@@ -451,8 +498,15 @@ export type EnumAuthAuditEventFieldUpdateOperationsInput = {
   set?: $Enums.AuthAuditEvent
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type AuthAuditLogCreateWithoutUserInput = {
-  id?: string
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -463,7 +517,7 @@ export type AuthAuditLogCreateWithoutUserInput = {
 }
 
 export type AuthAuditLogUncheckedCreateWithoutUserInput = {
-  id?: string
+  id?: number
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -503,8 +557,8 @@ export type AuthAuditLogScalarWhereInput = {
   AND?: Prisma.AuthAuditLogScalarWhereInput | Prisma.AuthAuditLogScalarWhereInput[]
   OR?: Prisma.AuthAuditLogScalarWhereInput[]
   NOT?: Prisma.AuthAuditLogScalarWhereInput | Prisma.AuthAuditLogScalarWhereInput[]
-  id?: Prisma.StringFilter<"AuthAuditLog"> | string
-  userId?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
+  id?: Prisma.IntFilter<"AuthAuditLog"> | number
+  userId?: Prisma.IntNullableFilter<"AuthAuditLog"> | number | null
   event?: Prisma.EnumAuthAuditEventFilter<"AuthAuditLog"> | $Enums.AuthAuditEvent
   reason?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
   ip?: Prisma.StringNullableFilter<"AuthAuditLog"> | string | null
@@ -515,7 +569,7 @@ export type AuthAuditLogScalarWhereInput = {
 }
 
 export type AuthAuditLogCreateManyUserInput = {
-  id?: string
+  id?: number
   event: $Enums.AuthAuditEvent
   reason?: string | null
   ip?: string | null
@@ -526,7 +580,6 @@ export type AuthAuditLogCreateManyUserInput = {
 }
 
 export type AuthAuditLogUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -537,7 +590,7 @@ export type AuthAuditLogUpdateWithoutUserInput = {
 }
 
 export type AuthAuditLogUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -548,7 +601,7 @@ export type AuthAuditLogUncheckedUpdateWithoutUserInput = {
 }
 
 export type AuthAuditLogUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   event?: Prisma.EnumAuthAuditEventFieldUpdateOperationsInput | $Enums.AuthAuditEvent
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -628,8 +681,8 @@ export type $AuthAuditLogPayload<ExtArgs extends runtime.Types.Extensions.Intern
     user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
-    userId: string | null
+    id: number
+    userId: number | null
     event: $Enums.AuthAuditEvent
     reason: string | null
     ip: string | null
@@ -1061,8 +1114,8 @@ export interface Prisma__AuthAuditLogClient<T, Null = never, ExtArgs extends run
  * Fields of the AuthAuditLog model
  */
 export interface AuthAuditLogFieldRefs {
-  readonly id: Prisma.FieldRef<"AuthAuditLog", 'String'>
-  readonly userId: Prisma.FieldRef<"AuthAuditLog", 'String'>
+  readonly id: Prisma.FieldRef<"AuthAuditLog", 'Int'>
+  readonly userId: Prisma.FieldRef<"AuthAuditLog", 'Int'>
   readonly event: Prisma.FieldRef<"AuthAuditLog", 'AuthAuditEvent'>
   readonly reason: Prisma.FieldRef<"AuthAuditLog", 'String'>
   readonly ip: Prisma.FieldRef<"AuthAuditLog", 'String'>

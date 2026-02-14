@@ -1,9 +1,10 @@
 import { OfficeStatus } from 'prisma/src/generated/prisma-client/client';
 
 export class Office {
-  id: string;
+  id: number;
+  publicId: string;
   name: string;
-  ownerUserId: string;
+  ownerUserId: number;
   status: OfficeStatus;
   createdAt: Date;
 }

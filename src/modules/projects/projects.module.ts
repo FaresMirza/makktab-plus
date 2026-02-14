@@ -4,11 +4,13 @@ import { ProjectsHelper } from './helpers/projects.helper';
 import { ProjectsRepository } from './queries/projects.queries';
 import { ProjectsController } from './projects.controller';
 import { PrismaModule } from '../prisma/prisma.module';
+import { OfficesRepository } from '../offices/queries/office.queries';
+import { UsersRepository } from '../users/queries/users.queries';
 
 @Module({
   imports: [PrismaModule],
   controllers: [ProjectsController],
-  providers: [ProjectsService, ProjectsHelper, ProjectsRepository],
-  exports: [ProjectsService, ProjectsRepository], // Export the service so it can be used in other modules
+  providers: [ProjectsService, ProjectsHelper, ProjectsRepository, OfficesRepository, UsersRepository],
+  exports: [ProjectsService, ProjectsRepository],
 })
 export class ProjectsModule { }

@@ -13,6 +13,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
+    /**
+     * `sub` in the JWT payload is the user's publicId (UUID).
+     */
     async validate(payload: any) {
         return { userId: payload.sub, username: payload.username, roles: payload.roles };
     }

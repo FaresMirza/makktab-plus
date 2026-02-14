@@ -14,27 +14,24 @@ export class ProjectsService {
 
   /**
    * Create a new project
-   * - Validates that office, creator, and project manager exist
+   * - Validates that office, creator, and project manager exist (by publicId)
+   * - Resolves publicIds → internal ids for DB creation
    * - Sets default status to IN_PROGRESS if not provided
    */
   async create(createProjectDto: CreateProjectDto) {
     const { officeId, createdByUserId, projectManagerUserId, name, description, status } = createProjectDto;
 
-    // Check if office exists
-    await this.projectsHelper.validateOfficeExists(officeId);
-
-    // Check if creator user exists
-    await this.projectsHelper.validateUserExists(createdByUserId, 'Creator');
-
-    // Check if project manager exists
-    await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+    // Resolve publicIds → internal entities
+    const office = await this.projectsHelper.validateOfficeExists(officeId);
+    const creator = await this.projectsHelper.validateUserExists(createdByUserId, 'Creator');
+    const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
 
     const project = await this.projectsRepository.create({
       name,
       description,
-      officeId,
-      createdByUserId,
-      projectManagerUserId,
+      officeId: office.id,
+      createdByUserId: creator.id,
+      projectManagerUserId: projectManager.id,
       status: status || ProjectStatus.IN_PROGRESS,
     });
 
@@ -43,109 +40,107 @@ export class ProjectsService {
 
   /**
    * Get all projects
-   * - Includes office, creator, project manager information
-   * - Includes task count
    */
   async findAll() {
     return this.projectsRepository.findAll();
   }
 
   /**
-   * Get a specific project by ID
-   * - Includes office, creator, project manager information
-   * - Includes list of tasks
+   * Get a specific project by publicId
    */
-  async findOne(id: string) {
-    const project = await this.projectsRepository.findById(id);
+  async findOne(publicId: string) {
+    const project = await this.projectsRepository.findByPublicId(publicId);
 
     if (!project) {
-      throw new NotFoundException(`Project with ID ${id} not found`);
+      throw new NotFoundException(`Project with ID ${publicId} not found`);
     }
 
     return project;
   }
 
   /**
-   * Get projects by office
-   * - Returns all projects belonging to a specific office
+   * Get projects by office (by office publicId)
    */
-  async findByOffice(officeId: string) {
-    return this.projectsRepository.findByOffice(officeId);
+  async findByOffice(officePublicId: string) {
+    const office = await this.projectsHelper.validateOfficeExists(officePublicId);
+    return this.projectsRepository.findByOffice(office.id);
   }
 
   /**
    * Get projects by status
-   * - Returns all projects with a specific status
    */
   async findByStatus(status: ProjectStatus) {
     return this.projectsRepository.findByStatus(status);
   }
 
   /**
-   * Get projects managed by a specific user
-   * - Returns all projects where the user is the project manager
+   * Get projects managed by a specific user (by user publicId)
    */
-  async findByProjectManager(projectManagerUserId: string) {
-    return this.projectsRepository.findByProjectManager(projectManagerUserId);
+  async findByProjectManager(projectManagerPublicId: string) {
+    const user = await this.projectsHelper.validateUserExists(projectManagerPublicId, 'Project manager');
+    return this.projectsRepository.findByProjectManager(user.id);
   }
 
   /**
    * Update a project
+   * - Accepts publicId
    * - Can update name, description, project manager, and status
-   * - Cannot update officeId or createdByUserId
    */
-  async update(id: string, updateProjectDto: UpdateProjectDto) {
-    // Check if project exists
-    await this.projectsHelper.validateProjectExists(id);
+  async update(publicId: string, updateProjectDto: UpdateProjectDto) {
+    // Resolve project publicId → internal entity
+    const project = await this.projectsHelper.validateProjectExists(publicId);
 
-    // If updating project manager, check if user exists
+    // Build update data with resolved FK ids
+    const updateData: any = {};
+    if (updateProjectDto.name !== undefined) updateData.name = updateProjectDto.name;
+    if (updateProjectDto.description !== undefined) updateData.description = updateProjectDto.description;
+    if (updateProjectDto.status !== undefined) updateData.status = updateProjectDto.status;
+
+    // If updating project manager, resolve publicId → internal id
     if (updateProjectDto.projectManagerUserId) {
-      await this.projectsHelper.validateUserExists(
+      const pm = await this.projectsHelper.validateUserExists(
         updateProjectDto.projectManagerUserId,
         'Project manager',
       );
+      updateData.projectManagerUserId = pm.id;
     }
 
-    const updatedProject = await this.projectsRepository.update(id, updateProjectDto);
+    const updatedProject = await this.projectsRepository.update(project.id, updateData);
 
     return updatedProject;
   }
 
   /**
    * Delete/Cancel a project
-   * - Soft delete: Sets status to CANCELLED
-   * - Hard delete: Permanently removes project (use with caution)
+   * - Accepts publicId
    */
-  async remove(id: string, hardDelete = false) {
-    // Check if project exists
-    const project = await this.projectsRepository.findByIdWithTaskCount(id);
+  async remove(publicId: string, hardDelete = false) {
+    const projectEntity = await this.projectsHelper.validateProjectExists(publicId);
 
+    const project = await this.projectsRepository.findByIdWithTaskCount(projectEntity.id);
     if (!project) {
-      throw new NotFoundException(`Project with ID ${id} not found`);
+      throw new NotFoundException(`Project with ID ${publicId} not found`);
     }
 
     if (hardDelete) {
-      // Check if project has related records
       this.projectsHelper.validateDeleteCondition(project);
-
-      // Hard delete - permanently remove project
-      await this.projectsRepository.delete(id);
+      await this.projectsRepository.delete(project.id);
       return { message: 'Project permanently deleted' };
     } else {
-      // Soft delete - cancel project
-      return this.projectsRepository.softDelete(id);
+      return this.projectsRepository.softDelete(project.id);
     }
   }
 
   /**
    * Get project statistics
-   * - Returns counts of tasks by status and other metrics
+   * - Accepts publicId
    */
-  async getStatistics(id: string) {
-    const project = await this.projectsRepository.findByIdWithTasksStatus(id);
+  async getStatistics(publicId: string) {
+    const projectEntity = await this.projectsHelper.validateProjectExists(publicId);
+    const project = await this.projectsRepository.findByPublicIdWithTasksStatus(publicId);
 
     if (!project) {
-      throw new NotFoundException(`Project with ID ${id} not found`);
+      throw new NotFoundException(`Project with ID ${publicId} not found`);
     }
 
     return this.projectsHelper.formatStatistics(project);

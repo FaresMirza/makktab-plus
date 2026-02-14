@@ -46,6 +46,7 @@ export class OtpHelper {
      * Check if user is locked.
      * - If locked_until is in the future → throw.
      * - If lock expired → auto-unlock.
+     * user.id is the internal integer ID.
      */
     async checkAndHandleUserLock(user: any): Promise<void> {
         if (user.status === UserStatus.LOCKED && user.lockedUntil) {
@@ -62,7 +63,7 @@ export class OtpHelper {
 
             // Lock has expired → unlock the user
             await this.otpRepository.unlockUser(user.id);
-            this.logger.log(`User ${user.id} auto-unlocked (lock expired).`);
+            this.logger.log(`User ${user.publicId} auto-unlocked (lock expired).`);
         }
     }
 
@@ -89,9 +90,9 @@ export class OtpHelper {
 
     /**
      * Enforce rate limit: max 5 OTP requests within 30 minutes.
-     * If exceeded → lock user for 30 minutes and throw.
+     * userId is the internal integer ID.
      */
-    async enforceRateLimit(userId: string): Promise<void> {
+    async enforceRateLimit(userId: number): Promise<void> {
         const maxRequests = OTP_CONSTANTS.MAX_OTP_REQUESTS;
         const rateLimitWindowMs = OTP_CONSTANTS.RATE_LIMIT_WINDOW_MINUTES * OTP_CONSTANTS.MS_PER_MINUTE;
         const lockDurationMs = OTP_CONSTANTS.LOCK_DURATION_MINUTES * OTP_CONSTANTS.MS_PER_MINUTE;
@@ -118,8 +119,9 @@ export class OtpHelper {
 
     /**
      * Expire any previous PENDING OTP for the same purpose.
+     * userId is the internal integer ID.
      */
-    async expirePreviousPendingOtps(userId: string, purpose: OtpPurpose): Promise<void> {
+    async expirePreviousPendingOtps(userId: number, purpose: OtpPurpose): Promise<void> {
         await this.otpRepository.expirePendingOtps(userId, purpose);
     }
 
@@ -148,6 +150,7 @@ export class OtpHelper {
     /**
      * Build OTP data and save to database.
      * status = PENDING, expires_at = now + 3 min.
+     * Uses internal user.id and office.id.
      */
     async saveOtpRecord(
         user: any,
@@ -193,15 +196,8 @@ export class OtpHelper {
     // ─── VERIFY OTP ───────────────────────────────────────────────
 
     /**
-     * Full OTP verification logic:
-     * - Finds latest PENDING OTP
-     * - Validates: not found → throw, expired → mark EXPIRED + throw,
-     *   max attempts → mark BLOCKED + lock user + throw
-     * - Secure comparison with bcrypt.compare
-     * - Invalid → increment attempts (block on last attempt) + throw
-     * - Valid → mark VERIFIED + unlock user if needed
-     *
-     * Returns { userId, purpose } on success.
+     * Full OTP verification logic.
+     * Returns { userId (publicId), purpose } on success.
      */
     async validateAndVerifyOtp(
         user: any,
@@ -233,15 +229,12 @@ export class OtpHelper {
         // ── Valid → mark VERIFIED, unlock user if needed ──
         await this.otpRepository.verifyOtp(otpRecord.id);
 
-        return { userId: user.id, purpose };
+        // Return publicId to the external world
+        return { userId: user.publicId, purpose };
     }
 
     /**
      * Secure OTP comparison with attempt tracking.
-     * - Compares using bcrypt (timing-safe)
-     * - Increments attempts on failure
-     * - Blocks OTP + locks user if max attempts exceeded
-     * - Throws on invalid OTP
      */
     private async compareAndHandleAttempts(otp: string, otpRecord: any, user: any): Promise<void> {
         const isValid = await bcrypt.compare(otp, otpRecord.codeHash);
@@ -297,7 +290,10 @@ export class OtpHelper {
         );
     }
 
-    private getUserOfficeId(user: any): string {
+    /**
+     * Get the office internal ID from the user entity.
+     */
+    private getUserOfficeId(user: any): number {
         if (user.ownedOffice) {
             return user.ownedOffice.id;
         }
@@ -315,7 +311,7 @@ export class OtpHelper {
         return attempts >= maxAttempts;
     }
 
-    private async lockUserForDuration(userId: string): Promise<void> {
+    private async lockUserForDuration(userId: number): Promise<void> {
         const lockedUntil = new Date(
             Date.now() + OTP_CONSTANTS.LOCK_DURATION_MINUTES * OTP_CONSTANTS.MS_PER_MINUTE,
         );

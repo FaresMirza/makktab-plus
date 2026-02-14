@@ -1,7 +1,8 @@
 import { UserStatus } from 'prisma/src/generated/prisma-client/client';
 
 export class User {
-  id: string;
+  id: number;
+  publicId: string;
   fullName: string;
   email: string;
   phone: string;

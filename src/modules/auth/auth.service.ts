@@ -68,7 +68,7 @@ export class AuthService {
         const tokens = await this.authHelper.generateTokens(user);
 
         await this.authHelper.logAudit({
-            userId: user.id,
+            userId: user.id, // internal id for FK
             event: 'LOGIN_SUCCESS',
             ip,
             userAgent,
@@ -125,7 +125,7 @@ export class AuthService {
         await this.usersRepository.updatePassword(user.id, passwordHash);
 
         await this.authHelper.logAudit({
-            userId: user.id,
+            userId: user.id, // internal id for FK
             event: 'PASSWORD_CHANGED',
             ip,
             userAgent,
@@ -135,8 +135,12 @@ export class AuthService {
         return { message: AUTH_MESSAGES.PASSWORD_CHANGED };
     }
 
-    async resetPassword(userId: string, dto: ResetPasswordDto, ip: string, userAgent: string, deviceFingerprint: string) {
-        const user = await this.usersRepository.findByIdSimple(userId);
+    /**
+     * Reset password for authenticated user.
+     * userPublicId comes from JWT token (payload.sub = publicId).
+     */
+    async resetPassword(userPublicId: string, dto: ResetPasswordDto, ip: string, userAgent: string, deviceFingerprint: string) {
+        const user = await this.usersRepository.findByPublicIdSimple(userPublicId);
         if (!user) throw new UnauthorizedException();
 
         const { newPassword } = dto;
@@ -152,7 +156,7 @@ export class AuthService {
         await this.usersRepository.updatePassword(user.id, passwordHash);
 
         await this.authHelper.logAudit({
-            userId: user.id,
+            userId: user.id, // internal id for FK
             event: 'PASSWORD_RESET',
             ip,
             userAgent,
@@ -162,16 +166,20 @@ export class AuthService {
         return { message: AUTH_MESSAGES.PASSWORD_RESET };
     }
 
+    /**
+     * Refresh access token.
+     * JWT `sub` is the user's publicId (UUID).
+     */
     async refresh(dto: RefreshTokenDto, ip: string, userAgent: string) {
-        let userId: string;
+        let userPublicId: string;
         try {
             const payload = await this.jwtService.verifyAsync(dto.refreshToken);
-            userId = payload.sub;
+            userPublicId = payload.sub;
         } catch (e) {
             throw new UnauthorizedException(AUTH_MESSAGES.INVALID_TOKEN_FORMAT);
         }
 
-        const user = await this.usersRepository.findByIdSimple(userId);
+        const user = await this.usersRepository.findByPublicIdSimple(userPublicId);
         if (!user || !user.refreshTokenHash) {
             throw new UnauthorizedException(AUTH_MESSAGES.INVALID_REFRESH_TOKEN);
         }
@@ -181,7 +189,8 @@ export class AuthService {
             throw new UnauthorizedException(AUTH_MESSAGES.INVALID_REFRESH_TOKEN);
         }
 
-        const payload = { sub: user.id, username: user.username, roles: user.roles };
+        // Generate new access token with publicId in payload
+        const payload = { sub: user.publicId, username: user.username, roles: user.roles };
         const accessToken = await this.jwtService.signAsync(payload);
 
         return { access_token: accessToken };

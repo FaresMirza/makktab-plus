@@ -13,26 +13,26 @@ export class CreateTaskDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'The ID of the project this task belongs to', example: 'project-uuid-123' })
+  @ApiProperty({ description: 'The public ID (UUID) of the project this task belongs to', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
   @IsString()
   @IsNotEmpty()
   projectId: string;
 
-  @ApiProperty({ description: 'The ID of the user who created this task', example: 'user-uuid-123' })
+  @ApiProperty({ description: 'The public ID (UUID) of the user who created this task', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' })
   @IsString()
   @IsNotEmpty()
   createdByUserId: string;
 
-  @ApiProperty({ description: 'The ID of the user this task is assigned to', example: 'user-uuid-456' })
+  @ApiProperty({ description: 'The public ID (UUID) of the user this task is assigned to', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' })
   @IsString()
   @IsNotEmpty()
   assignedToUserId: string;
 
-  @ApiProperty({ 
-    description: 'The status of the task', 
-    example: 'TODO', 
+  @ApiProperty({
+    description: 'The status of the task',
+    example: 'TODO',
     enum: TaskStatus,
-    required: false 
+    required: false
   })
   @IsEnum(TaskStatus)
   @IsOptional()

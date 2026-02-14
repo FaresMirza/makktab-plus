@@ -6,16 +6,13 @@ import { OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/clien
 export class AuthRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-
-
-
-
     /**
      * Create OTP code
+     * userId and officeId are internal integer IDs.
      */
     async createOtpCode(data: {
-        userId: string;
-        officeId: string;
+        userId: number;
+        officeId: number;
         email: string;
         purpose: OtpPurpose;
         channel: OtpChannel;
@@ -37,8 +34,9 @@ export class AuthRepository {
 
     /**
      * Find valid OTP code for user
+     * userId is the internal integer ID.
      */
-    async findValidOtpCode(userId: string, purpose: OtpPurpose) {
+    async findValidOtpCode(userId: number, purpose: OtpPurpose) {
         return this.prisma.otpCode.findFirst({
             where: {
                 userId,
@@ -56,8 +54,9 @@ export class AuthRepository {
 
     /**
      * Increment OTP attempts
+     * otpId is the internal integer ID.
      */
-    async incrementOtpAttempts(otpId: string) {
+    async incrementOtpAttempts(otpId: number) {
         return this.prisma.otpCode.update({
             where: { id: otpId },
             data: {
@@ -71,7 +70,7 @@ export class AuthRepository {
     /**
      * Mark OTP as used
      */
-    async markOtpAsUsed(otpId: string) {
+    async markOtpAsUsed(otpId: number) {
         return this.prisma.otpCode.update({
             where: { id: otpId },
             data: {
@@ -79,13 +78,4 @@ export class AuthRepository {
             },
         });
     }
-
-
-
-
-
-
-
-
 }
-

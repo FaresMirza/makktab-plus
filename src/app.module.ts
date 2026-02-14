@@ -8,7 +8,6 @@ import { UsersModule } from './modules/users/users.module';
 import { OfficesModule } from './modules/offices/offices.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { TasksModule } from './modules/tasks/tasks.module';
-import { RolesModule } from './modules/roles/roles.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OtpModule } from './modules/otps/otps.module';
 import { EnhancedThrottlerGuard } from './common/guards/custom-throttler.guard';
@@ -31,7 +30,6 @@ import { ThrottlerStorageService } from './common/storage/throttler-storage.serv
     OfficesModule,
     ProjectsModule,
     TasksModule,
-    RolesModule,
     AuditModule,
     OtpModule,
   ],

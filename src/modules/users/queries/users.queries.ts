@@ -37,16 +37,29 @@ export class UsersRepository {
         });
     }
 
-    async findById(id: string) {
+    async findById(id: number) {
         return this.prisma.user.findUnique({
             where: { id },
             include: this.userDetailInclude,
         });
     }
 
-    async findByIdSimple(id: string) {
+    async findByPublicId(publicId: string) {
+        return this.prisma.user.findUnique({
+            where: { publicId },
+            include: this.userDetailInclude,
+        });
+    }
+
+    async findByIdSimple(id: number) {
         return this.prisma.user.findUnique({
             where: { id },
+        });
+    }
+
+    async findByPublicIdSimple(publicId: string) {
+        return this.prisma.user.findUnique({
+            where: { publicId },
         });
     }
 
@@ -76,7 +89,7 @@ export class UsersRepository {
         });
     }
 
-    async update(id: string, data: Prisma.UserUpdateInput) {
+    async update(id: number, data: Prisma.UserUpdateInput) {
         return this.prisma.user.update({
             where: { id },
             data,
@@ -84,20 +97,20 @@ export class UsersRepository {
         });
     }
 
-    async delete(id: string) {
+    async delete(id: number) {
         return this.prisma.user.delete({
             where: { id },
         });
     }
 
-    async softDelete(id: string) {
+    async softDelete(id: number) {
         return this.prisma.user.update({
             where: { id },
             data: { status: UserStatus.DEACTIVATED },
         });
     }
 
-    async updatePassword(id: string, passwordHash: string) {
+    async updatePassword(id: number, passwordHash: string) {
         return this.prisma.user.update({
             where: { id },
             data: {
@@ -107,14 +120,14 @@ export class UsersRepository {
         });
     }
 
-    async updateRefreshTokenHash(id: string, refreshTokenHash: string | null) {
+    async updateRefreshTokenHash(id: number, refreshTokenHash: string | null) {
         return this.prisma.user.update({
             where: { id },
             data: { refreshTokenHash },
         });
     }
 
-    async findByOffice(officeId: string) {
+    async findByOffice(officeId: number) {
         return this.prisma.user.findMany({
             where: {
                 offices: {

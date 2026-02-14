@@ -2,12 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
 
 export class Project {
-  id: string;
+  id: number;
+  publicId: string;
   name: string;
   description: string;
-  officeId: string;
-  createdByUserId: string;
-  projectManagerUserId: string;
+  officeId: number;
+  createdByUserId: number;
+  projectManagerUserId: number;
   status: ProjectStatus;
   createdAt: Date;
 }

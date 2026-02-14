@@ -20,15 +20,31 @@ export type TaskAuditLogModel = runtime.Types.Result.DefaultSelection<Prisma.$Ta
 
 export type AggregateTaskAuditLog = {
   _count: TaskAuditLogCountAggregateOutputType | null
+  _avg: TaskAuditLogAvgAggregateOutputType | null
+  _sum: TaskAuditLogSumAggregateOutputType | null
   _min: TaskAuditLogMinAggregateOutputType | null
   _max: TaskAuditLogMaxAggregateOutputType | null
 }
 
+export type TaskAuditLogAvgAggregateOutputType = {
+  id: number | null
+  officeId: number | null
+  taskId: number | null
+  actorUserId: number | null
+}
+
+export type TaskAuditLogSumAggregateOutputType = {
+  id: number | null
+  officeId: number | null
+  taskId: number | null
+  actorUserId: number | null
+}
+
 export type TaskAuditLogMinAggregateOutputType = {
-  id: string | null
-  officeId: string | null
-  taskId: string | null
-  actorUserId: string | null
+  id: number | null
+  officeId: number | null
+  taskId: number | null
+  actorUserId: number | null
   action: $Enums.TaskAction | null
   fieldName: string | null
   oldValue: string | null
@@ -40,10 +56,10 @@ export type TaskAuditLogMinAggregateOutputType = {
 }
 
 export type TaskAuditLogMaxAggregateOutputType = {
-  id: string | null
-  officeId: string | null
-  taskId: string | null
-  actorUserId: string | null
+  id: number | null
+  officeId: number | null
+  taskId: number | null
+  actorUserId: number | null
   action: $Enums.TaskAction | null
   fieldName: string | null
   oldValue: string | null
@@ -70,6 +86,20 @@ export type TaskAuditLogCountAggregateOutputType = {
   _all: number
 }
 
+
+export type TaskAuditLogAvgAggregateInputType = {
+  id?: true
+  officeId?: true
+  taskId?: true
+  actorUserId?: true
+}
+
+export type TaskAuditLogSumAggregateInputType = {
+  id?: true
+  officeId?: true
+  taskId?: true
+  actorUserId?: true
+}
 
 export type TaskAuditLogMinAggregateInputType = {
   id?: true
@@ -155,6 +185,18 @@ export type TaskAuditLogAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: TaskAuditLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: TaskAuditLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: TaskAuditLogMinAggregateInputType
@@ -185,15 +227,17 @@ export type TaskAuditLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: TaskAuditLogCountAggregateInputType | true
+  _avg?: TaskAuditLogAvgAggregateInputType
+  _sum?: TaskAuditLogSumAggregateInputType
   _min?: TaskAuditLogMinAggregateInputType
   _max?: TaskAuditLogMaxAggregateInputType
 }
 
 export type TaskAuditLogGroupByOutputType = {
-  id: string
-  officeId: string
-  taskId: string
-  actorUserId: string
+  id: number
+  officeId: number
+  taskId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName: string | null
   oldValue: string | null
@@ -203,6 +247,8 @@ export type TaskAuditLogGroupByOutputType = {
   geo: string | null
   createdAt: Date
   _count: TaskAuditLogCountAggregateOutputType | null
+  _avg: TaskAuditLogAvgAggregateOutputType | null
+  _sum: TaskAuditLogSumAggregateOutputType | null
   _min: TaskAuditLogMinAggregateOutputType | null
   _max: TaskAuditLogMaxAggregateOutputType | null
 }
@@ -226,10 +272,10 @@ export type TaskAuditLogWhereInput = {
   AND?: Prisma.TaskAuditLogWhereInput | Prisma.TaskAuditLogWhereInput[]
   OR?: Prisma.TaskAuditLogWhereInput[]
   NOT?: Prisma.TaskAuditLogWhereInput | Prisma.TaskAuditLogWhereInput[]
-  id?: Prisma.StringFilter<"TaskAuditLog"> | string
-  officeId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  taskId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"TaskAuditLog"> | string
+  id?: Prisma.IntFilter<"TaskAuditLog"> | number
+  officeId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  taskId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"TaskAuditLog"> | number
   action?: Prisma.EnumTaskActionFilter<"TaskAuditLog"> | $Enums.TaskAction
   fieldName?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
@@ -262,13 +308,13 @@ export type TaskAuditLogOrderByWithRelationInput = {
 }
 
 export type TaskAuditLogWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   AND?: Prisma.TaskAuditLogWhereInput | Prisma.TaskAuditLogWhereInput[]
   OR?: Prisma.TaskAuditLogWhereInput[]
   NOT?: Prisma.TaskAuditLogWhereInput | Prisma.TaskAuditLogWhereInput[]
-  officeId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  taskId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"TaskAuditLog"> | string
+  officeId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  taskId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"TaskAuditLog"> | number
   action?: Prisma.EnumTaskActionFilter<"TaskAuditLog"> | $Enums.TaskAction
   fieldName?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
@@ -296,18 +342,20 @@ export type TaskAuditLogOrderByWithAggregationInput = {
   geo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TaskAuditLogCountOrderByAggregateInput
+  _avg?: Prisma.TaskAuditLogAvgOrderByAggregateInput
   _max?: Prisma.TaskAuditLogMaxOrderByAggregateInput
   _min?: Prisma.TaskAuditLogMinOrderByAggregateInput
+  _sum?: Prisma.TaskAuditLogSumOrderByAggregateInput
 }
 
 export type TaskAuditLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.TaskAuditLogScalarWhereWithAggregatesInput | Prisma.TaskAuditLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.TaskAuditLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TaskAuditLogScalarWhereWithAggregatesInput | Prisma.TaskAuditLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"TaskAuditLog"> | string
-  officeId?: Prisma.StringWithAggregatesFilter<"TaskAuditLog"> | string
-  taskId?: Prisma.StringWithAggregatesFilter<"TaskAuditLog"> | string
-  actorUserId?: Prisma.StringWithAggregatesFilter<"TaskAuditLog"> | string
+  id?: Prisma.IntWithAggregatesFilter<"TaskAuditLog"> | number
+  officeId?: Prisma.IntWithAggregatesFilter<"TaskAuditLog"> | number
+  taskId?: Prisma.IntWithAggregatesFilter<"TaskAuditLog"> | number
+  actorUserId?: Prisma.IntWithAggregatesFilter<"TaskAuditLog"> | number
   action?: Prisma.EnumTaskActionWithAggregatesFilter<"TaskAuditLog"> | $Enums.TaskAction
   fieldName?: Prisma.StringNullableWithAggregatesFilter<"TaskAuditLog"> | string | null
   oldValue?: Prisma.StringNullableWithAggregatesFilter<"TaskAuditLog"> | string | null
@@ -319,7 +367,6 @@ export type TaskAuditLogScalarWhereWithAggregatesInput = {
 }
 
 export type TaskAuditLogCreateInput = {
-  id?: string
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -334,10 +381,10 @@ export type TaskAuditLogCreateInput = {
 }
 
 export type TaskAuditLogUncheckedCreateInput = {
-  id?: string
-  officeId: string
-  taskId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  taskId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -349,7 +396,6 @@ export type TaskAuditLogUncheckedCreateInput = {
 }
 
 export type TaskAuditLogUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -364,10 +410,10 @@ export type TaskAuditLogUpdateInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -379,10 +425,10 @@ export type TaskAuditLogUncheckedUpdateInput = {
 }
 
 export type TaskAuditLogCreateManyInput = {
-  id?: string
-  officeId: string
-  taskId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  taskId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -394,7 +440,6 @@ export type TaskAuditLogCreateManyInput = {
 }
 
 export type TaskAuditLogUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,10 +451,10 @@ export type TaskAuditLogUpdateManyMutationInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -445,6 +490,13 @@ export type TaskAuditLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type TaskAuditLogAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  officeId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
+  actorUserId?: Prisma.SortOrder
+}
+
 export type TaskAuditLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   officeId?: Prisma.SortOrder
@@ -473,6 +525,13 @@ export type TaskAuditLogMinOrderByAggregateInput = {
   deviceFingerprint?: Prisma.SortOrder
   geo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type TaskAuditLogSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  officeId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
+  actorUserId?: Prisma.SortOrder
 }
 
 export type TaskAuditLogCreateNestedManyWithoutOfficeInput = {
@@ -606,7 +665,6 @@ export type EnumTaskActionFieldUpdateOperationsInput = {
 }
 
 export type TaskAuditLogCreateWithoutOfficeInput = {
-  id?: string
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -620,9 +678,9 @@ export type TaskAuditLogCreateWithoutOfficeInput = {
 }
 
 export type TaskAuditLogUncheckedCreateWithoutOfficeInput = {
-  id?: string
-  taskId: string
-  actorUserId: string
+  id?: number
+  taskId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -663,10 +721,10 @@ export type TaskAuditLogScalarWhereInput = {
   AND?: Prisma.TaskAuditLogScalarWhereInput | Prisma.TaskAuditLogScalarWhereInput[]
   OR?: Prisma.TaskAuditLogScalarWhereInput[]
   NOT?: Prisma.TaskAuditLogScalarWhereInput | Prisma.TaskAuditLogScalarWhereInput[]
-  id?: Prisma.StringFilter<"TaskAuditLog"> | string
-  officeId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  taskId?: Prisma.StringFilter<"TaskAuditLog"> | string
-  actorUserId?: Prisma.StringFilter<"TaskAuditLog"> | string
+  id?: Prisma.IntFilter<"TaskAuditLog"> | number
+  officeId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  taskId?: Prisma.IntFilter<"TaskAuditLog"> | number
+  actorUserId?: Prisma.IntFilter<"TaskAuditLog"> | number
   action?: Prisma.EnumTaskActionFilter<"TaskAuditLog"> | $Enums.TaskAction
   fieldName?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
   oldValue?: Prisma.StringNullableFilter<"TaskAuditLog"> | string | null
@@ -678,7 +736,6 @@ export type TaskAuditLogScalarWhereInput = {
 }
 
 export type TaskAuditLogCreateWithoutActorInput = {
-  id?: string
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -692,9 +749,9 @@ export type TaskAuditLogCreateWithoutActorInput = {
 }
 
 export type TaskAuditLogUncheckedCreateWithoutActorInput = {
-  id?: string
-  officeId: string
-  taskId: string
+  id?: number
+  officeId: number
+  taskId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -732,7 +789,6 @@ export type TaskAuditLogUpdateManyWithWhereWithoutActorInput = {
 }
 
 export type TaskAuditLogCreateWithoutTaskInput = {
-  id?: string
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -746,9 +802,9 @@ export type TaskAuditLogCreateWithoutTaskInput = {
 }
 
 export type TaskAuditLogUncheckedCreateWithoutTaskInput = {
-  id?: string
-  officeId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -786,9 +842,9 @@ export type TaskAuditLogUpdateManyWithWhereWithoutTaskInput = {
 }
 
 export type TaskAuditLogCreateManyOfficeInput = {
-  id?: string
-  taskId: string
-  actorUserId: string
+  id?: number
+  taskId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -800,7 +856,6 @@ export type TaskAuditLogCreateManyOfficeInput = {
 }
 
 export type TaskAuditLogUpdateWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -814,9 +869,9 @@ export type TaskAuditLogUpdateWithoutOfficeInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -828,9 +883,9 @@ export type TaskAuditLogUncheckedUpdateWithoutOfficeInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateManyWithoutOfficeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -842,9 +897,9 @@ export type TaskAuditLogUncheckedUpdateManyWithoutOfficeInput = {
 }
 
 export type TaskAuditLogCreateManyActorInput = {
-  id?: string
-  officeId: string
-  taskId: string
+  id?: number
+  officeId: number
+  taskId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -856,7 +911,6 @@ export type TaskAuditLogCreateManyActorInput = {
 }
 
 export type TaskAuditLogUpdateWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -870,9 +924,9 @@ export type TaskAuditLogUpdateWithoutActorInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -884,9 +938,9 @@ export type TaskAuditLogUncheckedUpdateWithoutActorInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateManyWithoutActorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  taskId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -898,9 +952,9 @@ export type TaskAuditLogUncheckedUpdateManyWithoutActorInput = {
 }
 
 export type TaskAuditLogCreateManyTaskInput = {
-  id?: string
-  officeId: string
-  actorUserId: string
+  id?: number
+  officeId: number
+  actorUserId: number
   action: $Enums.TaskAction
   fieldName?: string | null
   oldValue?: string | null
@@ -912,7 +966,6 @@ export type TaskAuditLogCreateManyTaskInput = {
 }
 
 export type TaskAuditLogUpdateWithoutTaskInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -926,9 +979,9 @@ export type TaskAuditLogUpdateWithoutTaskInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateWithoutTaskInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -940,9 +993,9 @@ export type TaskAuditLogUncheckedUpdateWithoutTaskInput = {
 }
 
 export type TaskAuditLogUncheckedUpdateManyWithoutTaskInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  officeId?: Prisma.StringFieldUpdateOperationsInput | string
-  actorUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorUserId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.EnumTaskActionFieldUpdateOperationsInput | $Enums.TaskAction
   fieldName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oldValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1049,10 +1102,10 @@ export type $TaskAuditLogPayload<ExtArgs extends runtime.Types.Extensions.Intern
     actor: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
-    officeId: string
-    taskId: string
-    actorUserId: string
+    id: number
+    officeId: number
+    taskId: number
+    actorUserId: number
     action: $Enums.TaskAction
     fieldName: string | null
     oldValue: string | null
@@ -1487,10 +1540,10 @@ export interface Prisma__TaskAuditLogClient<T, Null = never, ExtArgs extends run
  * Fields of the TaskAuditLog model
  */
 export interface TaskAuditLogFieldRefs {
-  readonly id: Prisma.FieldRef<"TaskAuditLog", 'String'>
-  readonly officeId: Prisma.FieldRef<"TaskAuditLog", 'String'>
-  readonly taskId: Prisma.FieldRef<"TaskAuditLog", 'String'>
-  readonly actorUserId: Prisma.FieldRef<"TaskAuditLog", 'String'>
+  readonly id: Prisma.FieldRef<"TaskAuditLog", 'Int'>
+  readonly officeId: Prisma.FieldRef<"TaskAuditLog", 'Int'>
+  readonly taskId: Prisma.FieldRef<"TaskAuditLog", 'Int'>
+  readonly actorUserId: Prisma.FieldRef<"TaskAuditLog", 'Int'>
   readonly action: Prisma.FieldRef<"TaskAuditLog", 'TaskAction'>
   readonly fieldName: Prisma.FieldRef<"TaskAuditLog", 'String'>
   readonly oldValue: Prisma.FieldRef<"TaskAuditLog", 'String'>

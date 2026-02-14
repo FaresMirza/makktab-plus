@@ -20,15 +20,32 @@ export type TaskModel = runtime.Types.Result.DefaultSelection<Prisma.$TaskPayloa
 
 export type AggregateTask = {
   _count: TaskCountAggregateOutputType | null
+  _avg: TaskAvgAggregateOutputType | null
+  _sum: TaskSumAggregateOutputType | null
   _min: TaskMinAggregateOutputType | null
   _max: TaskMaxAggregateOutputType | null
 }
 
+export type TaskAvgAggregateOutputType = {
+  id: number | null
+  projectId: number | null
+  createdByUserId: number | null
+  assignedToUserId: number | null
+}
+
+export type TaskSumAggregateOutputType = {
+  id: number | null
+  projectId: number | null
+  createdByUserId: number | null
+  assignedToUserId: number | null
+}
+
 export type TaskMinAggregateOutputType = {
-  id: string | null
-  projectId: string | null
-  createdByUserId: string | null
-  assignedToUserId: string | null
+  id: number | null
+  publicId: string | null
+  projectId: number | null
+  createdByUserId: number | null
+  assignedToUserId: number | null
   title: string | null
   description: string | null
   status: $Enums.TaskStatus | null
@@ -37,10 +54,11 @@ export type TaskMinAggregateOutputType = {
 }
 
 export type TaskMaxAggregateOutputType = {
-  id: string | null
-  projectId: string | null
-  createdByUserId: string | null
-  assignedToUserId: string | null
+  id: number | null
+  publicId: string | null
+  projectId: number | null
+  createdByUserId: number | null
+  assignedToUserId: number | null
   title: string | null
   description: string | null
   status: $Enums.TaskStatus | null
@@ -50,6 +68,7 @@ export type TaskMaxAggregateOutputType = {
 
 export type TaskCountAggregateOutputType = {
   id: number
+  publicId: number
   projectId: number
   createdByUserId: number
   assignedToUserId: number
@@ -62,8 +81,23 @@ export type TaskCountAggregateOutputType = {
 }
 
 
+export type TaskAvgAggregateInputType = {
+  id?: true
+  projectId?: true
+  createdByUserId?: true
+  assignedToUserId?: true
+}
+
+export type TaskSumAggregateInputType = {
+  id?: true
+  projectId?: true
+  createdByUserId?: true
+  assignedToUserId?: true
+}
+
 export type TaskMinAggregateInputType = {
   id?: true
+  publicId?: true
   projectId?: true
   createdByUserId?: true
   assignedToUserId?: true
@@ -76,6 +110,7 @@ export type TaskMinAggregateInputType = {
 
 export type TaskMaxAggregateInputType = {
   id?: true
+  publicId?: true
   projectId?: true
   createdByUserId?: true
   assignedToUserId?: true
@@ -88,6 +123,7 @@ export type TaskMaxAggregateInputType = {
 
 export type TaskCountAggregateInputType = {
   id?: true
+  publicId?: true
   projectId?: true
   createdByUserId?: true
   assignedToUserId?: true
@@ -137,6 +173,18 @@ export type TaskAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: TaskAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: TaskSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: TaskMinAggregateInputType
@@ -167,21 +215,26 @@ export type TaskGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: TaskCountAggregateInputType | true
+  _avg?: TaskAvgAggregateInputType
+  _sum?: TaskSumAggregateInputType
   _min?: TaskMinAggregateInputType
   _max?: TaskMaxAggregateInputType
 }
 
 export type TaskGroupByOutputType = {
-  id: string
-  projectId: string
-  createdByUserId: string
-  assignedToUserId: string
+  id: number
+  publicId: string
+  projectId: number
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description: string | null
   status: $Enums.TaskStatus
   dueDate: Date | null
   createdAt: Date
   _count: TaskCountAggregateOutputType | null
+  _avg: TaskAvgAggregateOutputType | null
+  _sum: TaskSumAggregateOutputType | null
   _min: TaskMinAggregateOutputType | null
   _max: TaskMaxAggregateOutputType | null
 }
@@ -205,10 +258,11 @@ export type TaskWhereInput = {
   AND?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   OR?: Prisma.TaskWhereInput[]
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
-  id?: Prisma.StringFilter<"Task"> | string
-  projectId?: Prisma.StringFilter<"Task"> | string
-  createdByUserId?: Prisma.StringFilter<"Task"> | string
-  assignedToUserId?: Prisma.StringFilter<"Task"> | string
+  id?: Prisma.IntFilter<"Task"> | number
+  publicId?: Prisma.StringFilter<"Task"> | string
+  projectId?: Prisma.IntFilter<"Task"> | number
+  createdByUserId?: Prisma.IntFilter<"Task"> | number
+  assignedToUserId?: Prisma.IntFilter<"Task"> | number
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -222,6 +276,7 @@ export type TaskWhereInput = {
 
 export type TaskOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   assignedToUserId?: Prisma.SortOrder
@@ -237,13 +292,14 @@ export type TaskOrderByWithRelationInput = {
 }
 
 export type TaskWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
+  publicId?: string
   AND?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   OR?: Prisma.TaskWhereInput[]
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
-  projectId?: Prisma.StringFilter<"Task"> | string
-  createdByUserId?: Prisma.StringFilter<"Task"> | string
-  assignedToUserId?: Prisma.StringFilter<"Task"> | string
+  projectId?: Prisma.IntFilter<"Task"> | number
+  createdByUserId?: Prisma.IntFilter<"Task"> | number
+  assignedToUserId?: Prisma.IntFilter<"Task"> | number
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -253,10 +309,11 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   assignedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   auditLogs?: Prisma.TaskAuditLogListRelationFilter
-}, "id">
+}, "id" | "publicId">
 
 export type TaskOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   assignedToUserId?: Prisma.SortOrder
@@ -266,18 +323,21 @@ export type TaskOrderByWithAggregationInput = {
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TaskCountOrderByAggregateInput
+  _avg?: Prisma.TaskAvgOrderByAggregateInput
   _max?: Prisma.TaskMaxOrderByAggregateInput
   _min?: Prisma.TaskMinOrderByAggregateInput
+  _sum?: Prisma.TaskSumOrderByAggregateInput
 }
 
 export type TaskScalarWhereWithAggregatesInput = {
   AND?: Prisma.TaskScalarWhereWithAggregatesInput | Prisma.TaskScalarWhereWithAggregatesInput[]
   OR?: Prisma.TaskScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TaskScalarWhereWithAggregatesInput | Prisma.TaskScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  projectId?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  createdByUserId?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  assignedToUserId?: Prisma.StringWithAggregatesFilter<"Task"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  publicId?: Prisma.StringWithAggregatesFilter<"Task"> | string
+  projectId?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  createdByUserId?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  assignedToUserId?: Prisma.IntWithAggregatesFilter<"Task"> | number
   title?: Prisma.StringWithAggregatesFilter<"Task"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
   status?: Prisma.EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
@@ -286,7 +346,7 @@ export type TaskScalarWhereWithAggregatesInput = {
 }
 
 export type TaskCreateInput = {
-  id?: string
+  publicId?: string
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -299,10 +359,11 @@ export type TaskCreateInput = {
 }
 
 export type TaskUncheckedCreateInput = {
-  id?: string
-  projectId: string
-  createdByUserId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -312,7 +373,7 @@ export type TaskUncheckedCreateInput = {
 }
 
 export type TaskUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -325,10 +386,11 @@ export type TaskUpdateInput = {
 }
 
 export type TaskUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -338,10 +400,11 @@ export type TaskUncheckedUpdateInput = {
 }
 
 export type TaskCreateManyInput = {
-  id?: string
-  projectId: string
-  createdByUserId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -350,7 +413,7 @@ export type TaskCreateManyInput = {
 }
 
 export type TaskUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -359,10 +422,11 @@ export type TaskUpdateManyMutationInput = {
 }
 
 export type TaskUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -382,6 +446,7 @@ export type TaskOrderByRelationAggregateInput = {
 
 export type TaskCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   assignedToUserId?: Prisma.SortOrder
@@ -392,8 +457,16 @@ export type TaskCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type TaskAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrder
+}
+
 export type TaskMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   assignedToUserId?: Prisma.SortOrder
@@ -406,6 +479,7 @@ export type TaskMaxOrderByAggregateInput = {
 
 export type TaskMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   assignedToUserId?: Prisma.SortOrder
@@ -414,6 +488,13 @@ export type TaskMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type TaskSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrder
 }
 
 export type TaskScalarRelationFilter = {
@@ -566,7 +647,7 @@ export type TaskUpdateOneRequiredWithoutAuditLogsNestedInput = {
 }
 
 export type TaskCreateWithoutCreatedByInput = {
-  id?: string
+  publicId?: string
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -578,9 +659,10 @@ export type TaskCreateWithoutCreatedByInput = {
 }
 
 export type TaskUncheckedCreateWithoutCreatedByInput = {
-  id?: string
-  projectId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -600,7 +682,7 @@ export type TaskCreateManyCreatedByInputEnvelope = {
 }
 
 export type TaskCreateWithoutAssignedToInput = {
-  id?: string
+  publicId?: string
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -612,9 +694,10 @@ export type TaskCreateWithoutAssignedToInput = {
 }
 
 export type TaskUncheckedCreateWithoutAssignedToInput = {
-  id?: string
-  projectId: string
-  createdByUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  createdByUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -653,10 +736,11 @@ export type TaskScalarWhereInput = {
   AND?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
   OR?: Prisma.TaskScalarWhereInput[]
   NOT?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
-  id?: Prisma.StringFilter<"Task"> | string
-  projectId?: Prisma.StringFilter<"Task"> | string
-  createdByUserId?: Prisma.StringFilter<"Task"> | string
-  assignedToUserId?: Prisma.StringFilter<"Task"> | string
+  id?: Prisma.IntFilter<"Task"> | number
+  publicId?: Prisma.StringFilter<"Task"> | string
+  projectId?: Prisma.IntFilter<"Task"> | number
+  createdByUserId?: Prisma.IntFilter<"Task"> | number
+  assignedToUserId?: Prisma.IntFilter<"Task"> | number
   title?: Prisma.StringFilter<"Task"> | string
   description?: Prisma.StringNullableFilter<"Task"> | string | null
   status?: Prisma.EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -681,7 +765,7 @@ export type TaskUpdateManyWithWhereWithoutAssignedToInput = {
 }
 
 export type TaskCreateWithoutProjectInput = {
-  id?: string
+  publicId?: string
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -693,9 +777,10 @@ export type TaskCreateWithoutProjectInput = {
 }
 
 export type TaskUncheckedCreateWithoutProjectInput = {
-  id?: string
-  createdByUserId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -731,7 +816,7 @@ export type TaskUpdateManyWithWhereWithoutProjectInput = {
 }
 
 export type TaskCreateWithoutAuditLogsInput = {
-  id?: string
+  publicId?: string
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -743,10 +828,11 @@ export type TaskCreateWithoutAuditLogsInput = {
 }
 
 export type TaskUncheckedCreateWithoutAuditLogsInput = {
-  id?: string
-  projectId: string
-  createdByUserId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -771,7 +857,7 @@ export type TaskUpdateToOneWithWhereWithoutAuditLogsInput = {
 }
 
 export type TaskUpdateWithoutAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -783,10 +869,11 @@ export type TaskUpdateWithoutAuditLogsInput = {
 }
 
 export type TaskUncheckedUpdateWithoutAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -795,9 +882,10 @@ export type TaskUncheckedUpdateWithoutAuditLogsInput = {
 }
 
 export type TaskCreateManyCreatedByInput = {
-  id?: string
-  projectId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -806,9 +894,10 @@ export type TaskCreateManyCreatedByInput = {
 }
 
 export type TaskCreateManyAssignedToInput = {
-  id?: string
-  projectId: string
-  createdByUserId: string
+  id?: number
+  publicId?: string
+  projectId: number
+  createdByUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -817,7 +906,7 @@ export type TaskCreateManyAssignedToInput = {
 }
 
 export type TaskUpdateWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -829,9 +918,10 @@ export type TaskUpdateWithoutCreatedByInput = {
 }
 
 export type TaskUncheckedUpdateWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -841,9 +931,10 @@ export type TaskUncheckedUpdateWithoutCreatedByInput = {
 }
 
 export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -852,7 +943,7 @@ export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
 }
 
 export type TaskUpdateWithoutAssignedToInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -864,9 +955,10 @@ export type TaskUpdateWithoutAssignedToInput = {
 }
 
 export type TaskUncheckedUpdateWithoutAssignedToInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -876,9 +968,10 @@ export type TaskUncheckedUpdateWithoutAssignedToInput = {
 }
 
 export type TaskUncheckedUpdateManyWithoutAssignedToInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -887,9 +980,10 @@ export type TaskUncheckedUpdateManyWithoutAssignedToInput = {
 }
 
 export type TaskCreateManyProjectInput = {
-  id?: string
-  createdByUserId: string
-  assignedToUserId: string
+  id?: number
+  publicId?: string
+  createdByUserId: number
+  assignedToUserId: number
   title: string
   description?: string | null
   status: $Enums.TaskStatus
@@ -898,7 +992,7 @@ export type TaskCreateManyProjectInput = {
 }
 
 export type TaskUpdateWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -910,9 +1004,10 @@ export type TaskUpdateWithoutProjectInput = {
 }
 
 export type TaskUncheckedUpdateWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -922,9 +1017,10 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
 }
 
 export type TaskUncheckedUpdateManyWithoutProjectInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  assignedToUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -965,6 +1061,7 @@ export type TaskCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
 
 export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   projectId?: boolean
   createdByUserId?: boolean
   assignedToUserId?: boolean
@@ -982,6 +1079,7 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   projectId?: boolean
   createdByUserId?: boolean
   assignedToUserId?: boolean
@@ -997,6 +1095,7 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   projectId?: boolean
   createdByUserId?: boolean
   assignedToUserId?: boolean
@@ -1012,6 +1111,7 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type TaskSelectScalar = {
   id?: boolean
+  publicId?: boolean
   projectId?: boolean
   createdByUserId?: boolean
   assignedToUserId?: boolean
@@ -1022,7 +1122,7 @@ export type TaskSelectScalar = {
   createdAt?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "createdByUserId" | "assignedToUserId" | "title" | "description" | "status" | "dueDate" | "createdAt", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "projectId" | "createdByUserId" | "assignedToUserId" | "title" | "description" | "status" | "dueDate" | "createdAt", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1050,10 +1150,11 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     auditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
-    projectId: string
-    createdByUserId: string
-    assignedToUserId: string
+    id: number
+    publicId: string
+    projectId: number
+    createdByUserId: number
+    assignedToUserId: number
     title: string
     description: string | null
     status: $Enums.TaskStatus
@@ -1486,10 +1587,11 @@ export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Typ
  * Fields of the Task model
  */
 export interface TaskFieldRefs {
-  readonly id: Prisma.FieldRef<"Task", 'String'>
-  readonly projectId: Prisma.FieldRef<"Task", 'String'>
-  readonly createdByUserId: Prisma.FieldRef<"Task", 'String'>
-  readonly assignedToUserId: Prisma.FieldRef<"Task", 'String'>
+  readonly id: Prisma.FieldRef<"Task", 'Int'>
+  readonly publicId: Prisma.FieldRef<"Task", 'String'>
+  readonly projectId: Prisma.FieldRef<"Task", 'Int'>
+  readonly createdByUserId: Prisma.FieldRef<"Task", 'Int'>
+  readonly assignedToUserId: Prisma.FieldRef<"Task", 'Int'>
   readonly title: Prisma.FieldRef<"Task", 'String'>
   readonly description: Prisma.FieldRef<"Task", 'String'>
   readonly status: Prisma.FieldRef<"Task", 'TaskStatus'>

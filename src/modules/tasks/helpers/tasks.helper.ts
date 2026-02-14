@@ -11,28 +11,41 @@ export class TasksHelper {
         private readonly usersRepository: UsersRepository,
     ) { }
 
-    async validateProjectExists(projectId: string) {
-        const project = await this.projectsRepository.findByIdSimple(projectId);
+    /**
+     * Validate project exists by publicId, returns the project entity
+     */
+    async validateProjectExists(projectPublicId: string) {
+        const project = await this.projectsRepository.findByPublicIdSimple(projectPublicId);
 
         if (!project) {
-            throw new NotFoundException(`Project with ID ${projectId} not found`);
+            throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
         }
+
+        return project;
     }
 
-    async validateUserExists(userId: string, role?: string) {
-        const user = await this.usersRepository.findByIdSimple(userId);
+    /**
+     * Validate user exists by publicId, returns the user entity
+     */
+    async validateUserExists(userPublicId: string, role?: string) {
+        const user = await this.usersRepository.findByPublicIdSimple(userPublicId);
 
         if (!user) {
             const roleMsg = role ? `${role} ` : '';
-            throw new NotFoundException(`${roleMsg}User with ID ${userId} not found`);
+            throw new NotFoundException(`${roleMsg}User with ID ${userPublicId} not found`);
         }
+
+        return user;
     }
 
-    async validateTaskExists(id: string) {
-        const task = await this.tasksRepository.findByIdSimple(id);
+    /**
+     * Validate task exists by publicId, returns the task entity
+     */
+    async validateTaskExists(taskPublicId: string) {
+        const task = await this.tasksRepository.findByPublicIdSimple(taskPublicId);
 
         if (!task) {
-            throw new NotFoundException(`Task with ID ${id} not found`);
+            throw new NotFoundException(`Task with ID ${taskPublicId} not found`);
         }
 
         return task;

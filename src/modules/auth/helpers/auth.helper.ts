@@ -28,6 +28,7 @@ export class AuthHelper {
 
     /**
      * Validate password and audit log if invalid.
+     * Uses user.id (internal) for audit FK.
      */
     async validatePassword(password: string, user: any, ip: string, userAgent: string, deviceFingerprint?: string) {
         const isPasswordValid = await this.verifyPassword(password, user.passwordHash);
@@ -92,11 +93,16 @@ export class AuthHelper {
         return bcrypt.compare(sha256, hash);
     }
 
+    /**
+     * Generate JWT tokens using publicId in the payload.
+     * The JWT `sub` field uses the user's publicId (UUID) — never the internal integer id.
+     */
     async generateTokens(user: any) {
-        const payload = { sub: user.id, username: user.username, roles: user.roles };
+        const payload = { sub: user.publicId, username: user.username, roles: user.roles };
         const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: AUTH_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN as any });
         const refreshTokenHash = await this.hashRefreshToken(refreshToken);
 
+        // Store refresh token hash using internal id
         await this.usersRepository.updateRefreshTokenHash(user.id, refreshTokenHash);
 
         const accessToken = await this.jwtService.signAsync(payload);
@@ -109,8 +115,12 @@ export class AuthHelper {
 
     // ─── AUDIT ────────────────────────────────────────────────────
 
+    /**
+     * Log audit event.
+     * userId is the internal integer id (FK to User table).
+     */
     async logAudit(data: {
-        userId?: string;
+        userId?: number;
         event: keyof typeof AuthAuditEvent;
         reason?: string;
         ip?: string;

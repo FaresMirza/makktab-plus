@@ -10,10 +10,11 @@ export class OtpRepository {
 
     /**
      * Create a new OTP record.
+     * userId and officeId are internal integer IDs.
      */
     async createOtp(data: {
-        userId: string;
-        officeId: string;
+        userId: number;
+        officeId: number;
         email: string;
         purpose: OtpPurpose;
         channel: string;
@@ -45,8 +46,9 @@ export class OtpRepository {
 
     /**
      * Find the latest PENDING OTP for a user + purpose combination.
+     * userId is the internal integer ID.
      */
-    async findLatestPendingOtp(userId: string, purpose: OtpPurpose) {
+    async findLatestPendingOtp(userId: number, purpose: OtpPurpose) {
         return this.prisma.otpCode.findFirst({
             where: {
                 userId,
@@ -63,7 +65,7 @@ export class OtpRepository {
      * Count OTP records created by a user within a time window.
      * Used for rate-limiting (e.g., max 5 in 30 min).
      */
-    async countRecentOtps(userId: string, sinceDate: Date): Promise<number> {
+    async countRecentOtps(userId: number, sinceDate: Date): Promise<number> {
         return this.prisma.otpCode.count({
             where: {
                 userId,
@@ -76,9 +78,8 @@ export class OtpRepository {
 
     /**
      * Expire all PENDING OTPs for a given user + purpose.
-     * Called before issuing a new OTP to invalidate old ones.
      */
-    async expirePendingOtps(userId: string, purpose: OtpPurpose) {
+    async expirePendingOtps(userId: number, purpose: OtpPurpose) {
         return this.prisma.otpCode.updateMany({
             where: {
                 userId,
@@ -93,8 +94,9 @@ export class OtpRepository {
 
     /**
      * Increment the attempts counter for an OTP record.
+     * otpId is the internal integer ID.
      */
-    async incrementAttempts(otpId: string) {
+    async incrementAttempts(otpId: number) {
         return this.prisma.otpCode.update({
             where: { id: otpId },
             data: {
@@ -108,7 +110,7 @@ export class OtpRepository {
     /**
      * Update the status of an OTP record.
      */
-    async updateOtpStatus(otpId: string, status: OtpStatus) {
+    async updateOtpStatus(otpId: number, status: OtpStatus) {
         return this.prisma.otpCode.update({
             where: { id: otpId },
             data: {
@@ -121,21 +123,21 @@ export class OtpRepository {
     /**
      * Mark OTP as BLOCKED (max attempts exceeded).
      */
-    async blockOtp(otpId: string) {
+    async blockOtp(otpId: number) {
         return this.updateOtpStatus(otpId, OtpStatus.BLOCKED);
     }
 
     /**
      * Mark OTP as VERIFIED.
      */
-    async verifyOtp(otpId: string) {
+    async verifyOtp(otpId: number) {
         return this.updateOtpStatus(otpId, OtpStatus.VERIFIED);
     }
 
     /**
      * Mark OTP as EXPIRED.
      */
-    async expireOtp(otpId: string) {
+    async expireOtp(otpId: number) {
         return this.updateOtpStatus(otpId, OtpStatus.EXPIRED);
     }
 
@@ -143,8 +145,9 @@ export class OtpRepository {
 
     /**
      * Lock a user until a specific time.
+     * userId is the internal integer ID.
      */
-    async lockUser(userId: string, lockedUntil: Date) {
+    async lockUser(userId: number, lockedUntil: Date) {
         return this.prisma.user.update({
             where: { id: userId },
             data: {
@@ -157,7 +160,7 @@ export class OtpRepository {
     /**
      * Unlock a user (clear lock).
      */
-    async unlockUser(userId: string) {
+    async unlockUser(userId: number) {
         return this.prisma.user.update({
             where: { id: userId },
             data: {
@@ -181,9 +184,9 @@ export class OtpRepository {
     }
 
     /**
-     * Find user by ID (simple, no relations).
+     * Find user by internal ID (simple, no relations).
      */
-    async findUserById(userId: string) {
+    async findUserById(userId: number) {
         return this.prisma.user.findUnique({
             where: { id: userId },
         });

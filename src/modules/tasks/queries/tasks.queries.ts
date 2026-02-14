@@ -9,6 +9,7 @@ export class TasksRepository {
     private get userSelect(): Prisma.UserSelect {
         return {
             id: true,
+            publicId: true,
             fullName: true,
             email: true,
             username: true,
@@ -18,11 +19,13 @@ export class TasksRepository {
     private get projectSelect(): Prisma.ProjectSelect {
         return {
             id: true,
+            publicId: true,
             name: true,
             status: true,
             office: {
                 select: {
                     id: true,
+                    publicId: true,
                     name: true,
                 },
             },
@@ -42,12 +45,14 @@ export class TasksRepository {
             project: {
                 select: {
                     id: true,
+                    publicId: true,
                     name: true,
                     description: true,
                     status: true,
                     office: {
                         select: {
                             id: true,
+                            publicId: true,
                             name: true,
                         },
                     },
@@ -70,6 +75,7 @@ export class TasksRepository {
                 project: {
                     select: {
                         id: true,
+                        publicId: true,
                         name: true,
                         status: true,
                     },
@@ -87,20 +93,33 @@ export class TasksRepository {
         });
     }
 
-    async findById(id: string) {
+    async findById(id: number) {
         return this.prisma.task.findUnique({
             where: { id },
             include: this.taskDetailInclude,
         });
     }
 
-    async findByIdSimple(id: string) {
+    async findByPublicId(publicId: string) {
+        return this.prisma.task.findUnique({
+            where: { publicId },
+            include: this.taskDetailInclude,
+        });
+    }
+
+    async findByIdSimple(id: number) {
         return this.prisma.task.findUnique({
             where: { id },
         });
     }
 
-    async findByProject(projectId: string) {
+    async findByPublicIdSimple(publicId: string) {
+        return this.prisma.task.findUnique({
+            where: { publicId },
+        });
+    }
+
+    async findByProject(projectId: number) {
         return this.prisma.task.findMany({
             where: { projectId },
             include: {
@@ -119,7 +138,7 @@ export class TasksRepository {
         });
     }
 
-    async findByAssignee(assignedToUserId: string) {
+    async findByAssignee(assignedToUserId: number) {
         return this.prisma.task.findMany({
             where: { assignedToUserId },
             include: {
@@ -130,13 +149,14 @@ export class TasksRepository {
         });
     }
 
-    async findByCreator(createdByUserId: string) {
+    async findByCreator(createdByUserId: number) {
         return this.prisma.task.findMany({
             where: { createdByUserId },
             include: {
                 project: {
                     select: {
                         id: true,
+                        publicId: true,
                         name: true,
                         status: true,
                     },
@@ -157,18 +177,19 @@ export class TasksRepository {
                 project: {
                     select: {
                         id: true,
+                        publicId: true,
                         name: true,
                         status: true,
                     },
                 },
-                createdBy: { select: { id: true, fullName: true, email: true } },
-                assignedTo: { select: { id: true, fullName: true, email: true } },
+                createdBy: { select: { id: true, publicId: true, fullName: true, email: true } },
+                assignedTo: { select: { id: true, publicId: true, fullName: true, email: true } },
             },
             orderBy: { dueDate: 'asc' },
         });
     }
 
-    async update(id: string, data: Prisma.TaskUncheckedUpdateInput) {
+    async update(id: number, data: Prisma.TaskUncheckedUpdateInput) {
         return this.prisma.task.update({
             where: { id },
             data,
@@ -176,6 +197,7 @@ export class TasksRepository {
                 project: {
                     select: {
                         id: true,
+                        publicId: true,
                         name: true,
                         status: true,
                     },
@@ -186,20 +208,20 @@ export class TasksRepository {
         });
     }
 
-    async delete(id: string) {
+    async delete(id: number) {
         return this.prisma.task.delete({
             where: { id },
         });
     }
 
-    async softDelete(id: string) {
+    async softDelete(id: number) {
         return this.prisma.task.update({
             where: { id },
             data: { status: TaskStatus.CANCELLED },
             include: {
-                project: { select: { id: true, name: true } },
-                createdBy: { select: { id: true, fullName: true, email: true } },
-                assignedTo: { select: { id: true, fullName: true, email: true } },
+                project: { select: { id: true, publicId: true, name: true } },
+                createdBy: { select: { id: true, publicId: true, fullName: true, email: true } },
+                assignedTo: { select: { id: true, publicId: true, fullName: true, email: true } },
             },
         });
     }

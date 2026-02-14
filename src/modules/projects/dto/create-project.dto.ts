@@ -13,26 +13,26 @@ export class CreateProjectDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'The ID of the office this project belongs to', example: 'office-uuid-123' })
+  @ApiProperty({ description: 'The public ID (UUID) of the office this project belongs to', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
   @IsString()
   @IsNotEmpty()
   officeId: string;
 
-  @ApiProperty({ description: 'The ID of the user who created this project', example: 'user-uuid-123' })
+  @ApiProperty({ description: 'The public ID (UUID) of the user who created this project', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' })
   @IsString()
   @IsNotEmpty()
   createdByUserId: string;
 
-  @ApiProperty({ description: 'The ID of the user who manages this project', example: 'user-uuid-456' })
+  @ApiProperty({ description: 'The public ID (UUID) of the user who manages this project', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' })
   @IsString()
   @IsNotEmpty()
   projectManagerUserId: string;
 
-  @ApiProperty({ 
-    description: 'The status of the project', 
-    example: 'IN_PROGRESS', 
+  @ApiProperty({
+    description: 'The status of the project',
+    example: 'IN_PROGRESS',
     enum: ProjectStatus,
-    required: false 
+    required: false
   })
   @IsEnum(ProjectStatus)
   @IsOptional()

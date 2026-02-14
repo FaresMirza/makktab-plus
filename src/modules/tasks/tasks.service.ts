@@ -14,27 +14,24 @@ export class TasksService {
 
   /**
    * Create a new task
-   * - Validates that project, creator, and assignee exist
+   * - Validates that project, creator, and assignee exist (by publicId)
+   * - Resolves publicIds → internal ids for DB creation
    * - Sets default status to TODO if not provided
    */
   async create(createTaskDto: CreateTaskDto) {
     const { projectId, createdByUserId, assignedToUserId, title, description, status, dueDate } = createTaskDto;
 
-    // Check if project exists
-    await this.tasksHelper.validateProjectExists(projectId);
-
-    // Check if creator user exists
-    await this.tasksHelper.validateUserExists(createdByUserId, 'Creator');
-
-    // Check if assignee user exists
-    await this.tasksHelper.validateUserExists(assignedToUserId, 'Assignee');
+    // Resolve publicIds → internal entities
+    const project = await this.tasksHelper.validateProjectExists(projectId);
+    const creator = await this.tasksHelper.validateUserExists(createdByUserId, 'Creator');
+    const assignee = await this.tasksHelper.validateUserExists(assignedToUserId, 'Assignee');
 
     const task = await this.tasksRepository.create({
       title,
       description,
-      projectId,
-      createdByUserId,
-      assignedToUserId,
+      projectId: project.id,
+      createdByUserId: creator.id,
+      assignedToUserId: assignee.id,
       status: status || TaskStatus.TODO,
       dueDate: dueDate ? new Date(dueDate) : null,
     });
@@ -44,61 +41,57 @@ export class TasksService {
 
   /**
    * Get all tasks
-   * - Includes project, creator, and assignee information
    */
   async findAll() {
     return this.tasksRepository.findAll();
   }
 
   /**
-   * Get a specific task by ID
-   * - Includes project, creator, and assignee information
+   * Get a specific task by publicId
    */
-  async findOne(id: string) {
-    const task = await this.tasksRepository.findById(id);
+  async findOne(publicId: string) {
+    const task = await this.tasksRepository.findByPublicId(publicId);
 
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(`Task with ID ${publicId} not found`);
     }
 
     return task;
   }
 
   /**
-   * Get tasks by project
-   * - Returns all tasks belonging to a specific project
+   * Get tasks by project (by project publicId)
    */
-  async findByProject(projectId: string) {
-    return this.tasksRepository.findByProject(projectId);
+  async findByProject(projectPublicId: string) {
+    const project = await this.tasksHelper.validateProjectExists(projectPublicId);
+    return this.tasksRepository.findByProject(project.id);
   }
 
   /**
    * Get tasks by status
-   * - Returns all tasks with a specific status
    */
   async findByStatus(status: TaskStatus) {
     return this.tasksRepository.findByStatus(status);
   }
 
   /**
-   * Get tasks assigned to a specific user
-   * - Returns all tasks assigned to the user
+   * Get tasks assigned to a specific user (by user publicId)
    */
-  async findByAssignee(assignedToUserId: string) {
-    return this.tasksRepository.findByAssignee(assignedToUserId);
+  async findByAssignee(assigneePublicId: string) {
+    const user = await this.tasksHelper.validateUserExists(assigneePublicId, 'Assignee');
+    return this.tasksRepository.findByAssignee(user.id);
   }
 
   /**
-   * Get tasks created by a specific user
-   * - Returns all tasks created by the user
+   * Get tasks created by a specific user (by user publicId)
    */
-  async findByCreator(createdByUserId: string) {
-    return this.tasksRepository.findByCreator(createdByUserId);
+  async findByCreator(creatorPublicId: string) {
+    const user = await this.tasksHelper.validateUserExists(creatorPublicId, 'Creator');
+    return this.tasksRepository.findByCreator(user.id);
   }
 
   /**
    * Get overdue tasks
-   * - Returns all tasks with due date in the past and not done
    */
   async findOverdue() {
     return this.tasksRepository.findOverdue();
@@ -106,45 +99,43 @@ export class TasksService {
 
   /**
    * Update a task
+   * - Accepts publicId
    * - Can update title, description, assignee, status, and due date
-   * - Cannot update projectId or createdByUserId
    */
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
-    // Check if task exists
-    await this.tasksHelper.validateTaskExists(id);
+  async update(publicId: string, updateTaskDto: UpdateTaskDto) {
+    // Resolve task publicId → internal entity
+    const task = await this.tasksHelper.validateTaskExists(publicId);
 
-    // If updating assignee, check if user exists
+    // Build update data
+    const updateData: any = {};
+    if (updateTaskDto.title !== undefined) updateData.title = updateTaskDto.title;
+    if (updateTaskDto.description !== undefined) updateData.description = updateTaskDto.description;
+    if (updateTaskDto.status !== undefined) updateData.status = updateTaskDto.status;
+    if (updateTaskDto.dueDate) updateData.dueDate = new Date(updateTaskDto.dueDate);
+
+    // If updating assignee, resolve publicId → internal id
     if (updateTaskDto.assignedToUserId) {
-      await this.tasksHelper.validateUserExists(updateTaskDto.assignedToUserId, 'Assignee');
+      const assignee = await this.tasksHelper.validateUserExists(updateTaskDto.assignedToUserId, 'Assignee');
+      updateData.assignedToUserId = assignee.id;
     }
 
-    // Prepare update data
-    const updateData: any = { ...updateTaskDto };
-    if (updateTaskDto.dueDate) {
-      updateData.dueDate = new Date(updateTaskDto.dueDate);
-    }
-
-    const updatedTask = await this.tasksRepository.update(id, updateData);
+    const updatedTask = await this.tasksRepository.update(task.id, updateData);
 
     return updatedTask;
   }
 
   /**
    * Delete/Cancel a task
-   * - Soft delete: Sets status to CANCELLED
-   * - Hard delete: Permanently removes task (use with caution)
+   * - Accepts publicId
    */
-  async remove(id: string, hardDelete = false) {
-    // Check if task exists
-    await this.tasksHelper.validateTaskExists(id);
+  async remove(publicId: string, hardDelete = false) {
+    const task = await this.tasksHelper.validateTaskExists(publicId);
 
     if (hardDelete) {
-      // Hard delete - permanently remove task
-      await this.tasksRepository.delete(id);
+      await this.tasksRepository.delete(task.id);
       return { message: 'Task permanently deleted' };
     } else {
-      // Soft delete - cancel task
-      return this.tasksRepository.softDelete(id);
+      return this.tasksRepository.softDelete(task.id);
     }
   }
 }

@@ -20,28 +20,43 @@ export type OfficeModel = runtime.Types.Result.DefaultSelection<Prisma.$OfficePa
 
 export type AggregateOffice = {
   _count: OfficeCountAggregateOutputType | null
+  _avg: OfficeAvgAggregateOutputType | null
+  _sum: OfficeSumAggregateOutputType | null
   _min: OfficeMinAggregateOutputType | null
   _max: OfficeMaxAggregateOutputType | null
 }
 
+export type OfficeAvgAggregateOutputType = {
+  id: number | null
+  ownerUserId: number | null
+}
+
+export type OfficeSumAggregateOutputType = {
+  id: number | null
+  ownerUserId: number | null
+}
+
 export type OfficeMinAggregateOutputType = {
-  id: string | null
+  id: number | null
+  publicId: string | null
   name: string | null
-  ownerUserId: string | null
+  ownerUserId: number | null
   status: $Enums.OfficeStatus | null
   createdAt: Date | null
 }
 
 export type OfficeMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
+  publicId: string | null
   name: string | null
-  ownerUserId: string | null
+  ownerUserId: number | null
   status: $Enums.OfficeStatus | null
   createdAt: Date | null
 }
 
 export type OfficeCountAggregateOutputType = {
   id: number
+  publicId: number
   name: number
   ownerUserId: number
   status: number
@@ -50,8 +65,19 @@ export type OfficeCountAggregateOutputType = {
 }
 
 
+export type OfficeAvgAggregateInputType = {
+  id?: true
+  ownerUserId?: true
+}
+
+export type OfficeSumAggregateInputType = {
+  id?: true
+  ownerUserId?: true
+}
+
 export type OfficeMinAggregateInputType = {
   id?: true
+  publicId?: true
   name?: true
   ownerUserId?: true
   status?: true
@@ -60,6 +86,7 @@ export type OfficeMinAggregateInputType = {
 
 export type OfficeMaxAggregateInputType = {
   id?: true
+  publicId?: true
   name?: true
   ownerUserId?: true
   status?: true
@@ -68,6 +95,7 @@ export type OfficeMaxAggregateInputType = {
 
 export type OfficeCountAggregateInputType = {
   id?: true
+  publicId?: true
   name?: true
   ownerUserId?: true
   status?: true
@@ -113,6 +141,18 @@ export type OfficeAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: OfficeAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: OfficeSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: OfficeMinAggregateInputType
@@ -143,17 +183,22 @@ export type OfficeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: OfficeCountAggregateInputType | true
+  _avg?: OfficeAvgAggregateInputType
+  _sum?: OfficeSumAggregateInputType
   _min?: OfficeMinAggregateInputType
   _max?: OfficeMaxAggregateInputType
 }
 
 export type OfficeGroupByOutputType = {
-  id: string
+  id: number
+  publicId: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt: Date
   _count: OfficeCountAggregateOutputType | null
+  _avg: OfficeAvgAggregateOutputType | null
+  _sum: OfficeSumAggregateOutputType | null
   _min: OfficeMinAggregateOutputType | null
   _max: OfficeMaxAggregateOutputType | null
 }
@@ -177,9 +222,10 @@ export type OfficeWhereInput = {
   AND?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[]
   OR?: Prisma.OfficeWhereInput[]
   NOT?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[]
-  id?: Prisma.StringFilter<"Office"> | string
+  id?: Prisma.IntFilter<"Office"> | number
+  publicId?: Prisma.StringFilter<"Office"> | string
   name?: Prisma.StringFilter<"Office"> | string
-  ownerUserId?: Prisma.StringFilter<"Office"> | string
+  ownerUserId?: Prisma.IntFilter<"Office"> | number
   status?: Prisma.EnumOfficeStatusFilter<"Office"> | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFilter<"Office"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -192,6 +238,7 @@ export type OfficeWhereInput = {
 
 export type OfficeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -205,8 +252,9 @@ export type OfficeOrderByWithRelationInput = {
 }
 
 export type OfficeWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
-  ownerUserId?: string
+  id?: number
+  publicId?: string
+  ownerUserId?: number
   AND?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[]
   OR?: Prisma.OfficeWhereInput[]
   NOT?: Prisma.OfficeWhereInput | Prisma.OfficeWhereInput[]
@@ -219,32 +267,36 @@ export type OfficeWhereUniqueInput = Prisma.AtLeast<{
   otpCodes?: Prisma.OtpCodeListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
-}, "id" | "ownerUserId">
+}, "id" | "publicId" | "ownerUserId">
 
 export type OfficeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.OfficeCountOrderByAggregateInput
+  _avg?: Prisma.OfficeAvgOrderByAggregateInput
   _max?: Prisma.OfficeMaxOrderByAggregateInput
   _min?: Prisma.OfficeMinOrderByAggregateInput
+  _sum?: Prisma.OfficeSumOrderByAggregateInput
 }
 
 export type OfficeScalarWhereWithAggregatesInput = {
   AND?: Prisma.OfficeScalarWhereWithAggregatesInput | Prisma.OfficeScalarWhereWithAggregatesInput[]
   OR?: Prisma.OfficeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OfficeScalarWhereWithAggregatesInput | Prisma.OfficeScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Office"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Office"> | number
+  publicId?: Prisma.StringWithAggregatesFilter<"Office"> | string
   name?: Prisma.StringWithAggregatesFilter<"Office"> | string
-  ownerUserId?: Prisma.StringWithAggregatesFilter<"Office"> | string
+  ownerUserId?: Prisma.IntWithAggregatesFilter<"Office"> | number
   status?: Prisma.EnumOfficeStatusWithAggregatesFilter<"Office"> | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Office"> | Date | string
 }
 
 export type OfficeCreateInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -257,9 +309,10 @@ export type OfficeCreateInput = {
 }
 
 export type OfficeUncheckedCreateInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
@@ -270,7 +323,7 @@ export type OfficeUncheckedCreateInput = {
 }
 
 export type OfficeUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -283,9 +336,10 @@ export type OfficeUpdateInput = {
 }
 
 export type OfficeUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
@@ -296,38 +350,47 @@ export type OfficeUncheckedUpdateInput = {
 }
 
 export type OfficeCreateManyInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
 }
 
 export type OfficeUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OfficeUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OfficeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
+export type OfficeAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  ownerUserId?: Prisma.SortOrder
+}
+
 export type OfficeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -336,10 +399,16 @@ export type OfficeMaxOrderByAggregateInput = {
 
 export type OfficeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   ownerUserId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type OfficeSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  ownerUserId?: Prisma.SortOrder
 }
 
 export type OfficeListRelationFilter = {
@@ -372,6 +441,14 @@ export type EnumOfficeStatusFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type OfficeCreateNestedManyWithoutUsersInput = {
@@ -501,7 +578,7 @@ export type OfficeUpdateOneRequiredWithoutTaskAuditLogsNestedInput = {
 }
 
 export type OfficeCreateWithoutUsersInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -513,9 +590,10 @@ export type OfficeCreateWithoutUsersInput = {
 }
 
 export type OfficeUncheckedCreateWithoutUsersInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOfficeInput
@@ -530,7 +608,7 @@ export type OfficeCreateOrConnectWithoutUsersInput = {
 }
 
 export type OfficeCreateWithoutOwnerInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -542,7 +620,8 @@ export type OfficeCreateWithoutOwnerInput = {
 }
 
 export type OfficeUncheckedCreateWithoutOwnerInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -578,9 +657,10 @@ export type OfficeScalarWhereInput = {
   AND?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[]
   OR?: Prisma.OfficeScalarWhereInput[]
   NOT?: Prisma.OfficeScalarWhereInput | Prisma.OfficeScalarWhereInput[]
-  id?: Prisma.StringFilter<"Office"> | string
+  id?: Prisma.IntFilter<"Office"> | number
+  publicId?: Prisma.StringFilter<"Office"> | string
   name?: Prisma.StringFilter<"Office"> | string
-  ownerUserId?: Prisma.StringFilter<"Office"> | string
+  ownerUserId?: Prisma.IntFilter<"Office"> | number
   status?: Prisma.EnumOfficeStatusFilter<"Office"> | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFilter<"Office"> | Date | string
 }
@@ -597,7 +677,7 @@ export type OfficeUpdateToOneWithWhereWithoutOwnerInput = {
 }
 
 export type OfficeUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -609,7 +689,8 @@ export type OfficeUpdateWithoutOwnerInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -621,7 +702,7 @@ export type OfficeUncheckedUpdateWithoutOwnerInput = {
 }
 
 export type OfficeCreateWithoutProjectsInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -633,9 +714,10 @@ export type OfficeCreateWithoutProjectsInput = {
 }
 
 export type OfficeUncheckedCreateWithoutProjectsInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
@@ -661,7 +743,7 @@ export type OfficeUpdateToOneWithWhereWithoutProjectsInput = {
 }
 
 export type OfficeUpdateWithoutProjectsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -673,9 +755,10 @@ export type OfficeUpdateWithoutProjectsInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutProjectsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
@@ -685,7 +768,7 @@ export type OfficeUncheckedUpdateWithoutProjectsInput = {
 }
 
 export type OfficeCreateWithoutOtpCodesInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -697,9 +780,10 @@ export type OfficeCreateWithoutOtpCodesInput = {
 }
 
 export type OfficeUncheckedCreateWithoutOtpCodesInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
@@ -725,7 +809,7 @@ export type OfficeUpdateToOneWithWhereWithoutOtpCodesInput = {
 }
 
 export type OfficeUpdateWithoutOtpCodesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -737,9 +821,10 @@ export type OfficeUpdateWithoutOtpCodesInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutOtpCodesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
@@ -749,7 +834,7 @@ export type OfficeUncheckedUpdateWithoutOtpCodesInput = {
 }
 
 export type OfficeCreateWithoutProjectAuditLogsInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -761,9 +846,10 @@ export type OfficeCreateWithoutProjectAuditLogsInput = {
 }
 
 export type OfficeUncheckedCreateWithoutProjectAuditLogsInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
@@ -789,7 +875,7 @@ export type OfficeUpdateToOneWithWhereWithoutProjectAuditLogsInput = {
 }
 
 export type OfficeUpdateWithoutProjectAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -801,9 +887,10 @@ export type OfficeUpdateWithoutProjectAuditLogsInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutProjectAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
@@ -813,7 +900,7 @@ export type OfficeUncheckedUpdateWithoutProjectAuditLogsInput = {
 }
 
 export type OfficeCreateWithoutTaskAuditLogsInput = {
-  id?: string
+  publicId?: string
   name: string
   status: $Enums.OfficeStatus
   createdAt?: Date | string
@@ -825,9 +912,10 @@ export type OfficeCreateWithoutTaskAuditLogsInput = {
 }
 
 export type OfficeUncheckedCreateWithoutTaskAuditLogsInput = {
-  id?: string
+  id?: number
+  publicId?: string
   name: string
-  ownerUserId: string
+  ownerUserId: number
   status: $Enums.OfficeStatus
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOfficesInput
@@ -853,7 +941,7 @@ export type OfficeUpdateToOneWithWhereWithoutTaskAuditLogsInput = {
 }
 
 export type OfficeUpdateWithoutTaskAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -865,9 +953,10 @@ export type OfficeUpdateWithoutTaskAuditLogsInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutTaskAuditLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutOfficesNestedInput
@@ -877,7 +966,7 @@ export type OfficeUncheckedUpdateWithoutTaskAuditLogsInput = {
 }
 
 export type OfficeUpdateWithoutUsersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -889,9 +978,10 @@ export type OfficeUpdateWithoutUsersInput = {
 }
 
 export type OfficeUncheckedUpdateWithoutUsersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOfficeNestedInput
@@ -901,9 +991,10 @@ export type OfficeUncheckedUpdateWithoutUsersInput = {
 }
 
 export type OfficeUncheckedUpdateManyWithoutUsersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfficeStatusFieldUpdateOperationsInput | $Enums.OfficeStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -977,6 +1068,7 @@ export type OfficeCountOutputTypeCountTaskAuditLogsArgs<ExtArgs extends runtime.
 
 export type OfficeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   name?: boolean
   ownerUserId?: boolean
   status?: boolean
@@ -992,6 +1084,7 @@ export type OfficeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type OfficeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   name?: boolean
   ownerUserId?: boolean
   status?: boolean
@@ -1001,6 +1094,7 @@ export type OfficeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type OfficeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  publicId?: boolean
   name?: boolean
   ownerUserId?: boolean
   status?: boolean
@@ -1010,13 +1104,14 @@ export type OfficeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type OfficeSelectScalar = {
   id?: boolean
+  publicId?: boolean
   name?: boolean
   ownerUserId?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type OfficeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "ownerUserId" | "status" | "createdAt", ExtArgs["result"]["office"]>
+export type OfficeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "ownerUserId" | "status" | "createdAt", ExtArgs["result"]["office"]>
 export type OfficeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   users?: boolean | Prisma.Office$usersArgs<ExtArgs>
@@ -1044,9 +1139,10 @@ export type $OfficePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     taskAuditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
+    publicId: string
     name: string
-    ownerUserId: string
+    ownerUserId: number
     status: $Enums.OfficeStatus
     createdAt: Date
   }, ExtArgs["result"]["office"]>
@@ -1478,9 +1574,10 @@ export interface Prisma__OfficeClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Office model
  */
 export interface OfficeFieldRefs {
-  readonly id: Prisma.FieldRef<"Office", 'String'>
+  readonly id: Prisma.FieldRef<"Office", 'Int'>
+  readonly publicId: Prisma.FieldRef<"Office", 'String'>
   readonly name: Prisma.FieldRef<"Office", 'String'>
-  readonly ownerUserId: Prisma.FieldRef<"Office", 'String'>
+  readonly ownerUserId: Prisma.FieldRef<"Office", 'Int'>
   readonly status: Prisma.FieldRef<"Office", 'OfficeStatus'>
   readonly createdAt: Prisma.FieldRef<"Office", 'DateTime'>
 }
