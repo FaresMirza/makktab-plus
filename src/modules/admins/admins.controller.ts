@@ -7,6 +7,9 @@ import {
     HttpCode,
     HttpStatus,
     UseGuards,
+    Req,
+    Ip,
+    Headers,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -43,8 +46,19 @@ export class AdminsController {
      */
     @Patch('offices/:id/deactivate')
     @HttpCode(HttpStatus.OK)
-    deactivateOffice(@Param('id') id: string) {
-        return this.adminsService.deactivateOffice(id);
+    deactivateOffice(
+        @Param('id') id: string,
+        @Req() req: any,
+        @Ip() ip: string,
+        @Headers('x-device-fingerprint') deviceFingerprint: string,
+    ) {
+        const auditMeta = {
+            adminUserId: req.user.userId,
+            ip,
+            userAgent: req.headers['user-agent'],
+            deviceFingerprint,
+        };
+        return this.adminsService.deactivateOffice(id, auditMeta);
     }
 
     /**
@@ -53,8 +67,19 @@ export class AdminsController {
      */
     @Patch('offices/:id/activate')
     @HttpCode(HttpStatus.OK)
-    activateOffice(@Param('id') id: string) {
-        return this.adminsService.activateOffice(id);
+    activateOffice(
+        @Param('id') id: string,
+        @Req() req: any,
+        @Ip() ip: string,
+        @Headers('x-device-fingerprint') deviceFingerprint: string,
+    ) {
+        const auditMeta = {
+            adminUserId: req.user.userId,
+            ip,
+            userAgent: req.headers['user-agent'],
+            deviceFingerprint,
+        };
+        return this.adminsService.activateOffice(id, auditMeta);
     }
 
     /**
@@ -76,7 +101,16 @@ export class AdminsController {
     handleRequest(
         @Param('id') id: string,
         @Body('approve') approve: boolean,
+        @Req() req: any,
+        @Ip() ip: string,
+        @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
-        return this.adminsService.handleRequest(id, approve);
+        const auditMeta = {
+            adminUserId: req.user.userId,
+            ip,
+            userAgent: req.headers['user-agent'],
+            deviceFingerprint,
+        };
+        return this.adminsService.handleRequest(id, approve, auditMeta);
     }
 }

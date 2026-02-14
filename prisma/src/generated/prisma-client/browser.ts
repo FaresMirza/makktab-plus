@@ -67,3 +67,8 @@ export type TaskAuditLog = Prisma.TaskAuditLogModel
  * 
  */
 export type AuthAuditLog = Prisma.AuthAuditLogModel
+/**
+ * Model AdminAuditLog
+ * 
+ */
+export type AdminAuditLog = Prisma.AdminAuditLogModel

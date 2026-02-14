@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { AdminsRepository } from './queries/admins.queries';
-import { OfficeStatus } from 'prisma/src/generated/prisma-client/client';
+import { AdminAction, OfficeStatus } from 'prisma/src/generated/prisma-client/client';
+import { AdminsHelper, AuditMeta } from './helpers/admins.helper';
 
 @Injectable()
 export class AdminsService {
     constructor(
         private readonly adminsRepository: AdminsRepository,
+        private readonly adminsHelper: AdminsHelper,
     ) { }
 
     /**
@@ -29,23 +31,39 @@ export class AdminsService {
     /**
      * Deactivate (suspend) an office
      */
-    async deactivateOffice(publicId: string) {
+    async deactivateOffice(publicId: string, auditMeta: AuditMeta) {
         const office = await this.adminsRepository.findOfficeByPublicIdSimple(publicId);
         if (!office) {
             throw new NotFoundException(`Office with ID ${publicId} not found`);
         }
-        return this.adminsRepository.updateOfficeStatus(office.id, OfficeStatus.SUSPENDED);
+
+        const result = await this.adminsRepository.updateOfficeStatus(office.id, OfficeStatus.SUSPENDED);
+
+        await this.adminsHelper.logAction(auditMeta, AdminAction.OFFICE_DEACTIVATED, {
+            targetOfficeId: office.id,
+            reason: 'Manually deactivated by admin',
+        });
+
+        return result;
     }
 
     /**
      * Activate an office
      */
-    async activateOffice(publicId: string) {
+    async activateOffice(publicId: string, auditMeta: AuditMeta) {
         const office = await this.adminsRepository.findOfficeByPublicIdSimple(publicId);
         if (!office) {
             throw new NotFoundException(`Office with ID ${publicId} not found`);
         }
-        return this.adminsRepository.updateOfficeStatus(office.id, OfficeStatus.ACTIVE);
+
+        const result = await this.adminsRepository.updateOfficeStatus(office.id, OfficeStatus.ACTIVE);
+
+        await this.adminsHelper.logAction(auditMeta, AdminAction.OFFICE_ACTIVATED, {
+            targetOfficeId: office.id,
+            reason: 'Manually activated by admin',
+        });
+
+        return result;
     }
 
     /**
@@ -60,7 +78,7 @@ export class AdminsService {
      * - approve: transaction → create User → create Office → set status = true
      * - reject: set status = false
      */
-    async handleRequest(requestId: string, approve: boolean) {
+    async handleRequest(requestId: string, approve: boolean, auditMeta: AuditMeta) {
         const request = await this.adminsRepository.findOfficeRequestById(requestId);
         if (!request) {
             throw new NotFoundException('Office request not found');
@@ -74,10 +92,20 @@ export class AdminsService {
 
         if (!approve) {
             await this.adminsRepository.rejectOfficeRequest(requestId);
+
+            await this.adminsHelper.logAction(auditMeta, AdminAction.OFFICE_REQUEST_REJECTED, {
+                targetRequestId: requestId,
+            });
+
             return { message: 'Office request rejected' };
         }
 
         const office = await this.adminsRepository.approveOfficeRequest(request);
+
+        await this.adminsHelper.logAction(auditMeta, AdminAction.OFFICE_REQUEST_APPROVED, {
+            targetRequestId: requestId,
+            targetOfficeId: office.id,
+        });
 
         return {
             message: 'Office request approved. User and office created.',

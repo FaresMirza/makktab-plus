@@ -58,7 +58,8 @@ export const ModelName = {
   OtpCode: 'OtpCode',
   ProjectAuditLog: 'ProjectAuditLog',
   TaskAuditLog: 'TaskAuditLog',
-  AuthAuditLog: 'AuthAuditLog'
+  AuthAuditLog: 'AuthAuditLog',
+  AdminAuditLog: 'AdminAuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -241,6 +242,22 @@ export const AuthAuditLogScalarFieldEnum = {
 } as const
 
 export type AuthAuditLogScalarFieldEnum = (typeof AuthAuditLogScalarFieldEnum)[keyof typeof AuthAuditLogScalarFieldEnum]
+
+
+export const AdminAuditLogScalarFieldEnum = {
+  id: 'id',
+  adminUserId: 'adminUserId',
+  action: 'action',
+  targetOfficeId: 'targetOfficeId',
+  targetRequestId: 'targetRequestId',
+  reason: 'reason',
+  ip: 'ip',
+  deviceFingerprint: 'deviceFingerprint',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminAuditLogScalarFieldEnum = (typeof AdminAuditLogScalarFieldEnum)[keyof typeof AdminAuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

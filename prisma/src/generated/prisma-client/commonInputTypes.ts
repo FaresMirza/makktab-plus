@@ -372,6 +372,23 @@ export type EnumAuthAuditEventWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAuthAuditEventFilter<$PrismaModel>
 }
 
+export type EnumAdminActionFilter<$PrismaModel = never> = {
+  equals?: $Enums.AdminAction | Prisma.EnumAdminActionFieldRefInput<$PrismaModel>
+  in?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAdminActionFilter<$PrismaModel> | $Enums.AdminAction
+}
+
+export type EnumAdminActionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AdminAction | Prisma.EnumAdminActionFieldRefInput<$PrismaModel>
+  in?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAdminActionWithAggregatesFilter<$PrismaModel> | $Enums.AdminAction
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAdminActionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAdminActionFilter<$PrismaModel>
+}
+
 export type NestedIntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -741,6 +758,23 @@ export type NestedEnumAuthAuditEventWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAuthAuditEventFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAuthAuditEventFilter<$PrismaModel>
+}
+
+export type NestedEnumAdminActionFilter<$PrismaModel = never> = {
+  equals?: $Enums.AdminAction | Prisma.EnumAdminActionFieldRefInput<$PrismaModel>
+  in?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAdminActionFilter<$PrismaModel> | $Enums.AdminAction
+}
+
+export type NestedEnumAdminActionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AdminAction | Prisma.EnumAdminActionFieldRefInput<$PrismaModel>
+  in?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AdminAction[] | Prisma.ListEnumAdminActionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAdminActionWithAggregatesFilter<$PrismaModel> | $Enums.AdminAction
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAdminActionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAdminActionFilter<$PrismaModel>
 }
 
 

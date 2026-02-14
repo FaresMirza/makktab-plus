@@ -111,3 +111,13 @@ export const AuthAuditEvent = {
 } as const
 
 export type AuthAuditEvent = (typeof AuthAuditEvent)[keyof typeof AuthAuditEvent]
+
+
+export const AdminAction = {
+  OFFICE_ACTIVATED: 'OFFICE_ACTIVATED',
+  OFFICE_DEACTIVATED: 'OFFICE_DEACTIVATED',
+  OFFICE_REQUEST_APPROVED: 'OFFICE_REQUEST_APPROVED',
+  OFFICE_REQUEST_REJECTED: 'OFFICE_REQUEST_REJECTED'
+} as const
+
+export type AdminAction = (typeof AdminAction)[keyof typeof AdminAction]

@@ -34,4 +34,12 @@ export class AuditRepository {
         });
     }
 
+    // --- Admin Audit Logs ---
+
+    async createAdminLog(data: Prisma.AdminAuditLogUncheckedCreateInput) {
+        return this.prisma.adminAuditLog.create({
+            data,
+        });
+    }
+
 }

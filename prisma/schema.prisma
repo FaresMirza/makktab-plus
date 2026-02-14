@@ -67,6 +67,7 @@ model User {
   authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
+  adminAuditLogs   AdminAuditLog[]   @relation("AdminActions")
 }
 
 model Role {
@@ -267,4 +268,26 @@ model AuthAuditLog {
   createdAt         DateTime       @default(now())
 
   user User? @relation(fields: [userId], references: [id])
+}
+
+enum AdminAction {
+  OFFICE_ACTIVATED
+  OFFICE_DEACTIVATED
+  OFFICE_REQUEST_APPROVED
+  OFFICE_REQUEST_REJECTED
+}
+
+model AdminAuditLog {
+  id                Int         @id @default(autoincrement())
+  adminUserId       Int
+  action            AdminAction
+  targetOfficeId    Int?
+  targetRequestId   String?
+  reason            String?
+  ip                String?
+  deviceFingerprint String?
+  userAgent         String?
+  createdAt         DateTime    @default(now())
+
+  admin User @relation("AdminActions", fields: [adminUserId], references: [id])
 }

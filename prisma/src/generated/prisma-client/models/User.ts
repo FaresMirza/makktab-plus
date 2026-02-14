@@ -294,6 +294,7 @@ export type UserWhereInput = {
   authAuditLogs?: Prisma.AuthAuditLogListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
+  adminAuditLogs?: Prisma.AdminAuditLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -321,6 +322,7 @@ export type UserOrderByWithRelationInput = {
   authAuditLogs?: Prisma.AuthAuditLogOrderByRelationAggregateInput
   projectAuditLogs?: Prisma.ProjectAuditLogOrderByRelationAggregateInput
   taskAuditLogs?: Prisma.TaskAuditLogOrderByRelationAggregateInput
+  adminAuditLogs?: Prisma.AdminAuditLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -351,6 +353,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   authAuditLogs?: Prisma.AuthAuditLogListRelationFilter
   projectAuditLogs?: Prisma.ProjectAuditLogListRelationFilter
   taskAuditLogs?: Prisma.TaskAuditLogListRelationFilter
+  adminAuditLogs?: Prisma.AdminAuditLogListRelationFilter
 }, "id" | "publicId" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -419,6 +422,7 @@ export type UserCreateInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -446,6 +450,7 @@ export type UserUncheckedCreateInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserUpdateInput = {
@@ -472,6 +477,7 @@ export type UserUpdateInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -499,6 +505,7 @@ export type UserUncheckedUpdateInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -823,6 +830,20 @@ export type UserUpdateOneWithoutAuthAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuthAuditLogsInput, Prisma.UserUpdateWithoutAuthAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuthAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutAdminAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminAuditLogsInput, Prisma.UserUncheckedCreateWithoutAdminAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminAuditLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAdminAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminAuditLogsInput, Prisma.UserUncheckedCreateWithoutAdminAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminAuditLogsInput
+  upsert?: Prisma.UserUpsertWithoutAdminAuditLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAdminAuditLogsInput, Prisma.UserUpdateWithoutAdminAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAdminAuditLogsInput>
+}
+
 export type UserCreateWithoutOwnedOfficeInput = {
   publicId?: string
   fullName: string
@@ -846,6 +867,7 @@ export type UserCreateWithoutOwnedOfficeInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutOwnedOfficeInput = {
@@ -872,6 +894,7 @@ export type UserUncheckedCreateWithoutOwnedOfficeInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutOwnedOfficeInput = {
@@ -902,6 +925,7 @@ export type UserCreateWithoutOfficesInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutOfficesInput = {
@@ -928,6 +952,7 @@ export type UserUncheckedCreateWithoutOfficesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutOfficesInput = {
@@ -969,6 +994,7 @@ export type UserUpdateWithoutOwnedOfficeInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
@@ -995,6 +1021,7 @@ export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutOfficesInput = {
@@ -1056,6 +1083,7 @@ export type UserCreateWithoutCreatedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProjectsInput = {
@@ -1082,6 +1110,7 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProjectsInput = {
@@ -1112,6 +1141,7 @@ export type UserCreateWithoutManagedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutManagedProjectsInput = {
@@ -1138,6 +1168,7 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutManagedProjectsInput = {
@@ -1179,6 +1210,7 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
@@ -1205,6 +1237,7 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUpsertWithoutManagedProjectsInput = {
@@ -1241,6 +1274,7 @@ export type UserUpdateWithoutManagedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutManagedProjectsInput = {
@@ -1267,6 +1301,7 @@ export type UserUncheckedUpdateWithoutManagedProjectsInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutCreatedTasksInput = {
@@ -1292,6 +1327,7 @@ export type UserCreateWithoutCreatedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTasksInput = {
@@ -1318,6 +1354,7 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTasksInput = {
@@ -1348,6 +1385,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -1374,6 +1412,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -1415,6 +1454,7 @@ export type UserUpdateWithoutCreatedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTasksInput = {
@@ -1441,6 +1481,7 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUpsertWithoutAssignedTasksInput = {
@@ -1477,6 +1518,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -1503,6 +1545,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutOtpCodesInput = {
@@ -1528,6 +1571,7 @@ export type UserCreateWithoutOtpCodesInput = {
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutOtpCodesInput = {
@@ -1554,6 +1598,7 @@ export type UserUncheckedCreateWithoutOtpCodesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutOtpCodesInput = {
@@ -1595,6 +1640,7 @@ export type UserUpdateWithoutOtpCodesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOtpCodesInput = {
@@ -1621,6 +1667,7 @@ export type UserUncheckedUpdateWithoutOtpCodesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutProjectAuditLogsInput = {
@@ -1646,6 +1693,7 @@ export type UserCreateWithoutProjectAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
@@ -1672,6 +1720,7 @@ export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutProjectAuditLogsInput = {
@@ -1713,6 +1762,7 @@ export type UserUpdateWithoutProjectAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
@@ -1739,6 +1789,7 @@ export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutTaskAuditLogsInput = {
@@ -1764,6 +1815,7 @@ export type UserCreateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
@@ -1790,6 +1842,7 @@ export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutTaskAuditLogsInput = {
@@ -1831,6 +1884,7 @@ export type UserUpdateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
@@ -1857,6 +1911,7 @@ export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutAuthAuditLogsInput = {
@@ -1882,6 +1937,7 @@ export type UserCreateWithoutAuthAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
 }
 
 export type UserUncheckedCreateWithoutAuthAuditLogsInput = {
@@ -1908,6 +1964,7 @@ export type UserUncheckedCreateWithoutAuthAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type UserCreateOrConnectWithoutAuthAuditLogsInput = {
@@ -1949,6 +2006,7 @@ export type UserUpdateWithoutAuthAuditLogsInput = {
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuthAuditLogsInput = {
@@ -1973,6 +2031,129 @@ export type UserUncheckedUpdateWithoutAuthAuditLogsInput = {
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+}
+
+export type UserCreateWithoutAdminAuditLogsInput = {
+  publicId?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutAdminAuditLogsInput = {
+  id?: number
+  publicId?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutAdminAuditLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminAuditLogsInput, Prisma.UserUncheckedCreateWithoutAdminAuditLogsInput>
+}
+
+export type UserUpsertWithoutAdminAuditLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAdminAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAdminAuditLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminAuditLogsInput, Prisma.UserUncheckedCreateWithoutAdminAuditLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAdminAuditLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAdminAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAdminAuditLogsInput>
+}
+
+export type UserUpdateWithoutAdminAuditLogsInput = {
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAdminAuditLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
@@ -2000,6 +2181,7 @@ export type UserUpdateWithoutOfficesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOfficesInput = {
@@ -2026,6 +2208,7 @@ export type UserUncheckedUpdateWithoutOfficesInput = {
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
   projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
   taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOfficesInput = {
@@ -2060,6 +2243,7 @@ export type UserCountOutputType = {
   authAuditLogs: number
   projectAuditLogs: number
   taskAuditLogs: number
+  adminAuditLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2072,6 +2256,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   authAuditLogs?: boolean | UserCountOutputTypeCountAuthAuditLogsArgs
   projectAuditLogs?: boolean | UserCountOutputTypeCountProjectAuditLogsArgs
   taskAuditLogs?: boolean | UserCountOutputTypeCountTaskAuditLogsArgs
+  adminAuditLogs?: boolean | UserCountOutputTypeCountAdminAuditLogsArgs
 }
 
 /**
@@ -2147,6 +2332,13 @@ export type UserCountOutputTypeCountTaskAuditLogsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.TaskAuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAdminAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminAuditLogWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2173,6 +2365,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   authAuditLogs?: boolean | Prisma.User$authAuditLogsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.User$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.User$taskAuditLogsArgs<ExtArgs>
+  adminAuditLogs?: boolean | Prisma.User$adminAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2239,6 +2432,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   authAuditLogs?: boolean | Prisma.User$authAuditLogsArgs<ExtArgs>
   projectAuditLogs?: boolean | Prisma.User$projectAuditLogsArgs<ExtArgs>
   taskAuditLogs?: boolean | Prisma.User$taskAuditLogsArgs<ExtArgs>
+  adminAuditLogs?: boolean | Prisma.User$adminAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2257,6 +2451,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     authAuditLogs: Prisma.$AuthAuditLogPayload<ExtArgs>[]
     projectAuditLogs: Prisma.$ProjectAuditLogPayload<ExtArgs>[]
     taskAuditLogs: Prisma.$TaskAuditLogPayload<ExtArgs>[]
+    adminAuditLogs: Prisma.$AdminAuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2677,6 +2872,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   authAuditLogs<T extends Prisma.User$authAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$authAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectAuditLogs<T extends Prisma.User$projectAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskAuditLogs<T extends Prisma.User$taskAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  adminAuditLogs<T extends Prisma.User$adminAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3340,6 +3536,30 @@ export type User$taskAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.TaskAuditLogScalarFieldEnum | Prisma.TaskAuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.adminAuditLogs
+ */
+export type User$adminAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminAuditLog
+   */
+  select?: Prisma.AdminAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminAuditLog
+   */
+  omit?: Prisma.AdminAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminAuditLogInclude<ExtArgs> | null
+  where?: Prisma.AdminAuditLogWhereInput
+  orderBy?: Prisma.AdminAuditLogOrderByWithRelationInput | Prisma.AdminAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AdminAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminAuditLogScalarFieldEnum | Prisma.AdminAuditLogScalarFieldEnum[]
 }
 
 /**
