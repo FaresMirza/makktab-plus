@@ -32,7 +32,6 @@ export class OfficesRepository {
                     users: true,
                     projects: true,
                     otpCodes: true,
-                    loginAttempts: true,
                 },
             },
         };

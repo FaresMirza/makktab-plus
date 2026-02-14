@@ -72,7 +72,6 @@ export class OfficesHelper {
                 totalUsers: office._count.users,
                 totalProjects: office._count.projects,
                 totalOtpCodes: office._count.otpCodes,
-                totalLoginAttempts: office._count.loginAttempts,
             },
         };
     }
