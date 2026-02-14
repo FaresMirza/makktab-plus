@@ -42,4 +42,19 @@ export class AuditRepository {
         });
     }
 
+    async findLastAdminLog(adminUserId: number) {
+        return this.prisma.adminAuditLog.findFirst({
+            where: { adminUserId },
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    async findLast100AdminLogs(adminUserId: number) {
+        return this.prisma.adminAuditLog.findMany({
+            where: { adminUserId },
+            orderBy: { createdAt: 'desc' },
+            take: 100,
+        });
+    }
+
 }

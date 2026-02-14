@@ -113,4 +113,21 @@ export class AdminsController {
         };
         return this.adminsService.handleRequest(id, approve, auditMeta);
     }
+    /**
+     * Get the last audit log for the current admin
+     * GET /admins/audit/last
+     */
+    @Get('audit/last')
+    getLastAdminAudit(@Req() req: any) {
+        return this.adminsService.getLastAdminLog(req.user.userId);
+    }
+
+    /**
+     * Get the last 100 audit logs for the current admin
+     * GET /admins/audit
+     */
+    @Get('audit')
+    getLast100AdminAudits(@Req() req: any) {
+        return this.adminsService.getLast100AdminLogs(req.user.userId);
+    }
 }

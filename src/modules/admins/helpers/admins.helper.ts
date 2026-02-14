@@ -36,4 +36,12 @@ export class AdminsHelper {
             deviceFingerprint: meta.deviceFingerprint,
         });
     }
+
+    async getLastAdminLog(adminUserId: number) {
+        return this.auditRepository.findLastAdminLog(adminUserId);
+    }
+
+    async getLast100AdminLogs(adminUserId: number) {
+        return this.auditRepository.findLast100AdminLogs(adminUserId);
+    }
 }
