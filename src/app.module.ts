@@ -10,6 +10,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OtpModule } from './modules/otps/otps.module';
+import { AdminsModule } from './modules/admins/admins.module';
 import { EnhancedThrottlerGuard } from './common/guards/custom-throttler.guard';
 import { ThrottlerStorageService } from './common/storage/throttler-storage.service';
 
@@ -32,6 +33,7 @@ import { ThrottlerStorageService } from './common/storage/throttler-storage.serv
     TasksModule,
     AuditModule,
     OtpModule,
+    AdminsModule,
   ],
   providers: [
     // Custom throttler storage for IP blocking
