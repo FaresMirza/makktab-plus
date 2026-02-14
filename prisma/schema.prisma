@@ -28,7 +28,7 @@ model Office {
 }
 
 model OfficeRequest {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   officeName   String
   fullName     String
   email        String

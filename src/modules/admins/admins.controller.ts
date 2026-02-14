@@ -3,6 +3,7 @@ import {
     Get,
     Patch,
     Param,
+    Body,
     HttpCode,
     HttpStatus,
     UseGuards,
@@ -54,5 +55,28 @@ export class AdminsController {
     @HttpCode(HttpStatus.OK)
     activateOffice(@Param('id') id: string) {
         return this.adminsService.activateOffice(id);
+    }
+
+    /**
+     * Get all pending office requests
+     * GET /admins/office-requests
+     */
+    @Get('office-requests')
+    getPendingRequests() {
+        return this.adminsService.getPendingRequests();
+    }
+
+    /**
+     * Handle office request: approve or reject
+     * PATCH /admins/office-requests/:id
+     * Body: { "approve": true } or { "approve": false }
+     */
+    @Patch('office-requests/:id')
+    @HttpCode(HttpStatus.OK)
+    handleRequest(
+        @Param('id') id: string,
+        @Body('approve') approve: boolean,
+    ) {
+        return this.adminsService.handleRequest(id, approve);
     }
 }

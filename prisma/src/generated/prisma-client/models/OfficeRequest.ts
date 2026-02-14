@@ -20,22 +20,12 @@ export type OfficeRequestModel = runtime.Types.Result.DefaultSelection<Prisma.$O
 
 export type AggregateOfficeRequest = {
   _count: OfficeRequestCountAggregateOutputType | null
-  _avg: OfficeRequestAvgAggregateOutputType | null
-  _sum: OfficeRequestSumAggregateOutputType | null
   _min: OfficeRequestMinAggregateOutputType | null
   _max: OfficeRequestMaxAggregateOutputType | null
 }
 
-export type OfficeRequestAvgAggregateOutputType = {
-  id: number | null
-}
-
-export type OfficeRequestSumAggregateOutputType = {
-  id: number | null
-}
-
 export type OfficeRequestMinAggregateOutputType = {
-  id: number | null
+  id: string | null
   officeName: string | null
   fullName: string | null
   email: string | null
@@ -47,7 +37,7 @@ export type OfficeRequestMinAggregateOutputType = {
 }
 
 export type OfficeRequestMaxAggregateOutputType = {
-  id: number | null
+  id: string | null
   officeName: string | null
   fullName: string | null
   email: string | null
@@ -71,14 +61,6 @@ export type OfficeRequestCountAggregateOutputType = {
   _all: number
 }
 
-
-export type OfficeRequestAvgAggregateInputType = {
-  id?: true
-}
-
-export type OfficeRequestSumAggregateInputType = {
-  id?: true
-}
 
 export type OfficeRequestMinAggregateInputType = {
   id?: true
@@ -155,18 +137,6 @@ export type OfficeRequestAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: OfficeRequestAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: OfficeRequestSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: OfficeRequestMinAggregateInputType
@@ -197,14 +167,12 @@ export type OfficeRequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: OfficeRequestCountAggregateInputType | true
-  _avg?: OfficeRequestAvgAggregateInputType
-  _sum?: OfficeRequestSumAggregateInputType
   _min?: OfficeRequestMinAggregateInputType
   _max?: OfficeRequestMaxAggregateInputType
 }
 
 export type OfficeRequestGroupByOutputType = {
-  id: number
+  id: string
   officeName: string
   fullName: string
   email: string
@@ -214,8 +182,6 @@ export type OfficeRequestGroupByOutputType = {
   status: boolean | null
   createdAt: Date
   _count: OfficeRequestCountAggregateOutputType | null
-  _avg: OfficeRequestAvgAggregateOutputType | null
-  _sum: OfficeRequestSumAggregateOutputType | null
   _min: OfficeRequestMinAggregateOutputType | null
   _max: OfficeRequestMaxAggregateOutputType | null
 }
@@ -239,7 +205,7 @@ export type OfficeRequestWhereInput = {
   AND?: Prisma.OfficeRequestWhereInput | Prisma.OfficeRequestWhereInput[]
   OR?: Prisma.OfficeRequestWhereInput[]
   NOT?: Prisma.OfficeRequestWhereInput | Prisma.OfficeRequestWhereInput[]
-  id?: Prisma.IntFilter<"OfficeRequest"> | number
+  id?: Prisma.StringFilter<"OfficeRequest"> | string
   officeName?: Prisma.StringFilter<"OfficeRequest"> | string
   fullName?: Prisma.StringFilter<"OfficeRequest"> | string
   email?: Prisma.StringFilter<"OfficeRequest"> | string
@@ -263,7 +229,7 @@ export type OfficeRequestOrderByWithRelationInput = {
 }
 
 export type OfficeRequestWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
+  id?: string
   AND?: Prisma.OfficeRequestWhereInput | Prisma.OfficeRequestWhereInput[]
   OR?: Prisma.OfficeRequestWhereInput[]
   NOT?: Prisma.OfficeRequestWhereInput | Prisma.OfficeRequestWhereInput[]
@@ -288,17 +254,15 @@ export type OfficeRequestOrderByWithAggregationInput = {
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.OfficeRequestCountOrderByAggregateInput
-  _avg?: Prisma.OfficeRequestAvgOrderByAggregateInput
   _max?: Prisma.OfficeRequestMaxOrderByAggregateInput
   _min?: Prisma.OfficeRequestMinOrderByAggregateInput
-  _sum?: Prisma.OfficeRequestSumOrderByAggregateInput
 }
 
 export type OfficeRequestScalarWhereWithAggregatesInput = {
   AND?: Prisma.OfficeRequestScalarWhereWithAggregatesInput | Prisma.OfficeRequestScalarWhereWithAggregatesInput[]
   OR?: Prisma.OfficeRequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OfficeRequestScalarWhereWithAggregatesInput | Prisma.OfficeRequestScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"OfficeRequest"> | number
+  id?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   officeName?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   fullName?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   email?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
@@ -310,6 +274,7 @@ export type OfficeRequestScalarWhereWithAggregatesInput = {
 }
 
 export type OfficeRequestCreateInput = {
+  id?: string
   officeName: string
   fullName: string
   email: string
@@ -321,7 +286,7 @@ export type OfficeRequestCreateInput = {
 }
 
 export type OfficeRequestUncheckedCreateInput = {
-  id?: number
+  id?: string
   officeName: string
   fullName: string
   email: string
@@ -333,6 +298,7 @@ export type OfficeRequestUncheckedCreateInput = {
 }
 
 export type OfficeRequestUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   officeName?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -344,7 +310,7 @@ export type OfficeRequestUpdateInput = {
 }
 
 export type OfficeRequestUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   officeName?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -356,7 +322,7 @@ export type OfficeRequestUncheckedUpdateInput = {
 }
 
 export type OfficeRequestCreateManyInput = {
-  id?: number
+  id?: string
   officeName: string
   fullName: string
   email: string
@@ -368,6 +334,7 @@ export type OfficeRequestCreateManyInput = {
 }
 
 export type OfficeRequestUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   officeName?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -379,7 +346,7 @@ export type OfficeRequestUpdateManyMutationInput = {
 }
 
 export type OfficeRequestUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   officeName?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -400,10 +367,6 @@ export type OfficeRequestCountOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type OfficeRequestAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
 }
 
 export type OfficeRequestMaxOrderByAggregateInput = {
@@ -428,10 +391,6 @@ export type OfficeRequestMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type OfficeRequestSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
 }
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -494,7 +453,7 @@ export type $OfficeRequestPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "OfficeRequest"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
+    id: string
     officeName: string
     fullName: string
     email: string
@@ -926,7 +885,7 @@ export interface Prisma__OfficeRequestClient<T, Null = never, ExtArgs extends ru
  * Fields of the OfficeRequest model
  */
 export interface OfficeRequestFieldRefs {
-  readonly id: Prisma.FieldRef<"OfficeRequest", 'Int'>
+  readonly id: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly officeName: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly fullName: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly email: Prisma.FieldRef<"OfficeRequest", 'String'>

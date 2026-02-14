@@ -174,7 +174,7 @@ export class OtpRepository {
      * Find user by email with office relations.
      */
     async findUserByEmail(email: string) {
-        return this.prisma.user.findUnique({
+        return this.prisma.user.findFirst({
             where: { email },
             include: {
                 offices: true,

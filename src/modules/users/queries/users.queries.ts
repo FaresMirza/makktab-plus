@@ -77,14 +77,14 @@ export class UsersRepository {
     }
 
     async findByEmail(email: string) {
-        return this.prisma.user.findUnique({
+        return this.prisma.user.findFirst({
             where: { email },
             include: this.userListInclude,
         });
     }
 
     async findByEmailSimple(email: string) {
-        return this.prisma.user.findUnique({
+        return this.prisma.user.findFirst({
             where: { email },
         });
     }
