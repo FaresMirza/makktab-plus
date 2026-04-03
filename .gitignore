@@ -39,3 +39,6 @@ prisma/migrations/*_migration.sql
 *.tmp
 *.temp
 .cache/
+
+# Claude Code
+.claude/
