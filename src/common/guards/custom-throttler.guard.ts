@@ -1,5 +1,6 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
-import { ThrottlerGuard, ThrottlerException } from '@nestjs/throttler';
+import { Injectable, ExecutionContext, Inject } from '@nestjs/common';
+import { ThrottlerGuard, ThrottlerException, ThrottlerModuleOptions, ThrottlerStorage, getOptionsToken, getStorageToken } from '@nestjs/throttler';
+import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { ThrottlerStorageService } from '../storage/throttler-storage.service';
 
@@ -10,15 +11,13 @@ import { ThrottlerStorageService } from '../storage/throttler-storage.service';
  */
 @Injectable()
 export class EnhancedThrottlerGuard extends ThrottlerGuard {
-    constructor(private readonly throttlerStorage: ThrottlerStorageService) {
-        super({
-            throttlers: [],
-            errorMessage: 'Too many requests',
-            ignoreUserAgents: [],
-            skipIf: () => false,
-            getTracker: () => Promise.resolve(''),
-            generateKey: () => '',
-        }, null as any, null as any);
+    constructor(
+        @Inject(getOptionsToken()) protected options: ThrottlerModuleOptions,
+        @Inject(getStorageToken()) protected storageService: ThrottlerStorage,
+        protected reflector: Reflector,
+        private readonly customStorage: ThrottlerStorageService,
+    ) {
+        super(options, storageService, reflector);
     }
 
     /**
@@ -61,21 +60,21 @@ export class EnhancedThrottlerGuard extends ThrottlerGuard {
         const ip = await this.getTracker(request);
 
         // Check if IP is already blocked
-        const isBlocked = await this.throttlerStorage.isBlocked(ip);
+        const isBlocked = await this.customStorage.isBlocked(ip);
         if (isBlocked) {
-            const timeRemaining = await this.throttlerStorage.getBlockTimeRemaining(ip);
+            const timeRemaining = await this.customStorage.getBlockTimeRemaining(ip);
             throw new ThrottlerException(
                 `Your IP (${ip}) has been blocked for ${Math.ceil(timeRemaining / 60)} more minutes due to excessive requests.`
             );
         }
 
         // Increment request count
-        const { totalHits, timeToExpire } = await this.throttlerStorage.increment(ip, 60); // 60 seconds TTL
+        const { totalHits, timeToExpire } = await this.customStorage.increment(ip, 60); // 60 seconds TTL
 
         // Check if limit exceeded (10 requests per minute)
         if (totalHits > 10) {
             // Block the IP for 30 minutes
-            await this.throttlerStorage.blockIp(ip);
+            await this.customStorage.blockIp(ip);
 
             throw new ThrottlerException(
                 `Rate limit exceeded. Your IP (${ip}) has been blocked for 30 minutes.`
