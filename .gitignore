@@ -32,8 +32,10 @@ logs/
 *.log
 
 # Prisma
-/generated/prisma
-prisma/migrations/*_migration.sql
+prisma/src/generated/
+
+# Claude Code
+.claude/settings.json
 
 # Temporary files
 *.tmp

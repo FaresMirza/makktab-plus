@@ -53,7 +53,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,
@@ -74,7 +74,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,
@@ -106,7 +106,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,

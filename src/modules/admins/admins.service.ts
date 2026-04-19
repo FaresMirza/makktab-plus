@@ -115,14 +115,14 @@ export class AdminsService {
     /**
      * Get the last audit log for the current admin
      */
-    async getLastAdminLog(adminUserId: number) {
-        return this.adminsHelper.getLastAdminLog(adminUserId);
+    async getLastAdminLog(adminPublicId: string) {
+        return this.adminsHelper.getLastAdminLog(adminPublicId);
     }
 
     /**
      * Get the last 100 audit logs for the current admin
      */
-    async getLast100AdminLogs(adminUserId: number) {
-        return this.adminsHelper.getLast100AdminLogs(adminUserId);
+    async getLast100AdminLogs(adminPublicId: string) {
+        return this.adminsHelper.getLast100AdminLogs(adminPublicId);
     }
 }
