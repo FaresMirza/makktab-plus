@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.github
+.claude
+.env
+*.md
+coverage
+.eslintrc*
+.prettierrc*
