@@ -68,8 +68,5 @@ jobs:
             # Pull the latest image
             docker pull ghcr.io/${{ github.repository }}:latest
 
-            # Stop and remove old container (if running)
-            docker compose -f ~/makktab-plus/docker-compose.prod.yml down api || true
-
-            # Start with new image
-            docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d
+            # Recreate API container with new image
+            docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --force-recreate --pull always api
