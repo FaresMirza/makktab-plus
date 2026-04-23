@@ -19,7 +19,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         JwtModule.register({
             global: true,
             secret: process.env.JWT_SECRET || 'super-secret-key-change-this',
-            signOptions: { expiresIn: '15m' },
+            signOptions: { expiresIn: '365d' },
         }),
         AuditModule,
         UsersModule,

@@ -131,18 +131,13 @@ export class OtpHelper {
      * Generate a 6-digit OTP and hash it with bcrypt.
      * Returns both the raw code (for sending) and the hash (for storage).
      */
-    async generateOtp(): Promise<{ rawCode: string; codeHash: string }> {
-        const rawCode = this.generate6DigitCode();
+    async generateOtp(digits: 4 | 6 = 4): Promise<{ rawCode: string; codeHash: string }> {
+        const min = digits === 4 ? 1000 : 100000;
+        const max = digits === 4 ? 9999 : 999999;
+        const { randomInt } = require('crypto');
+        const rawCode = randomInt(min, max).toString();
         const codeHash = await bcrypt.hash(rawCode, OTP_CONSTANTS.SALT_ROUNDS);
         return { rawCode, codeHash };
-    }
-
-    /**
-     * Generate a cryptographically random 6-digit OTP.
-     */
-    private generate6DigitCode(): string {
-        const { randomInt } = require('crypto');
-        return randomInt(100000, 999999).toString();
     }
 
     // ─── 5. SAVE OTP RECORD ───────────────────────────────────────

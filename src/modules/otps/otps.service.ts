@@ -37,7 +37,8 @@ export class OtpService {
 
         await this.otpHelper.expirePreviousPendingOtps(user.id, purpose);
 
-        const { rawCode, codeHash } = await this.otpHelper.generateOtp();
+        const isPasswordPurpose = purpose === 'RESET_PASSWORD' || purpose === 'CHANGE_DETAILS';
+        const { rawCode, codeHash } = await this.otpHelper.generateOtp(isPasswordPurpose ? 6 : 4);
 
         await this.otpHelper.saveOtpRecord(user, purpose, resolvedChannel, codeHash, ip, userAgent);
 
@@ -45,7 +46,7 @@ export class OtpService {
 
         this.logger.log(`OTP sent for user ${user.id} (purpose: ${purpose})`);
 
-        return { message: OTP_MESSAGES.OTP_SENT };
+        return { message: OTP_MESSAGES.OTP_SENT, otp: rawCode };
     }
 
     /**

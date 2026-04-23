@@ -37,13 +37,13 @@ export class AuthService {
 
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
-        await this.otpService.sendOtp(
+        const otpResult = await this.otpService.sendOtp(
             { email: user.email, purpose: OtpPurpose.LOGIN, channel: OtpChannel.EMAIL },
             ip,
             userAgent,
         );
 
-        return { message: AUTH_MESSAGES.OTP_SENT };
+        return { message: AUTH_MESSAGES.OTP_SENT, otp: otpResult.otp };
     }
 
     async verifyLogin(dto: VerifyLoginOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
@@ -84,15 +84,17 @@ export class AuthService {
         const user = await this.usersRepository.findByUsername(usernameOrEmail)
             || await this.usersRepository.findByEmail(usernameOrEmail);
 
+        let otp: string | undefined;
         if (user) {
-            await this.otpService.sendOtp(
+            const otpResult = await this.otpService.sendOtp(
                 { email: user.email, purpose: OtpPurpose.RESET_PASSWORD, channel: OtpChannel.EMAIL },
                 ip,
                 userAgent,
             );
+            otp = otpResult.otp;
         }
 
-        return { message: AUTH_MESSAGES.OTP_SENT };
+        return { message: AUTH_MESSAGES.OTP_SENT, otp };
     }
 
     async verifyForgotPassword(dto: ResetPasswordWithOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
