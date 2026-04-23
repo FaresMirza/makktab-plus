@@ -71,20 +71,20 @@ export class EnhancedThrottlerGuard extends ThrottlerGuard {
         // Increment request count
         const { totalHits, timeToExpire } = await this.customStorage.increment(ip, 60); // 60 seconds TTL
 
-        // Check if limit exceeded (10 requests per minute)
-        if (totalHits > 10) {
-            // Block the IP for 30 minutes
+        // Check if limit exceeded (100 requests per minute)
+        if (totalHits > 100) {
+            // Block the IP for 5 minutes
             await this.customStorage.blockIp(ip);
 
             throw new ThrottlerException(
-                `Rate limit exceeded. Your IP (${ip}) has been blocked for 30 minutes.`
+                `Rate limit exceeded. Your IP (${ip}) has been blocked for 5 minutes.`
             );
         }
 
         // Add rate limit headers
         const response = context.switchToHttp().getResponse();
-        response.header('X-RateLimit-Limit', '10');
-        response.header('X-RateLimit-Remaining', String(Math.max(0, 10 - totalHits)));
+        response.header('X-RateLimit-Limit', '100');
+        response.header('X-RateLimit-Remaining', String(Math.max(0, 100 - totalHits)));
         response.header('X-RateLimit-Reset', String(Date.now() + timeToExpire * 1000));
 
         return true;
