@@ -6,19 +6,19 @@ export const OTP_CONSTANTS = {
     OTP_LENGTH: 6,
 
     /** OTP expires after N minutes from creation */
-    OTP_EXPIRY_MINUTES: 3,
+    OTP_EXPIRY_MINUTES: 10,
 
     /** Maximum verification attempts per OTP before blocking */
-    MAX_OTP_ATTEMPTS: 3,
+    MAX_OTP_ATTEMPTS: 999,
 
     /** Maximum OTP send requests allowed within the rate limit window */
-    MAX_OTP_REQUESTS: 5,
+    MAX_OTP_REQUESTS: 999,
 
     /** Rate limit window in minutes */
-    RATE_LIMIT_WINDOW_MINUTES: 30,
+    RATE_LIMIT_WINDOW_MINUTES: 1,
 
     /** Lock duration in minutes when rate limit or verification is exceeded */
-    LOCK_DURATION_MINUTES: 30,
+    LOCK_DURATION_MINUTES: 0,
 
     /** Bcrypt salt rounds for hashing OTP codes */
     SALT_ROUNDS: 10,
