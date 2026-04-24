@@ -244,6 +244,10 @@ export class AuthService {
             throw new BadRequestException(AUTH_MESSAGES.VERIFICATION_MAX_ATTEMPTS);
         }
 
+        if (!request.verificationCodeHash) {
+            throw new BadRequestException(AUTH_MESSAGES.NO_PENDING_REQUEST);
+        }
+
         const isValid = await this.registrationHelper.verifyCode(dto.otp, request.verificationCodeHash);
         if (!isValid) {
             await this.registrationRepository.incrementVerificationAttempts(request.id);
