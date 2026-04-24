@@ -1,24 +1,30 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthHelper } from './helpers/auth.helper';
-import { AUTH_MESSAGES } from './constants/messages.constant';
+import { RegistrationHelper } from './helpers/registration.helper';
+import { AUTH_MESSAGES, AUTH_CONSTANTS } from './constants/messages.constant';
 import { UsersRepository } from '../users/queries/users.queries';
 import { OtpService } from '../otps/otps.service';
+import { RegistrationRepository } from './queries/registration.queries';
 import { LoginDto } from './dto/login.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordWithOtpDto } from './dto/reset-password-with-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { RegisterDto } from './dto/register.dto';
+import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly authHelper: AuthHelper,
+        private readonly registrationHelper: RegistrationHelper,
         private readonly usersRepository: UsersRepository,
         private readonly otpService: OtpService,
         private readonly jwtService: JwtService,
+        private readonly registrationRepository: RegistrationRepository,
     ) { }
 
     async login(loginDto: LoginDto, ip: string, userAgent: string) {
@@ -196,5 +202,56 @@ export class AuthService {
         const accessToken = await this.jwtService.signAsync(payload);
 
         return { access_token: accessToken };
+    }
+
+    async register(dto: RegisterDto, ip: string, userAgent: string) {
+        await this.registrationHelper.validateUsernameUnique(dto.username);
+        await this.registrationHelper.validateEmailUnique(dto.email);
+
+        const passwordHash = await this.authHelper.hashPassword(dto.password);
+        const { rawCode, codeHash } = await this.registrationHelper.generateVerificationCode();
+
+        const expiresAt = new Date(Date.now() + AUTH_CONSTANTS.OTP_EXPIRY_MINUTES * AUTH_CONSTANTS.MILLISECONDS_PER_MINUTE);
+
+        await this.registrationRepository.createOfficeRequest({
+            officeName: dto.officeName,
+            fullName: dto.ownerFullName,
+            email: dto.email,
+            phone: dto.phone,
+            username: dto.username,
+            city: dto.city,
+            passwordHash,
+            verificationCodeHash: codeHash,
+            verificationExpiresAt: expiresAt,
+        });
+
+        console.log(`[Registration OTP] Email: ${dto.email}, Code: ${rawCode}`);
+
+        return { message: AUTH_MESSAGES.REGISTRATION_SUCCESS, otp: rawCode };
+    }
+
+    async verifyRegistration(dto: VerifyRegisterDto, ip: string, userAgent: string) {
+        const request = await this.registrationRepository.findPendingRequestByEmail(dto.email);
+        if (!request) {
+            throw new BadRequestException(AUTH_MESSAGES.NO_PENDING_REQUEST);
+        }
+
+        if (request.verificationExpiresAt && new Date() > request.verificationExpiresAt) {
+            throw new BadRequestException(AUTH_MESSAGES.VERIFICATION_EXPIRED);
+        }
+
+        if (request.verificationAttempts >= AUTH_CONSTANTS.MAX_OTP_ATTEMPTS) {
+            throw new BadRequestException(AUTH_MESSAGES.VERIFICATION_MAX_ATTEMPTS);
+        }
+
+        const isValid = await this.registrationHelper.verifyCode(dto.otp, request.verificationCodeHash);
+        if (!isValid) {
+            await this.registrationRepository.incrementVerificationAttempts(request.id);
+            throw new BadRequestException(AUTH_MESSAGES.VERIFICATION_INVALID);
+        }
+
+        await this.registrationRepository.markEmailVerified(request.id);
+
+        return { message: AUTH_MESSAGES.EMAIL_VERIFIED };
     }
 }

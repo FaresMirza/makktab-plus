@@ -28,15 +28,20 @@ model Office {
 }
 
 model OfficeRequest {
-  id           String   @id @default(uuid())
-  officeName   String
-  fullName     String
-  email        String
-  phone        String
-  username     String
-  passwordHash String
-  status       Boolean?
-  createdAt    DateTime @default(now())
+  id                    String    @id @default(uuid())
+  officeName            String
+  fullName              String
+  email                 String
+  phone                 String
+  username              String
+  city                  String
+  passwordHash          String
+  emailVerified         Boolean   @default(false)
+  verificationCodeHash  String?
+  verificationAttempts  Int       @default(0)
+  verificationExpiresAt DateTime?
+  status                Boolean?
+  createdAt             DateTime  @default(now())
 }
 
 model User {
