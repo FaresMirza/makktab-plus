@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthHelper } from './helpers/auth.helper';
+import { RegistrationHelper } from './helpers/registration.helper';
 import { AuthRepository } from './queries/auth.queries';
+import { RegistrationRepository } from './queries/registration.queries';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuditModule } from '../audit/audit.module';
 import { UsersModule } from '../users/users.module';
@@ -26,7 +28,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         OtpModule,
     ],
     controllers: [AuthController],
-    providers: [AuthService, AuthHelper, AuthRepository, JwtStrategy],
+    providers: [AuthService, AuthHelper, RegistrationHelper, AuthRepository, RegistrationRepository, JwtStrategy],
     exports: [AuthService, AuthHelper, AuthRepository],
 })
 export class AuthModule { }

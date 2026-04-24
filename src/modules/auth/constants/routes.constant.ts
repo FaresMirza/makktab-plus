@@ -6,4 +6,6 @@ export enum AUTH_ROUTES {
     FORGOT_PASSWORD_VERIFY = 'forgot-password/verify',
     RESET_PASSWORD = 'reset-password',
     REFRESH = 'refresh',
+    REGISTER = 'register',
+    REGISTER_VERIFY = 'register/verify',
 };

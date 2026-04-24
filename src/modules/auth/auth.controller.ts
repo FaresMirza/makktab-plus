@@ -6,6 +6,8 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordWithOtpDto } from './dto/reset-password-with-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { RegisterDto } from './dto/register.dto';
+import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AUTH_ROUTES } from './constants/routes.constant';
 
@@ -65,5 +67,15 @@ export class AuthController {
         @Req() req: any
     ) {
         return this.authService.refresh(dto, ip, req.headers['user-agent']);
+    }
+
+    @Post(AUTH_ROUTES.REGISTER)
+    async register(@Body() dto: RegisterDto, @Ip() ip: string, @Req() req: any) {
+        return this.authService.register(dto, ip, req.headers['user-agent']);
+    }
+
+    @Post(AUTH_ROUTES.REGISTER_VERIFY)
+    async verifyRegistration(@Body() dto: VerifyRegisterDto, @Ip() ip: string, @Req() req: any) {
+        return this.authService.verifyRegistration(dto, ip, req.headers['user-agent']);
     }
 }

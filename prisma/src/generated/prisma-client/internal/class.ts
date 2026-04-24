@@ -23,7 +23,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/Users/abdulrahmanfaresali/Downloads/makktab-plus-main/prisma/src/generated/prisma-client",
+      "value": "/Users/fares/Desktop/makktab-plus/prisma/src/generated/prisma-client",
       "fromEnvVar": null
     },
     "config": {
@@ -37,7 +37,7 @@ const config: runtime.GetPrismaClientConfig = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/abdulrahmanfaresali/Downloads/makktab-plus-main/prisma/schema.prisma",
+    "sourceFilePath": "/Users/fares/Desktop/makktab-plus/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../..",
@@ -47,7 +47,6 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
