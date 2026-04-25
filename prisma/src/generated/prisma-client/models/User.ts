@@ -699,14 +699,6 @@ export type UserCreaterolesInput = {
   set: string[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type UserUpdaterolesInput = {
   set?: string[]
   push?: string | string[]

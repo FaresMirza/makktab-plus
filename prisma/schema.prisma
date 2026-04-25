@@ -25,6 +25,7 @@ model Office {
 
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
+  adminAuditLogs   AdminAuditLog[]
 }
 
 model OfficeRequest {
@@ -294,5 +295,6 @@ model AdminAuditLog {
   userAgent         String?
   createdAt         DateTime    @default(now())
 
-  admin User @relation("AdminActions", fields: [adminUserId], references: [id])
+  admin        User    @relation("AdminActions", fields: [adminUserId], references: [id])
+  targetOffice Office? @relation(fields: [targetOfficeId], references: [id])
 }

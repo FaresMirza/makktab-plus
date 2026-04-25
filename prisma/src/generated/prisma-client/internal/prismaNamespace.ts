@@ -1292,7 +1292,12 @@ export const OfficeRequestScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   username: 'username',
+  city: 'city',
   passwordHash: 'passwordHash',
+  emailVerified: 'emailVerified',
+  verificationCodeHash: 'verificationCodeHash',
+  verificationAttempts: 'verificationAttempts',
+  verificationExpiresAt: 'verificationExpiresAt',
   status: 'status',
   createdAt: 'createdAt'
 } as const

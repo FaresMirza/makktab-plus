@@ -46,6 +46,10 @@ export class AuditRepository {
         return this.prisma.adminAuditLog.findFirst({
             where: { adminUserId },
             orderBy: { createdAt: 'desc' },
+            include: {
+                admin: true,
+                targetOffice: true,
+            },
         });
     }
 
@@ -54,6 +58,10 @@ export class AuditRepository {
             where: { adminUserId },
             orderBy: { createdAt: 'desc' },
             take: 100,
+            include: {
+                admin: true,
+                targetOffice: true,
+            },
         });
     }
 
