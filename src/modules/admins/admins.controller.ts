@@ -16,11 +16,10 @@ import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Public } from '../../common/decorators/public.decorator';
 import { ApiOperation, ApiTags, ApiBody } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserStatus } from '../../../prisma/src/generated/prisma-client';
+import { CreateAdminDto } from './dto/create-admin.dto';
 
 @ApiTags('Admins')
 @Controller('admins')
@@ -142,25 +141,14 @@ export class AdminsController {
     }
 
     /**
-     * TEMP: Create an admin user bypassing JWT (for initial setup)
-     * POST /admins/temp-create-admin
+     * Create a new platform admin user
+     * POST /admins
      */
-    @Public()
-    @Post('temp-create-admin')
-    @ApiOperation({ summary: 'TEMPORARY: Create an admin user without auth' })
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                email: { type: 'string' },
-                username: { type: 'string' },
-                password: { type: 'string' },
-                fullName: { type: 'string' },
-            },
-        },
-    })
-    async tempCreateAdmin(@Body() body: any) {
-        const { email, username, password, fullName } = body;
+    @Post()
+    @Roles('super_admin', 'admin') // Note: Roles are merged with class-level @Roles('admin')
+    @ApiOperation({ summary: 'Create a new admin user' })
+    async createAdmin(@Body() createAdminDto: CreateAdminDto) {
+        const { email, username, password, fullName } = createAdminDto;
         
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -170,7 +158,7 @@ export class AdminsController {
                 email,
                 username,
                 fullName,
-                phone: '0000000000', // required dummy value
+                phone: '0000000000', // required dummy value as observed
                 passwordHash,
                 roles: ['admin'],
                 status: 'ACTIVE',
