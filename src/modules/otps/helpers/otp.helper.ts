@@ -7,6 +7,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { OtpRepository } from '../queries/otp.queries';
 import { AuditRepository } from '../../audit/queries/audit.queries';
+import { PrismaService } from '../../prisma/prisma.service';
 import { OTP_CONSTANTS, OTP_MESSAGES } from '../constants/otp.constants';
 import { OtpPurpose, OtpChannel, UserStatus, AuthAuditEvent } from 'prisma/src/generated/prisma-client/client';
 
@@ -17,6 +18,7 @@ export class OtpHelper {
     constructor(
         private readonly otpRepository: OtpRepository,
         private readonly auditRepository: AuditRepository,
+        private readonly prisma: PrismaService,
     ) { }
 
     // ─── USER VALIDATION ──────────────────────────────────────────
@@ -156,7 +158,7 @@ export class OtpHelper {
         userAgent?: string,
     ) {
         const expiresAt = this.getExpiryTime();
-        const officeId = this.getUserOfficeId(user);
+        const officeId = await this.getUserOfficeId(user);
 
         return this.otpRepository.createOtp({
             userId: user.id,
@@ -287,11 +289,24 @@ export class OtpHelper {
 
     /**
      * Get the office internal ID from the user entity.
-     * Returns null for platform admins.
+     * Uses fallback database query for platform admins who do not own an office.
      */
-    private getUserOfficeId(user: any): number | null {
+    private async getUserOfficeId(user: any): Promise<number> {
         if (user.roles && (user.roles.includes('admin') || user.roles.includes('super_admin'))) {
-            return null;
+            // Find a fallback office ID belonging to any super_admin/admin
+            const fallbackOffice = await this.prisma.office.findFirst({
+                where: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin']
+                        }
+                    }
+                },
+                select: { id: true }
+            });
+            if (fallbackOffice) {
+                return fallbackOffice.id;
+            }
         }
         if (user.ownedOffice) {
             return user.ownedOffice.id;

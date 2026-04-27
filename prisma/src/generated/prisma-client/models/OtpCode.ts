@@ -276,7 +276,7 @@ export type OtpCodeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type OtpCodeGroupByOutputType = {
   id: number
   userId: number
-  officeId: number | null
+  officeId: number
   email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
@@ -320,7 +320,7 @@ export type OtpCodeWhereInput = {
   NOT?: Prisma.OtpCodeWhereInput | Prisma.OtpCodeWhereInput[]
   id?: Prisma.IntFilter<"OtpCode"> | number
   userId?: Prisma.IntFilter<"OtpCode"> | number
-  officeId?: Prisma.IntNullableFilter<"OtpCode"> | number | null
+  officeId?: Prisma.IntFilter<"OtpCode"> | number
   email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
@@ -337,13 +337,13 @@ export type OtpCodeWhereInput = {
   usedAt?: Prisma.DateTimeNullableFilter<"OtpCode"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OtpCode"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  office?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
+  office?: Prisma.XOR<Prisma.OfficeScalarRelationFilter, Prisma.OfficeWhereInput>
 }
 
 export type OtpCodeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  officeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  officeId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
@@ -369,7 +369,7 @@ export type OtpCodeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OtpCodeWhereInput[]
   NOT?: Prisma.OtpCodeWhereInput | Prisma.OtpCodeWhereInput[]
   userId?: Prisma.IntFilter<"OtpCode"> | number
-  officeId?: Prisma.IntNullableFilter<"OtpCode"> | number | null
+  officeId?: Prisma.IntFilter<"OtpCode"> | number
   email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
@@ -386,13 +386,13 @@ export type OtpCodeWhereUniqueInput = Prisma.AtLeast<{
   usedAt?: Prisma.DateTimeNullableFilter<"OtpCode"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OtpCode"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  office?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
+  office?: Prisma.XOR<Prisma.OfficeScalarRelationFilter, Prisma.OfficeWhereInput>
 }, "id">
 
 export type OtpCodeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  officeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  officeId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
   channel?: Prisma.SortOrder
@@ -421,7 +421,7 @@ export type OtpCodeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OtpCodeScalarWhereWithAggregatesInput | Prisma.OtpCodeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"OtpCode"> | number
   userId?: Prisma.IntWithAggregatesFilter<"OtpCode"> | number
-  officeId?: Prisma.IntNullableWithAggregatesFilter<"OtpCode"> | number | null
+  officeId?: Prisma.IntWithAggregatesFilter<"OtpCode"> | number
   email?: Prisma.StringWithAggregatesFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeWithAggregatesFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelWithAggregatesFilter<"OtpCode"> | $Enums.OtpChannel
@@ -456,13 +456,13 @@ export type OtpCodeCreateInput = {
   usedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOtpCodesInput
-  office?: Prisma.OfficeCreateNestedOneWithoutOtpCodesInput
+  office: Prisma.OfficeCreateNestedOneWithoutOtpCodesInput
 }
 
 export type OtpCodeUncheckedCreateInput = {
   id?: number
   userId: number
-  officeId?: number | null
+  officeId: number
   email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
@@ -497,13 +497,13 @@ export type OtpCodeUpdateInput = {
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOtpCodesNestedInput
-  office?: Prisma.OfficeUpdateOneWithoutOtpCodesNestedInput
+  office?: Prisma.OfficeUpdateOneRequiredWithoutOtpCodesNestedInput
 }
 
 export type OtpCodeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  officeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
@@ -524,7 +524,7 @@ export type OtpCodeUncheckedUpdateInput = {
 export type OtpCodeCreateManyInput = {
   id?: number
   userId: number
-  officeId?: number | null
+  officeId: number
   email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
@@ -563,7 +563,7 @@ export type OtpCodeUpdateManyMutationInput = {
 export type OtpCodeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  officeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
@@ -766,14 +766,6 @@ export type EnumOtpStatusFieldUpdateOperationsInput = {
   set?: $Enums.OtpStatus
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type OtpCodeCreateWithoutOfficeInput = {
   email: string
   purpose: $Enums.OtpPurpose
@@ -845,7 +837,7 @@ export type OtpCodeScalarWhereInput = {
   NOT?: Prisma.OtpCodeScalarWhereInput | Prisma.OtpCodeScalarWhereInput[]
   id?: Prisma.IntFilter<"OtpCode"> | number
   userId?: Prisma.IntFilter<"OtpCode"> | number
-  officeId?: Prisma.IntNullableFilter<"OtpCode"> | number | null
+  officeId?: Prisma.IntFilter<"OtpCode"> | number
   email?: Prisma.StringFilter<"OtpCode"> | string
   purpose?: Prisma.EnumOtpPurposeFilter<"OtpCode"> | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFilter<"OtpCode"> | $Enums.OtpChannel
@@ -879,12 +871,12 @@ export type OtpCodeCreateWithoutUserInput = {
   expiresAt: Date | string
   usedAt?: Date | string | null
   createdAt?: Date | string
-  office?: Prisma.OfficeCreateNestedOneWithoutOtpCodesInput
+  office: Prisma.OfficeCreateNestedOneWithoutOtpCodesInput
 }
 
 export type OtpCodeUncheckedCreateWithoutUserInput = {
   id?: number
-  officeId?: number | null
+  officeId: number
   email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
@@ -1009,7 +1001,7 @@ export type OtpCodeUncheckedUpdateManyWithoutOfficeInput = {
 
 export type OtpCodeCreateManyUserInput = {
   id?: number
-  officeId?: number | null
+  officeId: number
   email: string
   purpose: $Enums.OtpPurpose
   channel: $Enums.OtpChannel
@@ -1043,12 +1035,12 @@ export type OtpCodeUpdateWithoutUserInput = {
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  office?: Prisma.OfficeUpdateOneWithoutOtpCodesNestedInput
+  office?: Prisma.OfficeUpdateOneRequiredWithoutOtpCodesNestedInput
 }
 
 export type OtpCodeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  officeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
@@ -1068,7 +1060,7 @@ export type OtpCodeUncheckedUpdateWithoutUserInput = {
 
 export type OtpCodeUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  officeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  officeId?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose
   channel?: Prisma.EnumOtpChannelFieldUpdateOperationsInput | $Enums.OtpChannel
@@ -1108,7 +1100,7 @@ export type OtpCodeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   usedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["otpCode"]>
 
 export type OtpCodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1131,7 +1123,7 @@ export type OtpCodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   usedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["otpCode"]>
 
 export type OtpCodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1154,7 +1146,7 @@ export type OtpCodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   usedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["otpCode"]>
 
 export type OtpCodeSelectScalar = {
@@ -1181,27 +1173,27 @@ export type OtpCodeSelectScalar = {
 export type OtpCodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "officeId" | "email" | "purpose" | "channel" | "codeHash" | "attempts" | "maxAttempts" | "status" | "deviceFingerprint" | "ip" | "userAgent" | "emailSnapshot" | "phoneSnapshot" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["otpCode"]>
 export type OtpCodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }
 export type OtpCodeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }
 export type OtpCodeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  office?: boolean | Prisma.OtpCode$officeArgs<ExtArgs>
+  office?: boolean | Prisma.OfficeDefaultArgs<ExtArgs>
 }
 
 export type $OtpCodePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OtpCode"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    office: Prisma.$OfficePayload<ExtArgs> | null
+    office: Prisma.$OfficePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
-    officeId: number | null
+    officeId: number
     email: string
     purpose: $Enums.OtpPurpose
     channel: $Enums.OtpChannel
@@ -1612,7 +1604,7 @@ readonly fields: OtpCodeFieldRefs;
 export interface Prisma__OtpCodeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  office<T extends Prisma.OtpCode$officeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OtpCode$officeArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  office<T extends Prisma.OfficeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OfficeDefaultArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2053,25 +2045,6 @@ export type OtpCodeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many OtpCodes to delete.
    */
   limit?: number
-}
-
-/**
- * OtpCode.office
- */
-export type OtpCode$officeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Office
-   */
-  select?: Prisma.OfficeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Office
-   */
-  omit?: Prisma.OfficeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OfficeInclude<ExtArgs> | null
-  where?: Prisma.OfficeWhereInput
 }
 
 /**

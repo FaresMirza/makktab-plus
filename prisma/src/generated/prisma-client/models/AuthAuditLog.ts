@@ -498,6 +498,14 @@ export type EnumAuthAuditEventFieldUpdateOperationsInput = {
   set?: $Enums.AuthAuditEvent
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type AuthAuditLogCreateWithoutUserInput = {
   event: $Enums.AuthAuditEvent
   reason?: string | null
