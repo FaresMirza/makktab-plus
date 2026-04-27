@@ -2,6 +2,7 @@ import {
     Controller,
     Get,
     Patch,
+    Post,
     Param,
     Body,
     HttpCode,
@@ -15,12 +16,21 @@ import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Public } from '../../common/decorators/public.decorator';
+import { ApiOperation, ApiTags, ApiBody } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserStatus } from '../../../prisma/src/generated/prisma-client';
 
+@ApiTags('Admins')
 @Controller('admins')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('admin')
 export class AdminsController {
-    constructor(private readonly adminsService: AdminsService) { }
+    constructor(
+        private readonly adminsService: AdminsService,
+        private readonly prisma: PrismaService,
+    ) { }
 
     /**
      * Get all offices
@@ -129,5 +139,42 @@ export class AdminsController {
     @Get('audit')
     getLast100AdminAudits(@Req() req: any) {
         return this.adminsService.getLast100AdminLogs(req.user.userId);
+    }
+
+    /**
+     * TEMP: Create an admin user bypassing JWT (for initial setup)
+     * POST /admins/temp-create-admin
+     */
+    @Public()
+    @Post('temp-create-admin')
+    @ApiOperation({ summary: 'TEMPORARY: Create an admin user without auth' })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                email: { type: 'string' },
+                username: { type: 'string' },
+                password: { type: 'string' },
+                fullName: { type: 'string' },
+            },
+        },
+    })
+    async tempCreateAdmin(@Body() body: any) {
+        const { email, username, password, fullName } = body;
+        
+        const saltRounds = 10;
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
+        return this.prisma.user.create({
+            data: {
+                email,
+                username,
+                fullName,
+                phone: '0000000000', // required dummy value
+                passwordHash,
+                roles: ['admin'],
+                status: 'ACTIVE',
+            },
+        });
     }
 }
