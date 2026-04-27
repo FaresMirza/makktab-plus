@@ -43,6 +43,20 @@ export class AuthService {
 
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
+        // Platform admins do not belong to an office and bypass OTP
+        if (user.roles && (user.roles.includes('admin') || user.roles.includes('super_admin'))) {
+            const tokens = await this.authHelper.generateTokens(user);
+
+            await this.authHelper.logAudit({
+                userId: user.id,
+                event: 'LOGIN_SUCCESS',
+                ip,
+                userAgent,
+            });
+
+            return tokens;
+        }
+
         const otpResult = await this.otpService.sendOtp(
             { email: user.email, purpose: OtpPurpose.LOGIN, channel: OtpChannel.EMAIL },
             ip,
