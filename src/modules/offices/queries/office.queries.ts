@@ -96,6 +96,15 @@ export class OfficesRepository {
 
     async findAll() {
         return this.prisma.office.findMany({
+            where: {
+                NOT: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin'],
+                        },
+                    },
+                },
+            },
             include: this.officeListInclude,
             orderBy: {
                 createdAt: 'desc',
@@ -172,7 +181,16 @@ export class OfficesRepository {
 
     async findByStatus(status: OfficeStatus) {
         return this.prisma.office.findMany({
-            where: { status },
+            where: {
+                status,
+                NOT: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin'],
+                        },
+                    },
+                },
+            },
             include: this.officeListInclude,
             orderBy: {
                 createdAt: 'desc',

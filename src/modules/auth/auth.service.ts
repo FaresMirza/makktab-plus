@@ -198,7 +198,7 @@ export class AuthService {
         }
 
         // Generate new access token with publicId in payload
-        const payload = { sub: user.publicId, username: user.username, roles: user.roles };
+        const payload = { sub: user.publicId, username: user.username, fullName: user.fullName, roles: user.roles };
         const accessToken = await this.jwtService.signAsync(payload);
 
         return { access_token: accessToken };

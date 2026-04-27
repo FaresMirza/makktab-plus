@@ -32,6 +32,34 @@ export class AdminsController {
     ) { }
 
     /**
+     * Get all admins and super_admins
+     * GET /admins
+     */
+    @Get()
+    @Roles('super_admin', 'admin') // Stacked explicitly just like POST
+    @ApiOperation({ summary: 'Get a list of all platform admins' })
+    async getAllAdmins() {
+        return this.prisma.user.findMany({
+            where: {
+                roles: {
+                    hasSome: ['admin', 'super_admin'],
+                },
+            },
+            select: {
+                publicId: true,
+                fullName: true,
+                username: true,
+                email: true,
+                phone: true,
+                status: true,
+                roles: true,
+                createdAt: true,
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    /**
      * Get all offices
      * GET /admins/offices
      */

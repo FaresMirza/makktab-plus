@@ -69,6 +69,15 @@ export class AdminsRepository {
      */
     async findAllOffices() {
         return this.prisma.office.findMany({
+            where: {
+                NOT: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin'],
+                        },
+                    },
+                },
+            },
             include: this.officeListInclude,
             orderBy: { createdAt: 'desc' },
         });
