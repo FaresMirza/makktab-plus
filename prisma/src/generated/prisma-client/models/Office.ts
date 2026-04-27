@@ -548,10 +548,12 @@ export type OfficeCreateNestedOneWithoutOtpCodesInput = {
   connect?: Prisma.OfficeWhereUniqueInput
 }
 
-export type OfficeUpdateOneRequiredWithoutOtpCodesNestedInput = {
+export type OfficeUpdateOneWithoutOtpCodesNestedInput = {
   create?: Prisma.XOR<Prisma.OfficeCreateWithoutOtpCodesInput, Prisma.OfficeUncheckedCreateWithoutOtpCodesInput>
   connectOrCreate?: Prisma.OfficeCreateOrConnectWithoutOtpCodesInput
   upsert?: Prisma.OfficeUpsertWithoutOtpCodesInput
+  disconnect?: Prisma.OfficeWhereInput | boolean
+  delete?: Prisma.OfficeWhereInput | boolean
   connect?: Prisma.OfficeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OfficeUpdateToOneWithWhereWithoutOtpCodesInput, Prisma.OfficeUpdateWithoutOtpCodesInput>, Prisma.OfficeUncheckedUpdateWithoutOtpCodesInput>
 }

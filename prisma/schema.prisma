@@ -125,7 +125,7 @@ model Task {
 model OtpCode {
   id                Int        @id @default(autoincrement())
   userId            Int
-  officeId          Int
+  officeId          Int?
   email             String
   purpose           OtpPurpose
   channel           OtpChannel
@@ -143,7 +143,7 @@ model OtpCode {
   createdAt         DateTime   @default(now())
 
   user   User   @relation(fields: [userId], references: [id])
-  office Office @relation(fields: [officeId], references: [id])
+  office Office? @relation(fields: [officeId], references: [id])
 }
 
 

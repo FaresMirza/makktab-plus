@@ -287,8 +287,12 @@ export class OtpHelper {
 
     /**
      * Get the office internal ID from the user entity.
+     * Returns null for platform admins.
      */
-    private getUserOfficeId(user: any): number {
+    private getUserOfficeId(user: any): number | null {
+        if (user.roles && (user.roles.includes('admin') || user.roles.includes('super_admin'))) {
+            return null;
+        }
         if (user.ownedOffice) {
             return user.ownedOffice.id;
         }
