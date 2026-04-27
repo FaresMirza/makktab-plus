@@ -56,13 +56,11 @@ export class AdminsHelper {
         });
     }
 
-    async getLastAdminLog(adminPublicId: string) {
-        const adminUserId = await this.resolveUserId(adminPublicId);
-        return this.auditRepository.findLastAdminLog(adminUserId);
+    async getLastAdminLog() {
+        return this.auditRepository.findLastAdminLog();
     }
 
-    async getLast100AdminLogs(adminPublicId: string) {
-        const adminUserId = await this.resolveUserId(adminPublicId);
-        return this.auditRepository.findLast100AdminLogs(adminUserId);
+    async getLast100AdminLogs() {
+        return this.auditRepository.findLast100AdminLogs();
     }
 }

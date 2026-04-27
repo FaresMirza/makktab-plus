@@ -113,16 +113,16 @@ export class AdminsService {
         };
     }
     /**
-     * Get the last audit log for the current admin
+     * Get the last audit log for the admins
      */
-    async getLastAdminLog(adminPublicId: string) {
-        return this.adminsHelper.getLastAdminLog(adminPublicId);
+    async getLastAdminLog() {
+        return this.adminsHelper.getLastAdminLog();
     }
 
     /**
-     * Get the last 100 audit logs for the current admin
+     * Get the audit logs for the admins
      */
-    async getLast100AdminLogs(adminPublicId: string) {
-        return this.adminsHelper.getLast100AdminLogs(adminPublicId);
+    async getLast100AdminLogs() {
+        return this.adminsHelper.getLast100AdminLogs();
     }
 }

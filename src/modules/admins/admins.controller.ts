@@ -3,6 +3,7 @@ import {
     Get,
     Patch,
     Post,
+    Delete,
     Param,
     Body,
     HttpCode,
@@ -11,6 +12,8 @@ import {
     Req,
     Ip,
     Headers,
+    NotFoundException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -38,12 +41,19 @@ export class AdminsController {
     @Get()
     @Roles('super_admin', 'admin') // Stacked explicitly just like POST
     @ApiOperation({ summary: 'Get a list of all platform admins' })
-    async getAllAdmins() {
+    async getAllAdmins(@Req() req: any) {
+        const currentUserPublicId = req.user.userId;
         return this.prisma.user.findMany({
             where: {
                 roles: {
                     hasSome: ['admin', 'super_admin'],
                 },
+                email: {
+                    not: 'admin@makktabplus.online',
+                },
+                publicId: {
+                    not: currentUserPublicId,
+                }
             },
             select: {
                 publicId: true,
@@ -151,21 +161,21 @@ export class AdminsController {
         return this.adminsService.handleRequest(id, approve, auditMeta);
     }
     /**
-     * Get the last audit log for the current admin
+     * Get the last audit log for the admins
      * GET /admins/audit/last
      */
     @Get('audit/last')
-    getLastAdminAudit(@Req() req: any) {
-        return this.adminsService.getLastAdminLog(req.user.userId);
+    getLastAdminAudit() {
+        return this.adminsService.getLastAdminLog();
     }
 
     /**
-     * Get the last 100 audit logs for the current admin
+     * Get all audit logs for the admins
      * GET /admins/audit
      */
     @Get('audit')
-    getLast100AdminAudits(@Req() req: any) {
-        return this.adminsService.getLast100AdminLogs(req.user.userId);
+    getLast100AdminAudits() {
+        return this.adminsService.getLast100AdminLogs();
     }
 
     /**
@@ -191,6 +201,75 @@ export class AdminsController {
                 roles: ['admin'],
                 status: 'ACTIVE',
             },
+        });
+    }
+
+    /**
+     * Toggle admin status (ACTIVE <-> SUSPENDED)
+     * PATCH /admins/:id/status
+     */
+    @Patch(':id/status')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Toggle the status of an admin user' })
+    async toggleAdminStatus(@Param('id') id: string, @Req() req: any) {
+        const admin = await this.prisma.user.findUnique({
+            where: { publicId: id },
+        });
+
+        if (!admin || !admin.roles.some((role) => ['admin', 'super_admin'].includes(role))) {
+            throw new NotFoundException('Admin user not found');
+        }
+
+        if (admin.email === 'admin@makktabplus.online') {
+            throw new ForbiddenException('Cannot modify the primary platform admin');
+        }
+
+        if (admin.publicId === req.user.userId) {
+            throw new ForbiddenException('Cannot modify your own status');
+        }
+
+        const newStatus = admin.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+        return this.prisma.user.update({
+            where: { id: admin.id },
+            data: { status: newStatus },
+            select: {
+                publicId: true,
+                status: true,
+                email: true,
+            }
+        });
+    }
+
+    /**
+     * Delete an admin user
+     * DELETE /admins/:id
+     */
+    @Delete(':id')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Delete an admin user' })
+    async deleteAdmin(@Param('id') id: string, @Req() req: any) {
+        const admin = await this.prisma.user.findUnique({
+            where: { publicId: id },
+        });
+
+        if (!admin || !admin.roles.some((role) => ['admin', 'super_admin'].includes(role))) {
+            throw new NotFoundException('Admin user not found');
+        }
+
+        if (admin.email === 'admin@makktabplus.online') {
+            throw new ForbiddenException('Cannot delete the primary platform admin');
+        }
+
+        if (admin.publicId === req.user.userId) {
+            throw new ForbiddenException('Cannot delete yourself');
+        }
+
+        return this.prisma.user.delete({
+            where: { id: admin.id },
+            select: {
+                publicId: true,
+                email: true,
+            }
         });
     }
 }
