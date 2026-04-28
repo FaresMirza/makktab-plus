@@ -79,6 +79,38 @@ export class AdminsController {
     }
 
     /**
+     * Get admin dashboard statistics
+     * GET /admins/stats
+     */
+    @Get('stats')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Get admin dashboard statistics' })
+    async getDashboardStats() {
+        const activeOfficesCount = await this.prisma.office.count({
+            where: { status: 'ACTIVE' },
+        });
+
+        const totalOfficesCount = await this.prisma.office.count();
+
+        const totalAdminsCount = await this.prisma.user.count({
+            where: {
+                roles: {
+                    hasSome: ['admin', 'super_admin'],
+                },
+            },
+        });
+
+        const totalUsersCount = await this.prisma.user.count();
+
+        return {
+            activeOfficesCount,
+            totalOfficesCount,
+            totalAdminsCount,
+            totalUsersCount,
+        };
+    }
+
+    /**
      * Get office details
      * GET /admins/offices/:id
      */
