@@ -45,6 +45,16 @@ export class AuthService {
             throw new UnauthorizedException('Your account is currently suspended or deactivated. Please contact the administrator.');
         }
 
+        // Check if user's office is suspended (skip for platform admins)
+        if (!user.roles?.includes('admin') && !user.roles?.includes('super_admin')) {
+            if (user.offices && user.offices.length > 0) {
+                const suspendedOffice = user.offices.find(office => office.status.toUpperCase() !== 'ACTIVE');
+                if (suspendedOffice) {
+                    throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
+                }
+            }
+        }
+
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
         const otpResult = await this.otpService.sendOtp(
@@ -68,6 +78,21 @@ export class AuthService {
         }
 
         await this.authHelper.validatePassword(password, user, ip, userAgent, deviceFingerprint);
+
+        // Check user status
+        if (user.status.toUpperCase() !== 'ACTIVE') {
+            throw new UnauthorizedException('Your account is currently suspended or deactivated. Please contact the administrator.');
+        }
+
+        // Check if user's office is suspended (skip for platform admins)
+        if (!user.roles?.includes('admin') && !user.roles?.includes('super_admin')) {
+            if (user.offices && user.offices.length > 0) {
+                const suspendedOffice = user.offices.find(office => office.status.toUpperCase() !== 'ACTIVE');
+                if (suspendedOffice) {
+                    throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
+                }
+            }
+        }
 
         await this.otpService.verifyOtp(
             { email: user.email, otp, purpose: OtpPurpose.LOGIN },
