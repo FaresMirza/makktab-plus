@@ -199,11 +199,16 @@ export class OfficesRepository {
     }
 
     async update(id: number, data: Prisma.OfficeUncheckedUpdateInput) {
-        return this.prisma.office.update({
-            where: { id },
-            data,
-            include: this.officeListInclude,
-        });
+        try {
+            return this.prisma.office.update({
+                where: { id },
+                data,
+                include: this.officeListInclude,
+            });
+        } catch (error: any) {
+            // Re-throw Prisma errors for handling upstream
+            throw error;
+        }
     }
 
     async delete(id: number) {
