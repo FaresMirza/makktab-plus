@@ -264,12 +264,20 @@ export class AdminsController {
             throw new ForbiddenException('Cannot delete yourself');
         }
 
-        return this.prisma.user.delete({
-            where: { id: admin.id },
-            select: {
-                publicId: true,
-                email: true,
-            }
-        });
+        return this.prisma.$transaction([
+            this.prisma.otpCode.deleteMany({
+                where: { userId: admin.id },
+            }),
+            this.prisma.adminAuditLog.deleteMany({
+                where: { adminUserId: admin.id },
+            }),
+            this.prisma.user.delete({
+                where: { id: admin.id },
+                select: {
+                    publicId: true,
+                    email: true,
+                }
+            }),
+        ]);
     }
 }

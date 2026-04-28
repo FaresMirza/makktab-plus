@@ -41,6 +41,10 @@ export class AuthService {
             this.authHelper.throwInvalidCredentials();
         }
 
+        if (user.status.toUpperCase() !== 'ACTIVE') {
+            throw new UnauthorizedException('Your account is currently suspended or deactivated. Please contact the administrator.');
+        }
+
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
         const otpResult = await this.otpService.sendOtp(
