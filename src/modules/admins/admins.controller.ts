@@ -86,11 +86,35 @@ export class AdminsController {
     @Roles('super_admin', 'admin')
     @ApiOperation({ summary: 'Get admin dashboard statistics' })
     async getDashboardStats() {
+        // Exclude offices where owner has admin/super_admin roles
         const activeOfficesCount = await this.prisma.office.count({
-            where: { status: 'ACTIVE' },
+            where: {
+                AND: [
+                    { status: 'ACTIVE' },
+                    {
+                        NOT: {
+                            owner: {
+                                roles: {
+                                    hasSome: ['admin', 'super_admin'],
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
         });
 
-        const totalOfficesCount = await this.prisma.office.count();
+        const totalOfficesCount = await this.prisma.office.count({
+            where: {
+                NOT: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin'],
+                        },
+                    },
+                },
+            },
+        });
 
         const totalAdminsCount = await this.prisma.user.count({
             where: {
@@ -102,11 +126,33 @@ export class AdminsController {
 
         const totalUsersCount = await this.prisma.user.count();
 
+        // Fetch recent admin audit logs
+        const recentLogs = await this.prisma.adminAuditLog.findMany({
+            take: 5,
+            orderBy: { createdAt: 'desc' },
+            include: {
+                admin: {
+                    select: {
+                        publicId: true,
+                        fullName: true,
+                        email: true,
+                    },
+                },
+                targetOffice: {
+                    select: {
+                        publicId: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
         return {
             activeOfficesCount,
             totalOfficesCount,
             totalAdminsCount,
             totalUsersCount,
+            recentLogs,
         };
     }
 
