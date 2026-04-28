@@ -47,11 +47,16 @@ export class AuthService {
 
         // Check if user's office is suspended (skip for platform admins)
         if (!user.roles?.includes('admin') && !user.roles?.includes('super_admin')) {
+            // Check employee offices
             if (user.offices && user.offices.length > 0) {
                 const suspendedOffice = user.offices.find(office => office.status.toUpperCase() !== 'ACTIVE');
                 if (suspendedOffice) {
                     throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
                 }
+            }
+            // Check owned office
+            if (user.ownedOffice && user.ownedOffice.status.toUpperCase() !== 'ACTIVE') {
+                throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
             }
         }
 
@@ -86,11 +91,16 @@ export class AuthService {
 
         // Check if user's office is suspended (skip for platform admins)
         if (!user.roles?.includes('admin') && !user.roles?.includes('super_admin')) {
+            // Check employee offices
             if (user.offices && user.offices.length > 0) {
                 const suspendedOffice = user.offices.find(office => office.status.toUpperCase() !== 'ACTIVE');
                 if (suspendedOffice) {
                     throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
                 }
+            }
+            // Check owned office
+            if (user.ownedOffice && user.ownedOffice.status.toUpperCase() !== 'ACTIVE') {
+                throw new UnauthorizedException('Your office account is currently suspended. Please contact platform administration.');
             }
         }
 
