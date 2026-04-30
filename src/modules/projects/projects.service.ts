@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Logger, BadRequestException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
@@ -8,6 +8,8 @@ import { UsersRepository } from '../users/queries/users.queries';
 
 @Injectable()
 export class ProjectsService {
+  private readonly logger = new Logger(ProjectsService.name);
+
   constructor(
     private readonly projectsHelper: ProjectsHelper,
     private readonly projectsRepository: ProjectsRepository,
@@ -55,38 +57,46 @@ export class ProjectsService {
    * Frontend cannot override these values for security/tenant isolation
    */
   async createForAuthenticatedUser(createProjectDto: CreateProjectDto, userPublicId: string) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
-    const user = await this.usersRepository.findByPublicId(userPublicId);
+    try {
+      this.logger.debug(`Creating project for user: ${userPublicId}`);
 
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userPublicId} not found`);
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      const user = await this.usersRepository.findByPublicId(userPublicId);
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userPublicId} not found`);
+      }
+
+      const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
+
+      // Validate project manager exists
+      const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+
+      // Validate client exists if provided
+      let clientObj: any = null;
+      if (clientId) {
+        clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
+      }
+
+      const project = await this.projectsRepository.create({
+        name,
+        description,
+        budget: budget ? String(budget) : null,
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
+        officeId: userOfficeId,
+        createdByUserId: user.id,
+        projectManagerUserId: projectManager.id,
+        clientId: clientObj?.id || null,
+        status: status || ProjectStatus.IN_PROGRESS,
+      });
+
+      this.logger.debug(`Project created successfully: ${project.publicId}`);
+      return project;
+    } catch (error) {
+      this.logger.error(`Error creating project for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
-
-    // Validate project manager exists
-    const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
-
-    // Validate client exists if provided
-    let clientObj: any = null;
-    if (clientId) {
-      clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
-    }
-
-    const project = await this.projectsRepository.create({
-      name,
-      description,
-      budget: budget ? String(budget) : null,
-      startDate: startDate ? new Date(startDate) : null,
-      endDate: endDate ? new Date(endDate) : null,
-      officeId: userOfficeId,
-      createdByUserId: user.id,
-      projectManagerUserId: projectManager.id,
-      clientId: clientObj?.id || null,
-      status: status || ProjectStatus.IN_PROGRESS,
-    });
-
-    return project;
   }
 
   /**
@@ -201,23 +211,34 @@ export class ProjectsService {
    * Helper: Get user's officeId from their publicId
    */
   private async getUserOfficeId(userPublicId: string): Promise<number> {
-    const user = await this.usersRepository.findByPublicId(userPublicId);
+    try {
+      this.logger.debug(`Getting office ID for user: ${userPublicId}`);
 
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userPublicId} not found`);
+      const user = await this.usersRepository.findByPublicId(userPublicId);
+
+      if (!user) {
+        this.logger.error(`User not found: ${userPublicId}`);
+        throw new NotFoundException(`User with ID ${userPublicId} not found`);
+      }
+
+      let officeId: number;
+
+      if (user.ownedOffice) {
+        officeId = user.ownedOffice.id;
+        this.logger.debug(`User is office owner, office ID: ${officeId}`);
+      } else if (user.offices && user.offices.length > 0) {
+        officeId = user.offices[0].id;
+        this.logger.debug(`User belongs to office, office ID: ${officeId}`);
+      } else {
+        this.logger.error(`User ${userPublicId} does not belong to any office`);
+        throw new ForbiddenException('User does not belong to any office');
+      }
+
+      return officeId;
+    } catch (error) {
+      this.logger.error(`Error getting office ID for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    let officeId: number;
-
-    if (user.ownedOffice) {
-      officeId = user.ownedOffice.id;
-    } else if (user.offices && user.offices.length > 0) {
-      officeId = user.offices[0].id;
-    } else {
-      throw new ForbiddenException('User does not belong to any office');
-    }
-
-    return officeId;
   }
 
   /**
@@ -245,40 +266,55 @@ export class ProjectsService {
     status?: ProjectStatus,
     projectManagerUserId?: string,
   ) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    try {
+      this.logger.debug(`Fetching projects for user: ${userPublicId}, filters: status=${status}, projectManager=${projectManagerUserId}`);
 
-    if (status) {
-      return this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      this.logger.debug(`User office ID: ${userOfficeId}`);
+
+      if (status) {
+        this.logger.debug(`Filtering by status: ${status}`);
+        return this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
+      }
+
+      if (projectManagerUserId) {
+        const projectManager = await this.projectsHelper.validateUserExists(
+          projectManagerUserId,
+          'Project manager',
+        );
+        this.logger.debug(`Filtering by project manager: ${projectManager.id}`);
+        return this.projectsRepository.findByOfficeAndProjectManager(
+          userOfficeId,
+          projectManager.id,
+        );
+      }
+
+      return this.projectsRepository.findByOffice(userOfficeId);
+    } catch (error) {
+      this.logger.error(`Error fetching projects for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    if (projectManagerUserId) {
-      const projectManager = await this.projectsHelper.validateUserExists(
-        projectManagerUserId,
-        'Project manager',
-      );
-      return this.projectsRepository.findByOfficeAndProjectManager(
-        userOfficeId,
-        projectManager.id,
-      );
-    }
-
-    return this.projectsRepository.findByOffice(userOfficeId);
   }
 
   /**
    * Get a specific project for authenticated user (with tenant isolation)
    */
   async findOneForAuthenticatedUser(projectPublicId: string, userPublicId: string) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
-    await this.verifyProjectAccess(projectPublicId, userOfficeId);
+    try {
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      await this.verifyProjectAccess(projectPublicId, userOfficeId);
 
-    const project = await this.projectsRepository.findByPublicId(projectPublicId);
+      const project = await this.projectsRepository.findByPublicId(projectPublicId);
 
-    if (!project) {
-      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      if (!project) {
+        throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      }
+
+      return project;
+    } catch (error) {
+      this.logger.error(`Error fetching project ${projectPublicId} for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    return project;
   }
 
   /**
@@ -289,25 +325,33 @@ export class ProjectsService {
     updateProjectDto: UpdateProjectDto,
     userPublicId: string,
   ) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
-    const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+    try {
+      this.logger.debug(`Updating project ${projectPublicId} for user ${userPublicId}`);
 
-    const updateData: any = {};
-    if (updateProjectDto.name !== undefined) updateData.name = updateProjectDto.name;
-    if (updateProjectDto.description !== undefined) updateData.description = updateProjectDto.description;
-    if (updateProjectDto.status !== undefined) updateData.status = updateProjectDto.status;
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
 
-    if (updateProjectDto.projectManagerUserId) {
-      const pm = await this.projectsHelper.validateUserExists(
-        updateProjectDto.projectManagerUserId,
-        'Project manager',
-      );
-      updateData.projectManagerUserId = pm.id;
+      const updateData: any = {};
+      if (updateProjectDto.name !== undefined) updateData.name = updateProjectDto.name;
+      if (updateProjectDto.description !== undefined) updateData.description = updateProjectDto.description;
+      if (updateProjectDto.status !== undefined) updateData.status = updateProjectDto.status;
+
+      if (updateProjectDto.projectManagerUserId) {
+        const pm = await this.projectsHelper.validateUserExists(
+          updateProjectDto.projectManagerUserId,
+          'Project manager',
+        );
+        updateData.projectManagerUserId = pm.id;
+      }
+
+      const updatedProject = await this.projectsRepository.update(project.id, updateData);
+
+      this.logger.debug(`Project ${projectPublicId} updated successfully`);
+      return updatedProject;
+    } catch (error) {
+      this.logger.error(`Error updating project ${projectPublicId} for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    const updatedProject = await this.projectsRepository.update(project.id, updateData);
-
-    return updatedProject;
   }
 
   /**
@@ -318,20 +362,30 @@ export class ProjectsService {
     userPublicId: string,
     hardDelete = false,
   ) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
-    const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+    try {
+      this.logger.debug(`Removing project ${projectPublicId} for user ${userPublicId}, hardDelete=${hardDelete}`);
 
-    const projectWithCount = await this.projectsRepository.findByIdWithTaskCount(project.id);
-    if (!projectWithCount) {
-      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
-    }
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
 
-    if (hardDelete) {
-      this.projectsHelper.validateDeleteCondition(projectWithCount);
-      await this.projectsRepository.delete(project.id);
-      return { message: 'Project permanently deleted' };
-    } else {
-      return this.projectsRepository.softDelete(project.id);
+      const projectWithCount = await this.projectsRepository.findByIdWithTaskCount(project.id);
+      if (!projectWithCount) {
+        throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      }
+
+      if (hardDelete) {
+        this.projectsHelper.validateDeleteCondition(projectWithCount);
+        await this.projectsRepository.delete(project.id);
+        this.logger.debug(`Project ${projectPublicId} permanently deleted`);
+        return { message: 'Project permanently deleted' };
+      } else {
+        const result = await this.projectsRepository.softDelete(project.id);
+        this.logger.debug(`Project ${projectPublicId} soft deleted`);
+        return result;
+      }
+    } catch (error) {
+      this.logger.error(`Error removing project ${projectPublicId} for user ${userPublicId}:`, error);
+      throw error;
     }
   }
 
@@ -339,15 +393,20 @@ export class ProjectsService {
    * Get project statistics for authenticated user (with tenant isolation)
    */
   async getStatisticsForAuthenticatedUser(projectPublicId: string, userPublicId: string) {
-    const userOfficeId = await this.getUserOfficeId(userPublicId);
-    await this.verifyProjectAccess(projectPublicId, userOfficeId);
+    try {
+      const userOfficeId = await this.getUserOfficeId(userPublicId);
+      await this.verifyProjectAccess(projectPublicId, userOfficeId);
 
-    const project = await this.projectsRepository.findByPublicIdWithTasksStatus(projectPublicId);
+      const project = await this.projectsRepository.findByPublicIdWithTasksStatus(projectPublicId);
 
-    if (!project) {
-      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      if (!project) {
+        throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      }
+
+      return this.projectsHelper.formatStatistics(project);
+    } catch (error) {
+      this.logger.error(`Error getting statistics for project ${projectPublicId} for user ${userPublicId}:`, error);
+      throw error;
     }
-
-    return this.projectsHelper.formatStatistics(project);
   }
 }
