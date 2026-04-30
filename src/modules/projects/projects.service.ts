@@ -1,15 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
 import { ProjectsHelper } from './helpers/projects.helper';
 import { ProjectsRepository } from './queries/projects.queries';
+import { UsersRepository } from '../users/queries/users.queries';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private readonly projectsHelper: ProjectsHelper,
     private readonly projectsRepository: ProjectsRepository,
+    private readonly usersRepository: UsersRepository,
   ) { }
 
   /**
@@ -141,6 +143,160 @@ export class ProjectsService {
 
     if (!project) {
       throw new NotFoundException(`Project with ID ${publicId} not found`);
+    }
+
+    return this.projectsHelper.formatStatistics(project);
+  }
+
+  /**
+   * Helper: Get user's officeId from their publicId
+   */
+  private async getUserOfficeId(userPublicId: string): Promise<number> {
+    const user = await this.usersRepository.findByPublicId(userPublicId);
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userPublicId} not found`);
+    }
+
+    let officeId: number;
+
+    if (user.ownedOffice) {
+      officeId = user.ownedOffice.id;
+    } else if (user.offices && user.offices.length > 0) {
+      officeId = user.offices[0].id;
+    } else {
+      throw new ForbiddenException('User does not belong to any office');
+    }
+
+    return officeId;
+  }
+
+  /**
+   * Verify that a project belongs to the user's office
+   */
+  private async verifyProjectAccess(projectPublicId: string, userOfficeId: number): Promise<any> {
+    const project = await this.projectsRepository.findByPublicIdSimple(projectPublicId);
+
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+    }
+
+    if (project.officeId !== userOfficeId) {
+      throw new ForbiddenException('You do not have access to this project');
+    }
+
+    return project;
+  }
+
+  /**
+   * Get all projects for the authenticated user's office with optional filters
+   */
+  async findAllForAuthenticatedUser(
+    userPublicId: string,
+    status?: ProjectStatus,
+    projectManagerUserId?: string,
+  ) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+
+    if (status) {
+      return this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
+    }
+
+    if (projectManagerUserId) {
+      const projectManager = await this.projectsHelper.validateUserExists(
+        projectManagerUserId,
+        'Project manager',
+      );
+      return this.projectsRepository.findByOfficeAndProjectManager(
+        userOfficeId,
+        projectManager.id,
+      );
+    }
+
+    return this.projectsRepository.findByOffice(userOfficeId);
+  }
+
+  /**
+   * Get a specific project for authenticated user (with tenant isolation)
+   */
+  async findOneForAuthenticatedUser(projectPublicId: string, userPublicId: string) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    await this.verifyProjectAccess(projectPublicId, userOfficeId);
+
+    const project = await this.projectsRepository.findByPublicId(projectPublicId);
+
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+    }
+
+    return project;
+  }
+
+  /**
+   * Update a project (with tenant isolation)
+   */
+  async updateForAuthenticatedUser(
+    projectPublicId: string,
+    updateProjectDto: UpdateProjectDto,
+    userPublicId: string,
+  ) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+
+    const updateData: any = {};
+    if (updateProjectDto.name !== undefined) updateData.name = updateProjectDto.name;
+    if (updateProjectDto.description !== undefined) updateData.description = updateProjectDto.description;
+    if (updateProjectDto.status !== undefined) updateData.status = updateProjectDto.status;
+
+    if (updateProjectDto.projectManagerUserId) {
+      const pm = await this.projectsHelper.validateUserExists(
+        updateProjectDto.projectManagerUserId,
+        'Project manager',
+      );
+      updateData.projectManagerUserId = pm.id;
+    }
+
+    const updatedProject = await this.projectsRepository.update(project.id, updateData);
+
+    return updatedProject;
+  }
+
+  /**
+   * Delete/Cancel a project (with tenant isolation)
+   */
+  async removeForAuthenticatedUser(
+    projectPublicId: string,
+    userPublicId: string,
+    hardDelete = false,
+  ) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+
+    const projectWithCount = await this.projectsRepository.findByIdWithTaskCount(project.id);
+    if (!projectWithCount) {
+      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+    }
+
+    if (hardDelete) {
+      this.projectsHelper.validateDeleteCondition(projectWithCount);
+      await this.projectsRepository.delete(project.id);
+      return { message: 'Project permanently deleted' };
+    } else {
+      return this.projectsRepository.softDelete(project.id);
+    }
+  }
+
+  /**
+   * Get project statistics for authenticated user (with tenant isolation)
+   */
+  async getStatisticsForAuthenticatedUser(projectPublicId: string, userPublicId: string) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    await this.verifyProjectAccess(projectPublicId, userOfficeId);
+
+    const project = await this.projectsRepository.findByPublicIdWithTasksStatus(projectPublicId);
+
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
     }
 
     return this.projectsHelper.formatStatistics(project);

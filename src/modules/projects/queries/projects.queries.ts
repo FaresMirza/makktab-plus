@@ -98,6 +98,15 @@ export class ProjectsRepository {
         });
     }
 
+    private get projectListIncludeWithStats(): Prisma.ProjectInclude {
+        return {
+            office: { select: this.officeSelect },
+            createdBy: { select: this.userSelect },
+            projectManager: { select: this.userSelect },
+            _count: { select: { tasks: true } },
+        };
+    }
+
     async findByOffice(officeId: number) {
         return this.prisma.project.findMany({
             where: { officeId },
@@ -181,6 +190,28 @@ export class ProjectsRepository {
             include: {
                 tasks: { select: { status: true } },
             },
+        });
+    }
+
+    /**
+     * Find projects by office and status (for tenant-isolated filtering)
+     */
+    async findByOfficeAndStatus(officeId: number, status: ProjectStatus) {
+        return this.prisma.project.findMany({
+            where: { officeId, status },
+            include: this.projectListInclude,
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    /**
+     * Find projects by office and project manager (for tenant-isolated filtering)
+     */
+    async findByOfficeAndProjectManager(officeId: number, projectManagerUserId: number) {
+        return this.prisma.project.findMany({
+            where: { officeId, projectManagerUserId },
+            include: this.projectListInclude,
+            orderBy: { createdAt: 'desc' },
         });
     }
 }
