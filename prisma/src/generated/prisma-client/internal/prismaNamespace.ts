@@ -1344,8 +1344,12 @@ export const ProjectScalarFieldEnum = {
   officeId: 'officeId',
   createdByUserId: 'createdByUserId',
   projectManagerUserId: 'projectManagerUserId',
+  clientId: 'clientId',
   name: 'name',
   description: 'description',
+  budget: 'budget',
+  startDate: 'startDate',
+  endDate: 'endDate',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -1564,6 +1568,20 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 

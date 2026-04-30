@@ -15,25 +15,74 @@ export class ProjectsService {
   ) { }
 
   /**
-   * Create a new project
+   * Create a new project (for backward compatibility - accepts officeId in request)
    * - Validates that office, creator, and project manager exist (by publicId)
    * - Resolves publicIds → internal ids for DB creation
    * - Sets default status to IN_PROGRESS if not provided
    */
-  async create(createProjectDto: CreateProjectDto) {
-    const { officeId, createdByUserId, projectManagerUserId, name, description, status } = createProjectDto;
+  async create(createProjectDto: any) {
+    const { officeId, createdByUserId, projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
 
     // Resolve publicIds → internal entities
     const office = await this.projectsHelper.validateOfficeExists(officeId);
     const creator = await this.projectsHelper.validateUserExists(createdByUserId, 'Creator');
     const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
 
+    let clientObj: any = null;
+    if (clientId) {
+      clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
+    }
+
     const project = await this.projectsRepository.create({
       name,
       description,
+      budget: budget ? String(budget) : null,
+      startDate: startDate ? new Date(startDate) : null,
+      endDate: endDate ? new Date(endDate) : null,
       officeId: office.id,
       createdByUserId: creator.id,
       projectManagerUserId: projectManager.id,
+      clientId: clientObj?.id || null,
+      status: status || ProjectStatus.IN_PROGRESS,
+    });
+
+    return project;
+  }
+
+  /**
+   * Create a new project for authenticated user
+   * CRITICAL: Extracts officeId and createdByUserId from JWT token
+   * Frontend cannot override these values for security/tenant isolation
+   */
+  async createForAuthenticatedUser(createProjectDto: CreateProjectDto, userPublicId: string) {
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    const user = await this.usersRepository.findByPublicId(userPublicId);
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userPublicId} not found`);
+    }
+
+    const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
+
+    // Validate project manager exists
+    const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+
+    // Validate client exists if provided
+    let clientObj: any = null;
+    if (clientId) {
+      clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
+    }
+
+    const project = await this.projectsRepository.create({
+      name,
+      description,
+      budget: budget ? String(budget) : null,
+      startDate: startDate ? new Date(startDate) : null,
+      endDate: endDate ? new Date(endDate) : null,
+      officeId: userOfficeId,
+      createdByUserId: user.id,
+      projectManagerUserId: projectManager.id,
+      clientId: clientObj?.id || null,
       status: status || ProjectStatus.IN_PROGRESS,
     });
 

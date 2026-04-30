@@ -288,6 +288,7 @@ export type UserWhereInput = {
   ownedOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
   createdProjects?: Prisma.ProjectListRelationFilter
   managedProjects?: Prisma.ProjectListRelationFilter
+  clientProjects?: Prisma.ProjectListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
@@ -316,6 +317,7 @@ export type UserOrderByWithRelationInput = {
   ownedOffice?: Prisma.OfficeOrderByWithRelationInput
   createdProjects?: Prisma.ProjectOrderByRelationAggregateInput
   managedProjects?: Prisma.ProjectOrderByRelationAggregateInput
+  clientProjects?: Prisma.ProjectOrderByRelationAggregateInput
   createdTasks?: Prisma.TaskOrderByRelationAggregateInput
   assignedTasks?: Prisma.TaskOrderByRelationAggregateInput
   otpCodes?: Prisma.OtpCodeOrderByRelationAggregateInput
@@ -347,6 +349,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   ownedOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
   createdProjects?: Prisma.ProjectListRelationFilter
   managedProjects?: Prisma.ProjectListRelationFilter
+  clientProjects?: Prisma.ProjectListRelationFilter
   createdTasks?: Prisma.TaskListRelationFilter
   assignedTasks?: Prisma.TaskListRelationFilter
   otpCodes?: Prisma.OtpCodeListRelationFilter
@@ -416,6 +419,7 @@ export type UserCreateInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -444,6 +448,7 @@ export type UserUncheckedCreateInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -471,6 +476,7 @@ export type UserUpdateInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -499,6 +505,7 @@ export type UserUncheckedUpdateInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -720,6 +727,12 @@ export type UserCreateNestedOneWithoutManagedProjectsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutClientProjectsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClientProjectsInput, Prisma.UserUncheckedCreateWithoutClientProjectsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClientProjectsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutCreatedProjectsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProjectsInput, Prisma.UserUncheckedCreateWithoutCreatedProjectsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProjectsInput
@@ -734,6 +747,16 @@ export type UserUpdateOneRequiredWithoutManagedProjectsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutManagedProjectsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutManagedProjectsInput, Prisma.UserUpdateWithoutManagedProjectsInput>, Prisma.UserUncheckedUpdateWithoutManagedProjectsInput>
+}
+
+export type UserUpdateOneWithoutClientProjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClientProjectsInput, Prisma.UserUncheckedCreateWithoutClientProjectsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClientProjectsInput
+  upsert?: Prisma.UserUpsertWithoutClientProjectsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClientProjectsInput, Prisma.UserUpdateWithoutClientProjectsInput>, Prisma.UserUncheckedUpdateWithoutClientProjectsInput>
 }
 
 export type UserCreateNestedOneWithoutCreatedTasksInput = {
@@ -853,6 +876,7 @@ export type UserCreateWithoutOwnedOfficeInput = {
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -880,6 +904,7 @@ export type UserUncheckedCreateWithoutOwnedOfficeInput = {
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -911,6 +936,7 @@ export type UserCreateWithoutOfficesInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -938,6 +964,7 @@ export type UserUncheckedCreateWithoutOfficesInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -980,6 +1007,7 @@ export type UserUpdateWithoutOwnedOfficeInput = {
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -1007,6 +1035,7 @@ export type UserUncheckedUpdateWithoutOwnedOfficeInput = {
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1069,6 +1098,7 @@ export type UserCreateWithoutCreatedProjectsInput = {
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -1096,6 +1126,7 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1127,6 +1158,7 @@ export type UserCreateWithoutManagedProjectsInput = {
   offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -1154,6 +1186,7 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
   offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1166,6 +1199,66 @@ export type UserUncheckedCreateWithoutManagedProjectsInput = {
 export type UserCreateOrConnectWithoutManagedProjectsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutManagedProjectsInput, Prisma.UserUncheckedCreateWithoutManagedProjectsInput>
+}
+
+export type UserCreateWithoutClientProjectsInput = {
+  publicId?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  offices?: Prisma.OfficeCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+}
+
+export type UserUncheckedCreateWithoutClientProjectsInput = {
+  id?: number
+  publicId?: string
+  fullName: string
+  email: string
+  phone: string
+  username: string
+  passwordHash: string
+  refreshTokenHash?: string | null
+  lastPasswordChange?: Date | string | null
+  roles?: Prisma.UserCreaterolesInput | string[]
+  status: $Enums.UserStatus
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  offices?: Prisma.OfficeUncheckedCreateNestedManyWithoutUsersInput
+  ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedCreateNestedManyWithoutActorInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedCreateNestedManyWithoutActorInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type UserCreateOrConnectWithoutClientProjectsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutClientProjectsInput, Prisma.UserUncheckedCreateWithoutClientProjectsInput>
 }
 
 export type UserUpsertWithoutCreatedProjectsInput = {
@@ -1196,6 +1289,7 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -1223,6 +1317,7 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1260,6 +1355,7 @@ export type UserUpdateWithoutManagedProjectsInput = {
   offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -1287,6 +1383,73 @@ export type UserUncheckedUpdateWithoutManagedProjectsInput = {
   offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUncheckedUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+}
+
+export type UserUpsertWithoutClientProjectsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutClientProjectsInput, Prisma.UserUncheckedUpdateWithoutClientProjectsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClientProjectsInput, Prisma.UserUncheckedCreateWithoutClientProjectsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutClientProjectsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutClientProjectsInput, Prisma.UserUncheckedUpdateWithoutClientProjectsInput>
+}
+
+export type UserUpdateWithoutClientProjectsInput = {
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
+  authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
+  projectAuditLogs?: Prisma.ProjectAuditLogUpdateManyWithoutActorNestedInput
+  taskAuditLogs?: Prisma.TaskAuditLogUpdateManyWithoutActorNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+}
+
+export type UserUncheckedUpdateWithoutClientProjectsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastPasswordChange?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  roles?: Prisma.UserUpdaterolesInput | string[]
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offices?: Prisma.OfficeUncheckedUpdateManyWithoutUsersNestedInput
+  ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1314,6 +1477,7 @@ export type UserCreateWithoutCreatedTasksInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
@@ -1341,6 +1505,7 @@ export type UserUncheckedCreateWithoutCreatedTasksInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -1372,6 +1537,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
@@ -1399,6 +1565,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -1441,6 +1608,7 @@ export type UserUpdateWithoutCreatedTasksInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
@@ -1468,6 +1636,7 @@ export type UserUncheckedUpdateWithoutCreatedTasksInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1505,6 +1674,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
@@ -1532,6 +1702,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1558,6 +1729,7 @@ export type UserCreateWithoutOtpCodesInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   authAuditLogs?: Prisma.AuthAuditLogCreateNestedManyWithoutUserInput
@@ -1585,6 +1757,7 @@ export type UserUncheckedCreateWithoutOtpCodesInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -1627,6 +1800,7 @@ export type UserUpdateWithoutOtpCodesInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUpdateManyWithoutUserNestedInput
@@ -1654,6 +1828,7 @@ export type UserUncheckedUpdateWithoutOtpCodesInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   authAuditLogs?: Prisma.AuthAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1680,6 +1855,7 @@ export type UserCreateWithoutProjectAuditLogsInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -1707,6 +1883,7 @@ export type UserUncheckedCreateWithoutProjectAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1749,6 +1926,7 @@ export type UserUpdateWithoutProjectAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -1776,6 +1954,7 @@ export type UserUncheckedUpdateWithoutProjectAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1802,6 +1981,7 @@ export type UserCreateWithoutTaskAuditLogsInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -1829,6 +2009,7 @@ export type UserUncheckedCreateWithoutTaskAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1871,6 +2052,7 @@ export type UserUpdateWithoutTaskAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -1898,6 +2080,7 @@ export type UserUncheckedUpdateWithoutTaskAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -1924,6 +2107,7 @@ export type UserCreateWithoutAuthAuditLogsInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -1951,6 +2135,7 @@ export type UserUncheckedCreateWithoutAuthAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -1993,6 +2178,7 @@ export type UserUpdateWithoutAuthAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -2020,6 +2206,7 @@ export type UserUncheckedUpdateWithoutAuthAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2046,6 +2233,7 @@ export type UserCreateWithoutAdminAuditLogsInput = {
   ownedOffice?: Prisma.OfficeCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeCreateNestedManyWithoutUserInput
@@ -2073,6 +2261,7 @@ export type UserUncheckedCreateWithoutAdminAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedCreateNestedOneWithoutOwnerInput
   createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCreatedByInput
   managedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutProjectManagerInput
+  clientProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   createdTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
   otpCodes?: Prisma.OtpCodeUncheckedCreateNestedManyWithoutUserInput
@@ -2115,6 +2304,7 @@ export type UserUpdateWithoutAdminAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -2142,6 +2332,7 @@ export type UserUncheckedUpdateWithoutAdminAuditLogsInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2167,6 +2358,7 @@ export type UserUpdateWithoutOfficesInput = {
   ownedOffice?: Prisma.OfficeUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUpdateManyWithoutUserNestedInput
@@ -2194,6 +2386,7 @@ export type UserUncheckedUpdateWithoutOfficesInput = {
   ownedOffice?: Prisma.OfficeUncheckedUpdateOneWithoutOwnerNestedInput
   createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   managedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutProjectManagerNestedInput
+  clientProjects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   createdTasks?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
   otpCodes?: Prisma.OtpCodeUncheckedUpdateManyWithoutUserNestedInput
@@ -2229,6 +2422,7 @@ export type UserCountOutputType = {
   offices: number
   createdProjects: number
   managedProjects: number
+  clientProjects: number
   createdTasks: number
   assignedTasks: number
   otpCodes: number
@@ -2242,6 +2436,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   offices?: boolean | UserCountOutputTypeCountOfficesArgs
   createdProjects?: boolean | UserCountOutputTypeCountCreatedProjectsArgs
   managedProjects?: boolean | UserCountOutputTypeCountManagedProjectsArgs
+  clientProjects?: boolean | UserCountOutputTypeCountClientProjectsArgs
   createdTasks?: boolean | UserCountOutputTypeCountCreatedTasksArgs
   assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
   otpCodes?: boolean | UserCountOutputTypeCountOtpCodesArgs
@@ -2279,6 +2474,13 @@ export type UserCountOutputTypeCountCreatedProjectsArgs<ExtArgs extends runtime.
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountManagedProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountClientProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProjectWhereInput
 }
 
@@ -2351,6 +2553,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   ownedOffice?: boolean | Prisma.User$ownedOfficeArgs<ExtArgs>
   createdProjects?: boolean | Prisma.User$createdProjectsArgs<ExtArgs>
   managedProjects?: boolean | Prisma.User$managedProjectsArgs<ExtArgs>
+  clientProjects?: boolean | Prisma.User$clientProjectsArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   otpCodes?: boolean | Prisma.User$otpCodesArgs<ExtArgs>
@@ -2418,6 +2621,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   ownedOffice?: boolean | Prisma.User$ownedOfficeArgs<ExtArgs>
   createdProjects?: boolean | Prisma.User$createdProjectsArgs<ExtArgs>
   managedProjects?: boolean | Prisma.User$managedProjectsArgs<ExtArgs>
+  clientProjects?: boolean | Prisma.User$clientProjectsArgs<ExtArgs>
   createdTasks?: boolean | Prisma.User$createdTasksArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   otpCodes?: boolean | Prisma.User$otpCodesArgs<ExtArgs>
@@ -2437,6 +2641,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     ownedOffice: Prisma.$OfficePayload<ExtArgs> | null
     createdProjects: Prisma.$ProjectPayload<ExtArgs>[]
     managedProjects: Prisma.$ProjectPayload<ExtArgs>[]
+    clientProjects: Prisma.$ProjectPayload<ExtArgs>[]
     createdTasks: Prisma.$TaskPayload<ExtArgs>[]
     assignedTasks: Prisma.$TaskPayload<ExtArgs>[]
     otpCodes: Prisma.$OtpCodePayload<ExtArgs>[]
@@ -2858,6 +3063,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   ownedOffice<T extends Prisma.User$ownedOfficeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedOfficeArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdProjects<T extends Prisma.User$createdProjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   managedProjects<T extends Prisma.User$managedProjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$managedProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  clientProjects<T extends Prisma.User$clientProjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$clientProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTasks<T extends Prisma.User$createdTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedTasks<T extends Prisma.User$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otpCodes<T extends Prisma.User$otpCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$otpCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OtpCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3366,6 +3572,30 @@ export type User$createdProjectsArgs<ExtArgs extends runtime.Types.Extensions.In
  * User.managedProjects
  */
 export type User$managedProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
+ * User.clientProjects
+ */
+export type User$clientProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Project
    */

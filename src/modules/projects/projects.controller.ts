@@ -55,12 +55,14 @@ export class ProjectsController {
   /**
    * Create a new project (authenticated users only)
    * POST /projects
+   * CRITICAL: officeId and createdByUserId are extracted from JWT, not from request body
    */
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProjectDto: CreateProjectDto, @Req() req: any) {
-    return this.projectsService.create(createProjectDto);
+  async create(@Body() createProjectDto: CreateProjectDto, @Req() req: any) {
+    const userPublicId = req.user.userId;
+    return this.projectsService.createForAuthenticatedUser(createProjectDto, userPublicId);
   }
 
   /**
