@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Logger, InternalServerErrorException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
@@ -59,24 +59,52 @@ export class ProjectsService {
   async createForAuthenticatedUser(createProjectDto: CreateProjectDto, userPublicId: string) {
     try {
       this.logger.debug(`Creating project for user: ${userPublicId}`);
+      console.log(`[POST /projects] Creating project for user: ${userPublicId}`);
 
+      // Step 1: Get user's office ID
+      console.log(`[POST /projects] Step 1: Getting user office ID for ${userPublicId}`);
       const userOfficeId = await this.getUserOfficeId(userPublicId);
+      console.log(`[POST /projects] Step 1: User office ID = ${userOfficeId}`);
+
+      // Step 2: Get user details (for createdByUserId)
+      console.log(`[POST /projects] Step 2: Fetching user details for ${userPublicId}`);
       const user = await this.usersRepository.findByPublicId(userPublicId);
 
       if (!user) {
+        console.error(`[POST /projects] User not found: ${userPublicId}`);
         throw new NotFoundException(`User with ID ${userPublicId} not found`);
       }
+      console.log(`[POST /projects] Step 2: User found - ID = ${user.id}, OfficeId = ${userOfficeId}`);
 
       const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
 
-      // Validate project manager exists
+      // Step 3: Validate project manager exists
+      console.log(`[POST /projects] Step 3: Validating project manager: ${projectManagerUserId}`);
       const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+      console.log(`[POST /projects] Step 3: Project manager found - ID = ${projectManager.id}`);
 
-      // Validate client exists if provided
+      // Step 4: Validate client exists if provided
       let clientObj: any = null;
       if (clientId) {
+        console.log(`[POST /projects] Step 4: Validating client: ${clientId}`);
         clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
+        console.log(`[POST /projects] Step 4: Client found - ID = ${clientObj.id}`);
       }
+
+      // Step 5: Create project in database
+      console.log(`[POST /projects] Step 5: Creating project in database`);
+      console.log(`[POST /projects] Project data:`, {
+        name,
+        description,
+        officeId: userOfficeId,
+        createdByUserId: user.id,
+        projectManagerUserId: projectManager.id,
+        clientId: clientObj?.id || null,
+        status: status || ProjectStatus.IN_PROGRESS,
+        budget,
+        startDate,
+        endDate,
+      });
 
       const project = await this.projectsRepository.create({
         name,
@@ -91,11 +119,20 @@ export class ProjectsService {
         status: status || ProjectStatus.IN_PROGRESS,
       });
 
+      console.log(`[POST /projects] Project created successfully: ${project.publicId}`);
       this.logger.debug(`Project created successfully: ${project.publicId}`);
       return project;
     } catch (error) {
+      console.error(`[POST /projects] Error creating project for user ${userPublicId}:`, error);
       this.logger.error(`Error creating project for user ${userPublicId}:`, error);
-      throw error;
+
+      if (error instanceof NotFoundException || error instanceof ForbiddenException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(
+        `Failed to create project: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -212,30 +249,47 @@ export class ProjectsService {
    */
   private async getUserOfficeId(userPublicId: string): Promise<number> {
     try {
+      console.log(`[getUserOfficeId] Getting office ID for user: ${userPublicId}`);
       this.logger.debug(`Getting office ID for user: ${userPublicId}`);
 
       const user = await this.usersRepository.findByPublicId(userPublicId);
 
       if (!user) {
+        console.error(`[getUserOfficeId] User not found: ${userPublicId}`);
         this.logger.error(`User not found: ${userPublicId}`);
         throw new NotFoundException(`User with ID ${userPublicId} not found`);
       }
+
+      console.log(`[getUserOfficeId] User found:`, {
+        id: user.id,
+        publicId: user.publicId,
+        username: user.username,
+        hasOwnedOffice: !!user.ownedOffice,
+        ownedOfficeId: user.ownedOffice?.id,
+        officesCount: user.offices?.length || 0,
+        officeIds: user.offices?.map(o => o.id),
+      });
 
       let officeId: number;
 
       if (user.ownedOffice) {
         officeId = user.ownedOffice.id;
+        console.log(`[getUserOfficeId] User is office owner, office ID: ${officeId}`);
         this.logger.debug(`User is office owner, office ID: ${officeId}`);
       } else if (user.offices && user.offices.length > 0) {
         officeId = user.offices[0].id;
+        console.log(`[getUserOfficeId] User belongs to office, office ID: ${officeId}`);
         this.logger.debug(`User belongs to office, office ID: ${officeId}`);
       } else {
+        console.error(`[getUserOfficeId] User ${userPublicId} does not belong to any office`);
         this.logger.error(`User ${userPublicId} does not belong to any office`);
         throw new ForbiddenException('User does not belong to any office');
       }
 
+      console.log(`[getUserOfficeId] Returning office ID: ${officeId}`);
       return officeId;
     } catch (error) {
+      console.error(`[getUserOfficeId] Error getting office ID for user ${userPublicId}:`, error);
       this.logger.error(`Error getting office ID for user ${userPublicId}:`, error);
       throw error;
     }
@@ -267,32 +321,54 @@ export class ProjectsService {
     projectManagerUserId?: string,
   ) {
     try {
-      this.logger.debug(`Fetching projects for user: ${userPublicId}, filters: status=${status}, projectManager=${projectManagerUserId}`);
+      this.logger.debug(`Fetching projects for user: ${userPublicId}`);
+      console.log(`[GET /projects] Fetching projects for user: ${userPublicId}, filters: status=${status}, projectManager=${projectManagerUserId}`);
 
+      // Step 1: Get user's office ID
+      console.log(`[GET /projects] Step 1: Getting user office ID`);
       const userOfficeId = await this.getUserOfficeId(userPublicId);
-      this.logger.debug(`User office ID: ${userOfficeId}`);
+      console.log(`[GET /projects] Step 1: User office ID = ${userOfficeId}`);
+
+      // Step 2: Query projects based on filters
+      console.log(`[GET /projects] Step 2: Querying projects from database`);
 
       if (status) {
-        this.logger.debug(`Filtering by status: ${status}`);
-        return this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
+        console.log(`[GET /projects] Filtering by status: ${status}`);
+        const projects = await this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
+        console.log(`[GET /projects] Found ${projects.length} projects with status ${status}`);
+        return projects;
       }
 
       if (projectManagerUserId) {
+        console.log(`[GET /projects] Filtering by project manager: ${projectManagerUserId}`);
         const projectManager = await this.projectsHelper.validateUserExists(
           projectManagerUserId,
           'Project manager',
         );
-        this.logger.debug(`Filtering by project manager: ${projectManager.id}`);
-        return this.projectsRepository.findByOfficeAndProjectManager(
+        console.log(`[GET /projects] Project manager ID: ${projectManager.id}`);
+        const projects = await this.projectsRepository.findByOfficeAndProjectManager(
           userOfficeId,
           projectManager.id,
         );
+        console.log(`[GET /projects] Found ${projects.length} projects managed by ${projectManager.id}`);
+        return projects;
       }
 
-      return this.projectsRepository.findByOffice(userOfficeId);
+      console.log(`[GET /projects] Fetching all projects for office ${userOfficeId}`);
+      const projects = await this.projectsRepository.findByOffice(userOfficeId);
+      console.log(`[GET /projects] Found ${projects.length} total projects`);
+      return projects;
     } catch (error) {
+      console.error(`[GET /projects] Error fetching projects for user ${userPublicId}:`, error);
       this.logger.error(`Error fetching projects for user ${userPublicId}:`, error);
-      throw error;
+
+      if (error instanceof NotFoundException || error instanceof ForbiddenException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(
+        `Failed to fetch projects: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
