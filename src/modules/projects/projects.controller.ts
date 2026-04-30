@@ -31,6 +31,28 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   /**
+   * Get project statistics (with tenant isolation)
+   * GET /projects/:id/statistics
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/statistics')
+  async getStatistics(@Param('id') id: string, @Req() req: any) {
+    const userPublicId = req.user.userId;
+    return this.projectsService.getStatisticsForAuthenticatedUser(id, userPublicId);
+  }
+
+  /**
+   * Get a specific project by ID (with tenant isolation)
+   * GET /projects/:id
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async findOne(@Param('id') id: string, @Req() req: any) {
+    const userPublicId = req.user.userId;
+    return this.projectsService.findOneForAuthenticatedUser(id, userPublicId);
+  }
+
+  /**
    * Create a new project (authenticated users only)
    * POST /projects
    */
@@ -59,28 +81,6 @@ export class ProjectsController {
       status,
       projectManagerUserId,
     );
-  }
-
-  /**
-   * Get project statistics (with tenant isolation)
-   * GET /projects/:id/statistics
-   */
-  @UseGuards(JwtAuthGuard)
-  @Get(':id/statistics')
-  async getStatistics(@Param('id') id: string, @Req() req: any) {
-    const userPublicId = req.user.userId;
-    return this.projectsService.getStatisticsForAuthenticatedUser(id, userPublicId);
-  }
-
-  /**
-   * Get a specific project by ID (with tenant isolation)
-   * GET /projects/:id
-   */
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async findOne(@Param('id') id: string, @Req() req: any) {
-    const userPublicId = req.user.userId;
-    return this.projectsService.findOneForAuthenticatedUser(id, userPublicId);
   }
 
   /**
