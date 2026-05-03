@@ -19,10 +19,10 @@ export class CreateProjectDto {
   @IsNotEmpty()
   projectManagerUserId: string;
 
-  @ApiProperty({ description: 'The public ID (UUID) of the client (user) for this project', example: 'd4e5f6a7-b8c9-0123-defg-234567890123', required: false })
+  @ApiProperty({ description: 'The name of the client for this project', example: 'Acme Corporation', required: false })
   @IsString()
   @IsOptional()
-  clientId?: string;
+  clientName?: string;
 
   @ApiProperty({ description: 'The project budget', example: 50000.00, required: false })
   @Type(() => Number)

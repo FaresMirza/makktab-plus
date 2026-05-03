@@ -30,7 +30,7 @@ export class ProjectsRepository {
             office: { select: this.officeSelect },
             createdBy: { select: this.userSelect },
             projectManager: { select: this.userSelect },
-            client: { select: this.userSelect },
+            
             _count: { select: { tasks: true } },
         };
     }
@@ -40,7 +40,7 @@ export class ProjectsRepository {
             office: { select: this.officeSelect },
             createdBy: { select: this.userSelect },
             projectManager: { select: this.userSelect },
-            client: { select: this.userSelect },
+            
             tasks: {
                 select: {
                     id: true,
@@ -63,7 +63,7 @@ export class ProjectsRepository {
                 office: { select: this.officeSelect },
                 createdBy: { select: this.userSelect },
                 projectManager: { select: this.userSelect },
-                client: { select: this.userSelect },
+                
             },
         });
     }
@@ -106,7 +106,7 @@ export class ProjectsRepository {
             office: { select: this.officeSelect },
             createdBy: { select: this.userSelect },
             projectManager: { select: this.userSelect },
-            client: { select: this.userSelect },
+            
             _count: { select: { tasks: true } },
         };
     }
@@ -157,7 +157,6 @@ export class ProjectsRepository {
                 office: { select: { id: true, publicId: true, name: true } },
                 createdBy: { select: { id: true, publicId: true, fullName: true, email: true } },
                 projectManager: { select: { id: true, publicId: true, fullName: true, email: true } },
-                client: { select: { id: true, publicId: true, fullName: true, email: true } },
             },
         });
     }

@@ -23,17 +23,12 @@ export class ProjectsService {
    * - Sets default status to IN_PROGRESS if not provided
    */
   async create(createProjectDto: any) {
-    const { officeId, createdByUserId, projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
+    const { officeId, createdByUserId, projectManagerUserId, name, description, status, budget, startDate, endDate, clientName } = createProjectDto;
 
     // Resolve publicIds → internal entities
     const office = await this.projectsHelper.validateOfficeExists(officeId);
     const creator = await this.projectsHelper.validateUserExists(createdByUserId, 'Creator');
     const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
-
-    let clientObj: any = null;
-    if (clientId) {
-      clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
-    }
 
     const project = await this.projectsRepository.create({
       name,
@@ -41,10 +36,10 @@ export class ProjectsService {
       budget: budget ? String(budget) : null,
       startDate: startDate ? new Date(startDate) : null,
       endDate: endDate ? new Date(endDate) : null,
+      clientName: clientName || null,
       officeId: office.id,
       createdByUserId: creator.id,
       projectManagerUserId: projectManager.id,
-      clientId: clientObj?.id || null,
       status: status || ProjectStatus.IN_PROGRESS,
     });
 
@@ -76,30 +71,22 @@ export class ProjectsService {
       }
       console.log(`[POST /projects] Step 2: User found - ID = ${user.id}, OfficeId = ${userOfficeId}`);
 
-      const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientId } = createProjectDto;
+      const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientName } = createProjectDto;
 
       // Step 3: Validate project manager exists
       console.log(`[POST /projects] Step 3: Validating project manager: ${projectManagerUserId}`);
       const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
       console.log(`[POST /projects] Step 3: Project manager found - ID = ${projectManager.id}`);
 
-      // Step 4: Validate client exists if provided
-      let clientObj: any = null;
-      if (clientId) {
-        console.log(`[POST /projects] Step 4: Validating client: ${clientId}`);
-        clientObj = await this.projectsHelper.validateUserExists(clientId, 'Client');
-        console.log(`[POST /projects] Step 4: Client found - ID = ${clientObj.id}`);
-      }
-
-      // Step 5: Create project in database
-      console.log(`[POST /projects] Step 5: Creating project in database`);
+      // Step 4: Create project in database
+      console.log(`[POST /projects] Step 4: Creating project in database`);
       console.log(`[POST /projects] Project data:`, {
         name,
         description,
         officeId: userOfficeId,
         createdByUserId: user.id,
         projectManagerUserId: projectManager.id,
-        clientId: clientObj?.id || null,
+        clientName: clientName || null,
         status: status || ProjectStatus.IN_PROGRESS,
         budget,
         startDate,
@@ -112,10 +99,10 @@ export class ProjectsService {
         budget: budget ? String(budget) : null,
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
+        clientName: clientName || null,
         officeId: userOfficeId,
         createdByUserId: user.id,
         projectManagerUserId: projectManager.id,
-        clientId: clientObj?.id || null,
         status: status || ProjectStatus.IN_PROGRESS,
       });
 
