@@ -59,13 +59,14 @@ model User {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
 
-  offices         Office[]
-  ownedOffice     Office?   @relation("OfficeOwner")
-  createdProjects Project[] @relation("CreatedProjects")
-  managedProjects Project[] @relation("ManagedProjects")
-  createdTasks    Task[]    @relation("CreatedTasks")
-  assignedTasks   Task[]    @relation("AssignedTasks")
-  otpCodes        OtpCode[]
+  offices              Office[]
+  ownedOffice          Office?       @relation("OfficeOwner")
+  createdProjects      Project[]     @relation("CreatedProjects")
+  managedProjects      Project[]     @relation("ManagedProjects")
+  createdTasks         Task[]        @relation("CreatedTasks")
+  assignedTasks        Task[]        @relation("AssignedTasks")
+  otpCodes             OtpCode[]
+  uploadedProjectFiles ProjectFile[] @relation("UploadedProjectFiles")
 
   authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]
@@ -103,6 +104,24 @@ model Project {
   projectManager User              @relation("ManagedProjects", fields: [projectManagerUserId], references: [id])
   tasks          Task[]
   auditLogs      ProjectAuditLog[]
+  files          ProjectFile[]
+}
+
+model ProjectFile {
+  id               Int      @id @default(autoincrement())
+  publicId         String   @unique @default(uuid())
+  projectId        Int
+  uploadedByUserId Int
+  fileName         String
+  storedFileName   String
+  fileUrl          String
+  filePath         String
+  fileSize         Int
+  mimeType         String
+  createdAt        DateTime @default(now())
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  uploadedBy User    @relation("UploadedProjectFiles", fields: [uploadedByUserId], references: [id])
 }
 
 model Task {

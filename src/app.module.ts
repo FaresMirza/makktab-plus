@@ -2,11 +2,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { OfficesModule } from './modules/offices/offices.module';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { ProjectFilesModule } from './modules/project-files/project-files.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OtpModule } from './modules/otps/otps.module';
@@ -25,11 +28,17 @@ import { ThrottlerStorageService } from './common/storage/throttler-storage.serv
         limit: 10,  // 10 requests per TTL window
       },
     ]),
+    // Serve uploaded files statically at /uploads/*
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
     PrismaModule,
     AuthModule,
     UsersModule,
     OfficesModule,
     ProjectsModule,
+    ProjectFilesModule,
     TasksModule,
     AuditModule,
     OtpModule,

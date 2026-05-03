@@ -395,6 +395,7 @@ export const ModelName = {
   User: 'User',
   Role: 'Role',
   Project: 'Project',
+  ProjectFile: 'ProjectFile',
   Task: 'Task',
   OtpCode: 'OtpCode',
   ProjectAuditLog: 'ProjectAuditLog',
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "office" | "officeRequest" | "user" | "role" | "project" | "task" | "otpCode" | "projectAuditLog" | "taskAuditLog" | "authAuditLog" | "adminAuditLog"
+    modelProps: "office" | "officeRequest" | "user" | "role" | "project" | "projectFile" | "task" | "otpCode" | "projectAuditLog" | "taskAuditLog" | "authAuditLog" | "adminAuditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -787,6 +788,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProjectCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProjectCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProjectFile: {
+      payload: Prisma.$ProjectFilePayload<ExtArgs>
+      fields: Prisma.ProjectFileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectFileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectFileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectFileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectFileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        findMany: {
+          args: Prisma.ProjectFileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>[]
+        }
+        create: {
+          args: Prisma.ProjectFileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        createMany: {
+          args: Prisma.ProjectFileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectFileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectFileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        update: {
+          args: Prisma.ProjectFileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectFileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectFileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectFileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectFileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFilePayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectFileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectFile>
+        }
+        groupBy: {
+          args: Prisma.ProjectFileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectFileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectFileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectFileCountAggregateOutputType> | number
         }
       }
     }
@@ -1357,6 +1432,23 @@ export const ProjectScalarFieldEnum = {
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+export const ProjectFileScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  projectId: 'projectId',
+  uploadedByUserId: 'uploadedByUserId',
+  fileName: 'fileName',
+  storedFileName: 'storedFileName',
+  fileUrl: 'fileUrl',
+  filePath: 'filePath',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectFileScalarFieldEnum = (typeof ProjectFileScalarFieldEnum)[keyof typeof ProjectFileScalarFieldEnum]
+
+
 export const TaskScalarFieldEnum = {
   id: 'id',
   publicId: 'publicId',
@@ -1816,6 +1908,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   role?: Prisma.RoleOmit
   project?: Prisma.ProjectOmit
+  projectFile?: Prisma.ProjectFileOmit
   task?: Prisma.TaskOmit
   otpCode?: Prisma.OtpCodeOmit
   projectAuditLog?: Prisma.ProjectAuditLogOmit

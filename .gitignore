@@ -41,3 +41,7 @@ prisma/src/generated/
 *.tmp
 *.temp
 .cache/
+
+# User uploads (keep folder structure, ignore contents)
+uploads/projects/*
+!uploads/projects/.gitkeep

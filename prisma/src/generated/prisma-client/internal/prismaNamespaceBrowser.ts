@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Role: 'Role',
   Project: 'Project',
+  ProjectFile: 'ProjectFile',
   Task: 'Task',
   OtpCode: 'OtpCode',
   ProjectAuditLog: 'ProjectAuditLog',
@@ -160,6 +161,23 @@ export const ProjectScalarFieldEnum = {
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectFileScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  projectId: 'projectId',
+  uploadedByUserId: 'uploadedByUserId',
+  fileName: 'fileName',
+  storedFileName: 'storedFileName',
+  fileUrl: 'fileUrl',
+  filePath: 'filePath',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectFileScalarFieldEnum = (typeof ProjectFileScalarFieldEnum)[keyof typeof ProjectFileScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {
