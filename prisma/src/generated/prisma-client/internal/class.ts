@@ -23,7 +23,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "D:\\ملفات قرص (D) في اللاب توب\\University\\مشروع التخرج\\back end\\makktab-plus\\prisma\\src\\generated\\prisma-client",
+      "value": "/Users/fares/Desktop/makktab-plus/prisma/src/generated/prisma-client",
       "fromEnvVar": null
     },
     "config": {
@@ -32,12 +32,12 @@ const config: runtime.GetPrismaClientConfig = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\ملفات قرص (D) في اللاب توب\\University\\مشروع التخرج\\back end\\makktab-plus\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/fares/Desktop/makktab-plus/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../..",
