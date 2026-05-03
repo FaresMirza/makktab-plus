@@ -283,20 +283,32 @@ export class ProjectsService {
   }
 
   /**
-   * Verify that a project belongs to the user's office
+   * Verify that a project belongs to the user's office (CRITICAL TENANT ISOLATION)
    */
   private async verifyProjectAccess(projectPublicId: string, userOfficeId: number): Promise<any> {
-    const project = await this.projectsRepository.findByPublicIdSimple(projectPublicId);
+    try {
+      console.log(`[verifyProjectAccess] Checking access: project=${projectPublicId}, userOfficeId=${userOfficeId}`);
 
-    if (!project) {
-      throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      const project = await this.projectsRepository.findByPublicIdSimple(projectPublicId);
+
+      if (!project) {
+        console.error(`[verifyProjectAccess] ✗ Project not found: ${projectPublicId}`);
+        throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
+      }
+
+      console.log(`[verifyProjectAccess] Project found - projectOfficeId=${project.officeId}`);
+
+      if (project.officeId !== userOfficeId) {
+        console.error(`[verifyProjectAccess] ✗ SECURITY VIOLATION: User from office ${userOfficeId} tried to access project from office ${project.officeId}`);
+        throw new ForbiddenException('You do not have access to this project');
+      }
+
+      console.log(`[verifyProjectAccess] ✓ TENANT ISOLATION VERIFIED: Project belongs to user's office`);
+      return project;
+    } catch (error) {
+      console.error(`[verifyProjectAccess] Error verifying access:`, error);
+      throw error;
     }
-
-    if (project.officeId !== userOfficeId) {
-      throw new ForbiddenException('You do not have access to this project');
-    }
-
-    return project;
   }
 
   /**
@@ -426,29 +438,57 @@ export class ProjectsService {
     hardDelete = false,
   ) {
     try {
+      const deleteType = hardDelete ? 'PERMANENT' : 'SOFT';
+      console.log(`[DELETE /projects/:id] ${deleteType} delete of project ${projectPublicId} for user ${userPublicId}`);
       this.logger.debug(`Removing project ${projectPublicId} for user ${userPublicId}, hardDelete=${hardDelete}`);
 
+      // Step 1: Get user's office ID
+      console.log(`[DELETE /projects/:id] Step 1: Getting user office ID`);
       const userOfficeId = await this.getUserOfficeId(userPublicId);
-      const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+      console.log(`[DELETE /projects/:id] Step 1: User office ID = ${userOfficeId}`);
 
+      // Step 2: Verify project exists and belongs to user's office (CRITICAL TENANT ISOLATION)
+      console.log(`[DELETE /projects/:id] Step 2: Verifying project access (tenant isolation check)`);
+      const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
+      console.log(`[DELETE /projects/:id] Step 2: ✓ Project access verified - office matches (officeId=${project.officeId})`);
+
+      // Step 3: Get project with task count
+      console.log(`[DELETE /projects/:id] Step 3: Fetching project with task count`);
       const projectWithCount = await this.projectsRepository.findByIdWithTaskCount(project.id);
       if (!projectWithCount) {
         throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
       }
+      console.log(`[DELETE /projects/:id] Step 3: Project found - has ${projectWithCount._count.tasks} tasks`);
 
+      // Step 4: Execute delete
       if (hardDelete) {
+        console.log(`[DELETE /projects/:id] Step 4: Validating hard delete conditions (must have 0 tasks)`);
         this.projectsHelper.validateDeleteCondition(projectWithCount);
+        console.log(`[DELETE /projects/:id] Step 4: ✓ Validation passed - proceeding with permanent deletion`);
+
+        console.log(`[DELETE /projects/:id] Step 5: Permanently deleting project from database`);
         await this.projectsRepository.delete(project.id);
+        console.log(`[DELETE /projects/:id] ✓ Project permanently deleted: ${projectPublicId}`);
         this.logger.debug(`Project ${projectPublicId} permanently deleted`);
-        return { message: 'Project permanently deleted' };
+        return { message: 'Project permanently deleted', publicId: projectPublicId };
       } else {
+        console.log(`[DELETE /projects/:id] Step 4: Soft deleting project (status → CANCELLED)`);
         const result = await this.projectsRepository.softDelete(project.id);
+        console.log(`[DELETE /projects/:id] ✓ Project soft deleted: ${projectPublicId}`);
         this.logger.debug(`Project ${projectPublicId} soft deleted`);
         return result;
       }
     } catch (error) {
+      console.error(`[DELETE /projects/:id] Error deleting project ${projectPublicId}:`, error);
       this.logger.error(`Error removing project ${projectPublicId} for user ${userPublicId}:`, error);
-      throw error;
+
+      if (error instanceof NotFoundException || error instanceof ForbiddenException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(
+        `Failed to delete project: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
