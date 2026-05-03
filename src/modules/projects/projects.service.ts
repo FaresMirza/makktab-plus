@@ -122,7 +122,7 @@ export class ProjectsService {
       console.error(`[POST /projects] Error creating project for user ${userPublicId}:`, error);
       this.logger.error(`Error creating project for user ${userPublicId}:`, error);
 
-      if (error instanceof NotFoundException || error instanceof ForbiddenException) {
+      if (error instanceof NotFoundException || error instanceof ForbiddenException || error instanceof ConflictException) {
         throw error;
       }
 
