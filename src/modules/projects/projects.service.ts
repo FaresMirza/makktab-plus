@@ -435,12 +435,8 @@ export class ProjectsService {
   async removeForAuthenticatedUser(
     projectPublicId: string,
     userPublicId: string,
-    hardDelete = false,
   ) {
     try {
-      const deleteType = hardDelete ? 'PERMANENT' : 'SOFT';
-      console.log(`[DELETE /projects/:id] ${deleteType} delete of project ${projectPublicId} for user ${userPublicId}`);
-      this.logger.debug(`Removing project ${projectPublicId} for user ${userPublicId}, hardDelete=${hardDelete}`);
 
       // Step 1: Get user's office ID
       console.log(`[DELETE /projects/:id] Step 1: Getting user office ID`);
@@ -452,32 +448,18 @@ export class ProjectsService {
       const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
       console.log(`[DELETE /projects/:id] Step 2: ✓ Project access verified - office matches (officeId=${project.officeId})`);
 
-      // Step 3: Get project with task count
-      console.log(`[DELETE /projects/:id] Step 3: Fetching project with task count`);
-      const projectWithCount = await this.projectsRepository.findByIdWithTaskCount(project.id);
-      if (!projectWithCount) {
-        throw new NotFoundException(`Project with ID ${projectPublicId} not found`);
-      }
-      console.log(`[DELETE /projects/:id] Step 3: Project found - has ${projectWithCount._count.tasks} tasks`);
+      // Step 3: Hard delete - permanently remove from database
+      console.log(`[DELETE /projects/:id] Step 3: Performing hard delete - permanently removing from database`);
 
-      // Step 4: Execute delete
-      if (hardDelete) {
-        console.log(`[DELETE /projects/:id] Step 4: Validating hard delete conditions (must have 0 tasks)`);
-        this.projectsHelper.validateDeleteCondition(projectWithCount);
-        console.log(`[DELETE /projects/:id] Step 4: ✓ Validation passed - proceeding with permanent deletion`);
+      await this.projectsRepository.delete(project.id);
+      console.log(`[DELETE /projects/:id] ✓ Project permanently deleted from database: ${projectPublicId}`);
+      this.logger.debug(`Project ${projectPublicId} permanently deleted`);
 
-        console.log(`[DELETE /projects/:id] Step 5: Permanently deleting project from database`);
-        await this.projectsRepository.delete(project.id);
-        console.log(`[DELETE /projects/:id] ✓ Project permanently deleted: ${projectPublicId}`);
-        this.logger.debug(`Project ${projectPublicId} permanently deleted`);
-        return { message: 'Project permanently deleted', publicId: projectPublicId };
-      } else {
-        console.log(`[DELETE /projects/:id] Step 4: Soft deleting project (status → CANCELLED)`);
-        const result = await this.projectsRepository.softDelete(project.id);
-        console.log(`[DELETE /projects/:id] ✓ Project soft deleted: ${projectPublicId}`);
-        this.logger.debug(`Project ${projectPublicId} soft deleted`);
-        return result;
-      }
+      return {
+        message: 'Project successfully deleted',
+        publicId: projectPublicId,
+        officeId: userOfficeId
+      };
     } catch (error) {
       console.error(`[DELETE /projects/:id] Error deleting project ${projectPublicId}:`, error);
       this.logger.error(`Error removing project ${projectPublicId} for user ${userPublicId}:`, error);

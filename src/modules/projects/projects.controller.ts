@@ -101,7 +101,7 @@ export class ProjectsController {
   }
 
   /**
-   * Soft delete a project (cancel) - with tenant isolation
+   * Delete a project (permanent removal from database) - with tenant isolation
    * DELETE /projects/:id
    */
   @UseGuards(JwtAuthGuard)
@@ -109,18 +109,6 @@ export class ProjectsController {
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string, @Req() req: any) {
     const userPublicId = req.user.userId;
-    return this.projectsService.removeForAuthenticatedUser(id, userPublicId, false);
-  }
-
-  /**
-   * Hard delete a project (permanent) - with tenant isolation
-   * DELETE /projects/:id/permanent
-   */
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id/permanent')
-  @HttpCode(HttpStatus.OK)
-  async removePermanent(@Param('id') id: string, @Req() req: any) {
-    const userPublicId = req.user.userId;
-    return this.projectsService.removeForAuthenticatedUser(id, userPublicId, true);
+    return this.projectsService.removeForAuthenticatedUser(id, userPublicId);
   }
 }
