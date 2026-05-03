@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Logger, InternalServerErrorException, ConflictException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
@@ -77,6 +77,15 @@ export class ProjectsService {
       console.log(`[POST /projects] Step 3: Validating project manager: ${projectManagerUserId}`);
       const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
       console.log(`[POST /projects] Step 3: Project manager found - ID = ${projectManager.id}`);
+
+      // Step 3.5: Check for duplicate project name in office
+      console.log(`[POST /projects] Step 3.5: Checking for duplicate project name in office ${userOfficeId}`);
+      const existingProject = await this.projectsRepository.findByOfficeAndName(userOfficeId, name);
+      if (existingProject) {
+        console.log(`[POST /projects] Step 3.5: ✗ Duplicate project name found: ${name}`);
+        throw new ConflictException('A project with this name already exists in your office.');
+      }
+      console.log(`[POST /projects] Step 3.5: ✓ No duplicate project name found`);
 
       // Step 4: Create project in database
       console.log(`[POST /projects] Step 4: Creating project in database`);

@@ -218,4 +218,13 @@ export class ProjectsRepository {
             orderBy: { createdAt: 'desc' },
         });
     }
+
+    /**
+     * Find a project by office and name (for duplicate name validation)
+     */
+    async findByOfficeAndName(officeId: number, name: string) {
+        return this.prisma.project.findFirst({
+            where: { officeId, name },
+        });
+    }
 }
