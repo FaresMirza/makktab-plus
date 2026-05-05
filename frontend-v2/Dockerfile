@@ -20,6 +20,8 @@ ENV NODE_ENV=production
 RUN npm install -g serve@14
 
 COPY --from=build /app/dist ./dist
+# serve.json controls cache headers (no-store on index.html, immutable on /assets)
+COPY serve.json ./dist/serve.json
 
 EXPOSE 3000
 
