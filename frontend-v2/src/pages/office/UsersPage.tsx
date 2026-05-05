@@ -123,7 +123,7 @@ export function OfficeUsersPage() {
           <p className="text-xs text-muted bg-elevated/40 border border-border rounded-lg p-3">
             عند إنشاء الموظف بدون كلمة مرور، سيتلقى بريداً لتفعيل حسابه واختيار كلمة المرور بنفسه.
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label>الاسم الكامل</Label>
               <Input value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />

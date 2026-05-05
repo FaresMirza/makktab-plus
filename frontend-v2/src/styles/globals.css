@@ -3,11 +3,38 @@
 @tailwind utilities;
 
 @layer base {
+  /* Dark theme (default) */
+  :root,
+  :root.dark {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --elevated: #171717;
+    --border: #262626;
+    --muted: #a3a3a3;
+    --accent: #fafafa;
+    --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    color-scheme: dark;
+  }
+
+  :root.light {
+    --bg: #f8f8f8;
+    --surface: #ffffff;
+    --elevated: #f1f1f1;
+    --border: #e5e5e5;
+    --muted: #6b7280;
+    --accent: #0a0a0a;
+    --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
+    color-scheme: light;
+  }
+
   html {
-    background-color: #0a0a0a;
-    color: #fafafa;
+    background-color: var(--bg);
+    color: var(--accent);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 200ms ease, color 200ms ease;
   }
 
   body {
@@ -16,11 +43,11 @@
   }
 
   *::selection {
-    background-color: rgba(255, 255, 255, 0.18);
-    color: #fafafa;
+    background-color: rgba(127, 127, 127, 0.25);
+    color: var(--accent);
   }
 
-  /* Native scrollbar — slim and dark */
+  /* Native scrollbar */
   *::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -29,26 +56,30 @@
     background: transparent;
   }
   *::-webkit-scrollbar-thumb {
-    background: #262626;
+    background: var(--border);
     border-radius: 6px;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: #383838;
+    background: var(--muted);
   }
 
-  /* Inputs autofill — keep dark */
+  /* Inputs autofill — match the surface */
   input:-webkit-autofill,
   input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px #111111 inset !important;
-    -webkit-text-fill-color: #fafafa !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+    -webkit-text-fill-color: var(--accent) !important;
     transition: background-color 5000s ease-in-out 0s;
   }
 }
 
 @layer utilities {
   .glass {
-    background: rgba(20, 20, 20, 0.6);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
   }
 }

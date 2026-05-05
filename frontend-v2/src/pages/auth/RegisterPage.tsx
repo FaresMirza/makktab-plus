@@ -112,7 +112,7 @@ export function RegisterPage() {
         <CardContent>
           {step === 'form' ? (
             <form onSubmit={submitForm} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="officeName">اسم المكتب</Label>
                   <Input id="officeName" value={form.officeName} onChange={(e) => set('officeName', e.target.value)} />

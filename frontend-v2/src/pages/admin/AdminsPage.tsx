@@ -138,7 +138,7 @@ export function AdminAdminsPage() {
             create.mutate(form)
           }}
         >
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label>الاسم الكامل</Label>
               <Input value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />

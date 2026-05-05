@@ -171,7 +171,7 @@ export function OfficeProjectDetailPage() {
       />
 
       {/* Project facts */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <Card><CardContent className="p-4">
           <div className="text-xs text-muted">العميل</div>
           <div className="text-sm font-medium mt-1">{p.clientName || '—'}</div>
@@ -357,7 +357,7 @@ export function OfficeProjectDetailPage() {
             <Label>الوصف</Label>
             <Input value={taskForm.description} onChange={(e) => setTaskForm((f) => ({ ...f, description: e.target.value }))} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label>المسؤول</Label>
               <Select
