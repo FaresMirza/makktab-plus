@@ -1,17 +1,23 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Logger, Inject, forwardRef } from '@nestjs/common';
+import { randomBytes } from 'crypto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersHelper } from './helpers/users.helper';
 import { UsersRepository } from './queries/users.queries';
 import { OfficesRepository } from '../offices/queries/office.queries';
-import { UserStatus } from 'prisma/src/generated/prisma-client/client';
+import { OtpService } from '../otps/otps.service';
+import { UserStatus, OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly usersHelper: UsersHelper,
     private readonly usersRepository: UsersRepository,
     private readonly officesRepository: OfficesRepository,
+    @Inject(forwardRef(() => OtpService))
+    private readonly otpService: OtpService,
   ) { }
 
   /**
@@ -28,8 +34,10 @@ export class UsersService {
     await this.usersHelper.validateUsernameUnique(username);
     await this.usersHelper.validateEmailUnique(email);
 
-    // Hash the password
-    const passwordHash = await this.usersHelper.hashPassword(password);
+    // If the manager did not provide a password, generate an unusable random one.
+    // The user will set their real password via the first-login OTP flow.
+    const passwordToHash = password ?? randomBytes(32).toString('hex');
+    const passwordHash = await this.usersHelper.hashPassword(passwordToHash);
 
     // Create the user with optional office connection
     const userData: any = {
@@ -55,7 +63,24 @@ export class UsersService {
 
     const user = await this.usersRepository.create(userData);
 
-    return this.usersHelper.formatUser(user);
+    // Dispatch a FIRST_LOGIN OTP so the new user can set their own password.
+    // Best-effort: failures (e.g. user not linked to an office) shouldn't block
+    // user creation — the OTP can be re-sent via /auth/first-login/resend.
+    let firstLoginOtpSent = false;
+    try {
+      await this.otpService.sendOtp({
+        email: user.email,
+        purpose: OtpPurpose.FIRST_LOGIN,
+        channel: OtpChannel.EMAIL,
+      });
+      firstLoginOtpSent = true;
+    } catch (err) {
+      this.logger.warn(
+        `Failed to send FIRST_LOGIN OTP to ${user.email}: ${(err as Error).message}`,
+      );
+    }
+
+    return { ...this.usersHelper.formatUser(user), firstLoginOtpSent };
   }
 
   /**

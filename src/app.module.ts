@@ -14,6 +14,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OtpModule } from './modules/otps/otps.module';
 import { AdminsModule } from './modules/admins/admins.module';
+import { EmailModule } from './modules/email/email.module';
 import { EnhancedThrottlerGuard } from './common/guards/custom-throttler.guard';
 import { ThrottlerStorageService } from './common/storage/throttler-storage.service';
 
@@ -33,6 +34,7 @@ import { ThrottlerStorageService } from './common/storage/throttler-storage.serv
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
+    EmailModule,
     PrismaModule,
     AuthModule,
     UsersModule,

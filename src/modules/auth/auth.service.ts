@@ -14,7 +14,9 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
-import { OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/client';
+import { FirstLoginResendDto } from './dto/first-login-resend.dto';
+import { FirstLoginVerifyDto } from './dto/first-login-verify.dto';
+import { OtpPurpose, OtpChannel, UserStatus } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
 export class AuthService {
@@ -211,6 +213,72 @@ export class AuthService {
         });
 
         return { message: AUTH_MESSAGES.PASSWORD_RESET };
+    }
+
+    /**
+     * Resend a FIRST_LOGIN OTP. Only valid while the user is still PENDING.
+     */
+    async resendFirstLoginOtp(dto: FirstLoginResendDto, ip: string, userAgent: string) {
+        const usernameOrEmail = dto.username;
+
+        const user = await this.usersRepository.findByUsername(usernameOrEmail)
+            || await this.usersRepository.findByEmail(usernameOrEmail);
+
+        // Respond identically whether or not the user is eligible to avoid
+        // leaking which usernames have pending first-login state.
+        if (!user || user.status !== UserStatus.PENDING) {
+            return { message: AUTH_MESSAGES.OTP_SENT };
+        }
+
+        const otpResult = await this.otpService.sendOtp(
+            { email: user.email, purpose: OtpPurpose.FIRST_LOGIN, channel: OtpChannel.EMAIL },
+            ip,
+            userAgent,
+        );
+
+        return { message: AUTH_MESSAGES.OTP_SENT, otp: otpResult.otp };
+    }
+
+    /**
+     * Complete first-login: verify the FIRST_LOGIN OTP, set the user's
+     * chosen password, and activate the account.
+     */
+    async verifyFirstLogin(dto: FirstLoginVerifyDto, ip: string, userAgent: string, deviceFingerprint: string) {
+        const { username, otp, newPassword, confirmPassword } = dto;
+
+        if (newPassword !== confirmPassword) {
+            throw new BadRequestException(AUTH_MESSAGES.PASSWORDS_DO_NOT_MATCH);
+        }
+
+        const user = await this.usersRepository.findByUsername(username)
+            || await this.usersRepository.findByEmail(username);
+        if (!user) {
+            throw new BadRequestException(AUTH_MESSAGES.INVALID_REQUEST);
+        }
+
+        if (user.status !== UserStatus.PENDING) {
+            throw new BadRequestException(AUTH_MESSAGES.FIRST_LOGIN_NOT_PENDING);
+        }
+
+        await this.otpService.verifyOtp(
+            { email: user.email, otp, purpose: OtpPurpose.FIRST_LOGIN },
+            ip,
+            userAgent,
+        );
+
+        const passwordHash = await this.authHelper.hashPassword(newPassword);
+        await this.usersRepository.updatePassword(user.id, passwordHash);
+        await this.usersRepository.update(user.id, { status: UserStatus.ACTIVE });
+
+        await this.authHelper.logAudit({
+            userId: user.id,
+            event: 'PASSWORD_CHANGED',
+            ip,
+            userAgent,
+            deviceFingerprint,
+        });
+
+        return { message: AUTH_MESSAGES.FIRST_LOGIN_COMPLETED };
     }
 
     /**

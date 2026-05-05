@@ -21,6 +21,8 @@ export const AUTH_MESSAGES = {
     VERIFICATION_MAX_ATTEMPTS: 'Maximum verification attempts exceeded. Please register again.',
     VERIFICATION_INVALID: 'Invalid verification code.',
     NO_PENDING_REQUEST: 'No pending registration found for this email.',
+    FIRST_LOGIN_NOT_PENDING: 'This account is not awaiting first-login setup.',
+    FIRST_LOGIN_COMPLETED: 'First-login completed. You can now sign in with your new password.',
 };
 
 export const AUTH_CONSTANTS = {

@@ -8,6 +8,8 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
+import { FirstLoginResendDto } from './dto/first-login-resend.dto';
+import { FirstLoginVerifyDto } from './dto/first-login-verify.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AUTH_ROUTES } from './constants/routes.constant';
 
@@ -58,6 +60,25 @@ export class AuthController {
         @Headers('x-device-fingerprint') deviceFingerprint: string
     ) {
         return this.authService.resetPassword(req.user.userId, dto, ip, req.headers['user-agent'], deviceFingerprint);
+    }
+
+    @Post(AUTH_ROUTES.FIRST_LOGIN_RESEND)
+    async resendFirstLoginOtp(
+        @Body() dto: FirstLoginResendDto,
+        @Ip() ip: string,
+        @Req() req: any
+    ) {
+        return this.authService.resendFirstLoginOtp(dto, ip, req.headers['user-agent']);
+    }
+
+    @Post(AUTH_ROUTES.FIRST_LOGIN_VERIFY)
+    async verifyFirstLogin(
+        @Body() dto: FirstLoginVerifyDto,
+        @Ip() ip: string,
+        @Req() req: any,
+        @Headers('x-device-fingerprint') deviceFingerprint: string
+    ) {
+        return this.authService.verifyFirstLogin(dto, ip, req.headers['user-agent'], deviceFingerprint);
     }
 
     @Post(AUTH_ROUTES.REFRESH)
