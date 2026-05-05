@@ -1,14 +1,12 @@
 generator client {
   provider = "prisma-client"
-  output="src/generated/prisma-client"
+  output   = "src/generated/prisma-client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-
 
 model Office {
   id          Int          @id @default(autoincrement())
@@ -18,25 +16,31 @@ model Office {
   status      OfficeStatus
   createdAt   DateTime     @default(now())
 
-  owner            User              @relation("OfficeOwner", fields: [ownerUserId], references: [id])
-  users            User[]
-  projects         Project[]
-  otpCodes         OtpCode[]
+  owner    User      @relation("OfficeOwner", fields: [ownerUserId], references: [id])
+  users    User[]
+  projects Project[]
+  otpCodes OtpCode[]
 
   projectAuditLogs ProjectAuditLog[]
   taskAuditLogs    TaskAuditLog[]
+  adminAuditLogs   AdminAuditLog[]
 }
 
 model OfficeRequest {
-  id           String   @id @default(uuid())
-  officeName   String
-  fullName     String
-  email        String
-  phone        String
-  username     String
-  passwordHash String
-  status       Boolean?
-  createdAt    DateTime @default(now())
+  id                    String    @id @default(uuid())
+  officeName            String
+  fullName              String
+  email                 String
+  phone                 String
+  username              String
+  city                  String
+  passwordHash          String
+  emailVerified         Boolean   @default(false)
+  verificationCodeHash  String?
+  verificationAttempts  Int       @default(0)
+  verificationExpiresAt DateTime?
+  status                Boolean?
+  createdAt             DateTime  @default(now())
 }
 
 model User {
@@ -55,14 +59,14 @@ model User {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
 
-  offices          Office[]
-  ownedOffice      Office?           @relation("OfficeOwner")
-  createdProjects  Project[]         @relation("CreatedProjects")
-  managedProjects  Project[]         @relation("ManagedProjects")
-  createdTasks     Task[]            @relation("CreatedTasks")
-  assignedTasks    Task[]            @relation("AssignedTasks")
-  otpCodes         OtpCode[]
-
+  offices              Office[]
+  ownedOffice          Office?       @relation("OfficeOwner")
+  createdProjects      Project[]     @relation("CreatedProjects")
+  managedProjects      Project[]     @relation("ManagedProjects")
+  createdTasks         Task[]        @relation("CreatedTasks")
+  assignedTasks        Task[]        @relation("AssignedTasks")
+  otpCodes             OtpCode[]
+  uploadedProjectFiles ProjectFile[] @relation("UploadedProjectFiles")
 
   authAuditLogs    AuthAuditLog[]
   projectAuditLogs ProjectAuditLog[]
@@ -88,6 +92,10 @@ model Project {
   projectManagerUserId Int
   name                 String
   description          String?
+  clientName           String?
+  budget               Decimal?      @db.Decimal(12, 2)
+  startDate            DateTime?
+  endDate              DateTime?
   status               ProjectStatus
   createdAt            DateTime      @default(now())
 
@@ -96,6 +104,24 @@ model Project {
   projectManager User              @relation("ManagedProjects", fields: [projectManagerUserId], references: [id])
   tasks          Task[]
   auditLogs      ProjectAuditLog[]
+  files          ProjectFile[]
+}
+
+model ProjectFile {
+  id               Int      @id @default(autoincrement())
+  publicId         String   @unique @default(uuid())
+  projectId        Int
+  uploadedByUserId Int
+  fileName         String
+  storedFileName   String
+  fileUrl          String
+  filePath         String
+  fileSize         Int
+  mimeType         String
+  createdAt        DateTime @default(now())
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  uploadedBy User    @relation("UploadedProjectFiles", fields: [uploadedByUserId], references: [id])
 }
 
 model Task {
@@ -139,8 +165,6 @@ model OtpCode {
   user   User   @relation(fields: [userId], references: [id])
   office Office @relation(fields: [officeId], references: [id])
 }
-
-
 
 model ProjectAuditLog {
   id                Int           @id @default(autoincrement())
@@ -225,8 +249,6 @@ enum OtpStatus {
   BLOCKED
 }
 
-
-
 enum ProjectAction {
   CREATE
   UPDATE
@@ -289,5 +311,6 @@ model AdminAuditLog {
   userAgent         String?
   createdAt         DateTime    @default(now())
 
-  admin User @relation("AdminActions", fields: [adminUserId], references: [id])
+  admin        User    @relation("AdminActions", fields: [adminUserId], references: [id])
+  targetOffice Office? @relation(fields: [targetOfficeId], references: [id])
 }

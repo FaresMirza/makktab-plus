@@ -2,6 +2,8 @@ import {
     Controller,
     Get,
     Patch,
+    Post,
+    Delete,
     Param,
     Body,
     HttpCode,
@@ -10,17 +12,62 @@ import {
     Req,
     Ip,
     Headers,
+    NotFoundException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { ApiOperation, ApiTags, ApiBody } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateAdminDto } from './dto/create-admin.dto';
 
+@ApiTags('Admins')
 @Controller('admins')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('admin')
 export class AdminsController {
-    constructor(private readonly adminsService: AdminsService) { }
+    constructor(
+        private readonly adminsService: AdminsService,
+        private readonly prisma: PrismaService,
+    ) { }
+
+    /**
+     * Get all admins and super_admins
+     * GET /admins
+     */
+    @Get()
+    @Roles('super_admin', 'admin') // Stacked explicitly just like POST
+    @ApiOperation({ summary: 'Get a list of all platform admins' })
+    async getAllAdmins(@Req() req: any) {
+        const currentUserPublicId = req.user.userId;
+        return this.prisma.user.findMany({
+            where: {
+                roles: {
+                    hasSome: ['admin', 'super_admin'],
+                },
+                email: {
+                    not: 'admin@makktabplus.online',
+                },
+                publicId: {
+                    not: currentUserPublicId,
+                }
+            },
+            select: {
+                publicId: true,
+                fullName: true,
+                username: true,
+                email: true,
+                phone: true,
+                status: true,
+                roles: true,
+                createdAt: true,
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+    }
 
     /**
      * Get all offices
@@ -29,6 +76,84 @@ export class AdminsController {
     @Get('offices')
     getAllOffices() {
         return this.adminsService.getAllOffices();
+    }
+
+    /**
+     * Get admin dashboard statistics
+     * GET /admins/stats
+     */
+    @Get('stats')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Get admin dashboard statistics' })
+    async getDashboardStats() {
+        // Exclude offices where owner has admin/super_admin roles
+        const activeOfficesCount = await this.prisma.office.count({
+            where: {
+                AND: [
+                    { status: 'ACTIVE' },
+                    {
+                        NOT: {
+                            owner: {
+                                roles: {
+                                    hasSome: ['admin', 'super_admin'],
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+        });
+
+        const totalOfficesCount = await this.prisma.office.count({
+            where: {
+                NOT: {
+                    owner: {
+                        roles: {
+                            hasSome: ['admin', 'super_admin'],
+                        },
+                    },
+                },
+            },
+        });
+
+        const totalAdminsCount = await this.prisma.user.count({
+            where: {
+                roles: {
+                    hasSome: ['admin', 'super_admin'],
+                },
+            },
+        });
+
+        const totalUsersCount = await this.prisma.user.count();
+
+        // Fetch recent admin audit logs
+        const recentLogs = await this.prisma.adminAuditLog.findMany({
+            take: 5,
+            orderBy: { createdAt: 'desc' },
+            include: {
+                admin: {
+                    select: {
+                        publicId: true,
+                        fullName: true,
+                        email: true,
+                    },
+                },
+                targetOffice: {
+                    select: {
+                        publicId: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            activeOfficesCount,
+            totalOfficesCount,
+            totalAdminsCount,
+            totalUsersCount,
+            recentLogs,
+        };
     }
 
     /**
@@ -53,7 +178,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,
@@ -74,7 +199,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,
@@ -106,7 +231,7 @@ export class AdminsController {
         @Headers('x-device-fingerprint') deviceFingerprint: string,
     ) {
         const auditMeta = {
-            adminUserId: req.user.userId,
+            adminPublicId: req.user.userId,
             ip,
             userAgent: req.headers['user-agent'],
             deviceFingerprint,
@@ -114,20 +239,123 @@ export class AdminsController {
         return this.adminsService.handleRequest(id, approve, auditMeta);
     }
     /**
-     * Get the last audit log for the current admin
+     * Get the last audit log for the admins
      * GET /admins/audit/last
      */
     @Get('audit/last')
-    getLastAdminAudit(@Req() req: any) {
-        return this.adminsService.getLastAdminLog(req.user.userId);
+    getLastAdminAudit() {
+        return this.adminsService.getLastAdminLog();
     }
 
     /**
-     * Get the last 100 audit logs for the current admin
+     * Get all audit logs for the admins
      * GET /admins/audit
      */
     @Get('audit')
-    getLast100AdminAudits(@Req() req: any) {
-        return this.adminsService.getLast100AdminLogs(req.user.userId);
+    getLast100AdminAudits() {
+        return this.adminsService.getLast100AdminLogs();
+    }
+
+    /**
+     * Create a new platform admin user
+     * POST /admins
+     */
+    @Post()
+    @Roles('super_admin', 'admin') // Note: Roles are merged with class-level @Roles('admin')
+    @ApiOperation({ summary: 'Create a new admin user' })
+    async createAdmin(@Body() createAdminDto: CreateAdminDto) {
+        const { email, username, password, fullName } = createAdminDto;
+        
+        const saltRounds = 10;
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
+        return this.prisma.user.create({
+            data: {
+                email,
+                username,
+                fullName,
+                phone: '0000000000', // required dummy value as observed
+                passwordHash,
+                roles: ['admin'],
+                status: 'ACTIVE',
+            },
+        });
+    }
+
+    /**
+     * Toggle admin status (ACTIVE <-> SUSPENDED)
+     * PATCH /admins/:id/status
+     */
+    @Patch(':id/status')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Toggle the status of an admin user' })
+    async toggleAdminStatus(@Param('id') id: string, @Req() req: any) {
+        const admin = await this.prisma.user.findUnique({
+            where: { publicId: id },
+        });
+
+        if (!admin || !admin.roles.some((role) => ['admin', 'super_admin'].includes(role))) {
+            throw new NotFoundException('Admin user not found');
+        }
+
+        if (admin.email === 'admin@makktabplus.online') {
+            throw new ForbiddenException('Cannot modify the primary platform admin');
+        }
+
+        if (admin.publicId === req.user.userId) {
+            throw new ForbiddenException('Cannot modify your own status');
+        }
+
+        const newStatus = admin.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+        return this.prisma.user.update({
+            where: { id: admin.id },
+            data: { status: newStatus },
+            select: {
+                publicId: true,
+                status: true,
+                email: true,
+            }
+        });
+    }
+
+    /**
+     * Delete an admin user
+     * DELETE /admins/:id
+     */
+    @Delete(':id')
+    @Roles('super_admin', 'admin')
+    @ApiOperation({ summary: 'Delete an admin user' })
+    async deleteAdmin(@Param('id') id: string, @Req() req: any) {
+        const admin = await this.prisma.user.findUnique({
+            where: { publicId: id },
+        });
+
+        if (!admin || !admin.roles.some((role) => ['admin', 'super_admin'].includes(role))) {
+            throw new NotFoundException('Admin user not found');
+        }
+
+        if (admin.email === 'admin@makktabplus.online') {
+            throw new ForbiddenException('Cannot delete the primary platform admin');
+        }
+
+        if (admin.publicId === req.user.userId) {
+            throw new ForbiddenException('Cannot delete yourself');
+        }
+
+        return this.prisma.$transaction([
+            this.prisma.otpCode.deleteMany({
+                where: { userId: admin.id },
+            }),
+            this.prisma.adminAuditLog.deleteMany({
+                where: { adminUserId: admin.id },
+            }),
+            this.prisma.user.delete({
+                where: { id: admin.id },
+                select: {
+                    publicId: true,
+                    email: true,
+                }
+            }),
+        ]);
     }
 }

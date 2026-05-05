@@ -7,6 +7,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // Trust proxy - IMPORTANT for getting real client IP
   // This allows Express to trust X-Forwarded-* headers from proxies
   // Set to true if behind a single proxy (Nginx, Cloudflare, etc.)

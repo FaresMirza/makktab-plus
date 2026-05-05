@@ -14,7 +14,7 @@ interface StorageRecord {
 @Injectable()
 export class ThrottlerStorageService {
     private storage = new Map<string, StorageRecord>();
-    private readonly BLOCK_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+    private readonly BLOCK_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
     /**
      * Increment request count for a key (IP address)

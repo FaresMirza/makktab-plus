@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 /**
  * RolesGuard
@@ -23,6 +24,15 @@ export class RolesGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) { }
 
     canActivate(context: ExecutionContext): boolean {
+        // Check if route is marked as @Public()
+        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (isPublic) {
+            return true;
+        }
+
         // Merge roles from both handler-level and class-level decorators
         const requiredRoles = this.reflector.getAllAndMerge<string[]>(
             ROLES_KEY,

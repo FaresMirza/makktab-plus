@@ -98,7 +98,7 @@ export class AuthHelper {
      * The JWT `sub` field uses the user's publicId (UUID) — never the internal integer id.
      */
     async generateTokens(user: any) {
-        const payload = { sub: user.publicId, username: user.username, roles: user.roles };
+        const payload = { sub: user.publicId, username: user.username, fullName: user.fullName, roles: user.roles };
         const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: AUTH_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN as any });
         const refreshTokenHash = await this.hashRefreshToken(refreshToken);
 

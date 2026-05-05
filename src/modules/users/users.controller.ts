@@ -15,6 +15,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserStatus } from 'prisma/src/generated/prisma-client/client';
 
 @Controller('users')
@@ -101,10 +102,9 @@ export class UsersController {
   @Patch(':id/password')
   changePassword(
     @Param('id') id: string,
-    @Body('oldPassword') oldPassword: string,
-    @Body('newPassword') newPassword: string,
+    @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    return this.usersService.changePassword(id, oldPassword, newPassword);
+    return this.usersService.changePassword(id, changePasswordDto.oldPassword, changePasswordDto.newPassword);
   }
 
   /**

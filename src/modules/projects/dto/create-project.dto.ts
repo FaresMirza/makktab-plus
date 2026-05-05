@@ -1,6 +1,7 @@
-import { IsString, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsOptional, IsDateString, IsNumber } from 'class-validator';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateProjectDto {
   @ApiProperty({ description: 'The name of the project', example: 'Mobile App Development' })
@@ -13,20 +14,31 @@ export class CreateProjectDto {
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ description: 'The public ID (UUID) of the office this project belongs to', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
-  @IsString()
-  @IsNotEmpty()
-  officeId: string;
-
-  @ApiProperty({ description: 'The public ID (UUID) of the user who created this project', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' })
-  @IsString()
-  @IsNotEmpty()
-  createdByUserId: string;
-
   @ApiProperty({ description: 'The public ID (UUID) of the user who manages this project', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' })
   @IsString()
   @IsNotEmpty()
   projectManagerUserId: string;
+
+  @ApiProperty({ description: 'The name of the client for this project', example: 'Acme Corporation', required: false })
+  @IsString()
+  @IsOptional()
+  clientName?: string;
+
+  @ApiProperty({ description: 'The project budget', example: 50000.00, required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  budget?: number;
+
+  @ApiProperty({ description: 'The project start date (ISO 8601 format)', example: '2024-05-01', required: false })
+  @IsDateString()
+  @IsOptional()
+  startDate?: string;
+
+  @ApiProperty({ description: 'The project end date (ISO 8601 format)', example: '2024-12-31', required: false })
+  @IsDateString()
+  @IsOptional()
+  endDate?: string;
 
   @ApiProperty({
     description: 'The status of the project',

@@ -13,6 +13,14 @@ export const AUTH_MESSAGES = {
     USER_NOT_FOUND: (email: string) => `User with email ${email} not found`,
     INVALID_REQUEST: 'Invalid request',
     USER_NO_OFFICE: 'User is not associated with any office',
+    REGISTRATION_SUCCESS: 'Registration successful. Please verify your email.',
+    EMAIL_VERIFIED: 'Email verified successfully. Your office request is pending admin approval.',
+    USERNAME_TAKEN: 'Username is already taken',
+    EMAIL_TAKEN: 'Email is already in use',
+    VERIFICATION_EXPIRED: 'Verification code has expired. Please register again.',
+    VERIFICATION_MAX_ATTEMPTS: 'Maximum verification attempts exceeded. Please register again.',
+    VERIFICATION_INVALID: 'Invalid verification code.',
+    NO_PENDING_REQUEST: 'No pending registration found for this email.',
 };
 
 export const AUTH_CONSTANTS = {

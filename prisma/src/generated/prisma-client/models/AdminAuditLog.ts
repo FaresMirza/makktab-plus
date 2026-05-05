@@ -265,6 +265,7 @@ export type AdminAuditLogWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AdminAuditLog"> | Date | string
   admin?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  targetOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
 }
 
 export type AdminAuditLogOrderByWithRelationInput = {
@@ -279,6 +280,7 @@ export type AdminAuditLogOrderByWithRelationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   admin?: Prisma.UserOrderByWithRelationInput
+  targetOffice?: Prisma.OfficeOrderByWithRelationInput
 }
 
 export type AdminAuditLogWhereUniqueInput = Prisma.AtLeast<{
@@ -296,6 +298,7 @@ export type AdminAuditLogWhereUniqueInput = Prisma.AtLeast<{
   userAgent?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AdminAuditLog"> | Date | string
   admin?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  targetOffice?: Prisma.XOR<Prisma.OfficeNullableScalarRelationFilter, Prisma.OfficeWhereInput> | null
 }, "id">
 
 export type AdminAuditLogOrderByWithAggregationInput = {
@@ -334,7 +337,6 @@ export type AdminAuditLogScalarWhereWithAggregatesInput = {
 
 export type AdminAuditLogCreateInput = {
   action: $Enums.AdminAction
-  targetOfficeId?: number | null
   targetRequestId?: string | null
   reason?: string | null
   ip?: string | null
@@ -342,6 +344,7 @@ export type AdminAuditLogCreateInput = {
   userAgent?: string | null
   createdAt?: Date | string
   admin: Prisma.UserCreateNestedOneWithoutAdminAuditLogsInput
+  targetOffice?: Prisma.OfficeCreateNestedOneWithoutAdminAuditLogsInput
 }
 
 export type AdminAuditLogUncheckedCreateInput = {
@@ -359,7 +362,6 @@ export type AdminAuditLogUncheckedCreateInput = {
 
 export type AdminAuditLogUpdateInput = {
   action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
-  targetOfficeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -367,6 +369,7 @@ export type AdminAuditLogUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   admin?: Prisma.UserUpdateOneRequiredWithoutAdminAuditLogsNestedInput
+  targetOffice?: Prisma.OfficeUpdateOneWithoutAdminAuditLogsNestedInput
 }
 
 export type AdminAuditLogUncheckedUpdateInput = {
@@ -397,7 +400,6 @@ export type AdminAuditLogCreateManyInput = {
 
 export type AdminAuditLogUpdateManyMutationInput = {
   action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
-  targetOfficeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -480,6 +482,48 @@ export type AdminAuditLogSumOrderByAggregateInput = {
   targetOfficeId?: Prisma.SortOrder
 }
 
+export type AdminAuditLogCreateNestedManyWithoutTargetOfficeInput = {
+  create?: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput> | Prisma.AdminAuditLogCreateWithoutTargetOfficeInput[] | Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput[]
+  connectOrCreate?: Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput | Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput[]
+  createMany?: Prisma.AdminAuditLogCreateManyTargetOfficeInputEnvelope
+  connect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+}
+
+export type AdminAuditLogUncheckedCreateNestedManyWithoutTargetOfficeInput = {
+  create?: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput> | Prisma.AdminAuditLogCreateWithoutTargetOfficeInput[] | Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput[]
+  connectOrCreate?: Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput | Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput[]
+  createMany?: Prisma.AdminAuditLogCreateManyTargetOfficeInputEnvelope
+  connect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+}
+
+export type AdminAuditLogUpdateManyWithoutTargetOfficeNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput> | Prisma.AdminAuditLogCreateWithoutTargetOfficeInput[] | Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput[]
+  connectOrCreate?: Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput | Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput[]
+  upsert?: Prisma.AdminAuditLogUpsertWithWhereUniqueWithoutTargetOfficeInput | Prisma.AdminAuditLogUpsertWithWhereUniqueWithoutTargetOfficeInput[]
+  createMany?: Prisma.AdminAuditLogCreateManyTargetOfficeInputEnvelope
+  set?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  delete?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  connect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  update?: Prisma.AdminAuditLogUpdateWithWhereUniqueWithoutTargetOfficeInput | Prisma.AdminAuditLogUpdateWithWhereUniqueWithoutTargetOfficeInput[]
+  updateMany?: Prisma.AdminAuditLogUpdateManyWithWhereWithoutTargetOfficeInput | Prisma.AdminAuditLogUpdateManyWithWhereWithoutTargetOfficeInput[]
+  deleteMany?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
+}
+
+export type AdminAuditLogUncheckedUpdateManyWithoutTargetOfficeNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput> | Prisma.AdminAuditLogCreateWithoutTargetOfficeInput[] | Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput[]
+  connectOrCreate?: Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput | Prisma.AdminAuditLogCreateOrConnectWithoutTargetOfficeInput[]
+  upsert?: Prisma.AdminAuditLogUpsertWithWhereUniqueWithoutTargetOfficeInput | Prisma.AdminAuditLogUpsertWithWhereUniqueWithoutTargetOfficeInput[]
+  createMany?: Prisma.AdminAuditLogCreateManyTargetOfficeInputEnvelope
+  set?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  delete?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  connect?: Prisma.AdminAuditLogWhereUniqueInput | Prisma.AdminAuditLogWhereUniqueInput[]
+  update?: Prisma.AdminAuditLogUpdateWithWhereUniqueWithoutTargetOfficeInput | Prisma.AdminAuditLogUpdateWithWhereUniqueWithoutTargetOfficeInput[]
+  updateMany?: Prisma.AdminAuditLogUpdateManyWithWhereWithoutTargetOfficeInput | Prisma.AdminAuditLogUpdateManyWithWhereWithoutTargetOfficeInput[]
+  deleteMany?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
+}
+
 export type AdminAuditLogCreateNestedManyWithoutAdminInput = {
   create?: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutAdminInput, Prisma.AdminAuditLogUncheckedCreateWithoutAdminInput> | Prisma.AdminAuditLogCreateWithoutAdminInput[] | Prisma.AdminAuditLogUncheckedCreateWithoutAdminInput[]
   connectOrCreate?: Prisma.AdminAuditLogCreateOrConnectWithoutAdminInput | Prisma.AdminAuditLogCreateOrConnectWithoutAdminInput[]
@@ -526,15 +570,80 @@ export type EnumAdminActionFieldUpdateOperationsInput = {
   set?: $Enums.AdminAction
 }
 
-export type AdminAuditLogCreateWithoutAdminInput = {
+export type AdminAuditLogCreateWithoutTargetOfficeInput = {
   action: $Enums.AdminAction
-  targetOfficeId?: number | null
   targetRequestId?: string | null
   reason?: string | null
   ip?: string | null
   deviceFingerprint?: string | null
   userAgent?: string | null
   createdAt?: Date | string
+  admin: Prisma.UserCreateNestedOneWithoutAdminAuditLogsInput
+}
+
+export type AdminAuditLogUncheckedCreateWithoutTargetOfficeInput = {
+  id?: number
+  adminUserId: number
+  action: $Enums.AdminAction
+  targetRequestId?: string | null
+  reason?: string | null
+  ip?: string | null
+  deviceFingerprint?: string | null
+  userAgent?: string | null
+  createdAt?: Date | string
+}
+
+export type AdminAuditLogCreateOrConnectWithoutTargetOfficeInput = {
+  where: Prisma.AdminAuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput>
+}
+
+export type AdminAuditLogCreateManyTargetOfficeInputEnvelope = {
+  data: Prisma.AdminAuditLogCreateManyTargetOfficeInput | Prisma.AdminAuditLogCreateManyTargetOfficeInput[]
+  skipDuplicates?: boolean
+}
+
+export type AdminAuditLogUpsertWithWhereUniqueWithoutTargetOfficeInput = {
+  where: Prisma.AdminAuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AdminAuditLogUpdateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedUpdateWithoutTargetOfficeInput>
+  create: Prisma.XOR<Prisma.AdminAuditLogCreateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedCreateWithoutTargetOfficeInput>
+}
+
+export type AdminAuditLogUpdateWithWhereUniqueWithoutTargetOfficeInput = {
+  where: Prisma.AdminAuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AdminAuditLogUpdateWithoutTargetOfficeInput, Prisma.AdminAuditLogUncheckedUpdateWithoutTargetOfficeInput>
+}
+
+export type AdminAuditLogUpdateManyWithWhereWithoutTargetOfficeInput = {
+  where: Prisma.AdminAuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AdminAuditLogUpdateManyMutationInput, Prisma.AdminAuditLogUncheckedUpdateManyWithoutTargetOfficeInput>
+}
+
+export type AdminAuditLogScalarWhereInput = {
+  AND?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
+  OR?: Prisma.AdminAuditLogScalarWhereInput[]
+  NOT?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
+  id?: Prisma.IntFilter<"AdminAuditLog"> | number
+  adminUserId?: Prisma.IntFilter<"AdminAuditLog"> | number
+  action?: Prisma.EnumAdminActionFilter<"AdminAuditLog"> | $Enums.AdminAction
+  targetOfficeId?: Prisma.IntNullableFilter<"AdminAuditLog"> | number | null
+  targetRequestId?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
+  reason?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
+  ip?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
+  deviceFingerprint?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
+  userAgent?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"AdminAuditLog"> | Date | string
+}
+
+export type AdminAuditLogCreateWithoutAdminInput = {
+  action: $Enums.AdminAction
+  targetRequestId?: string | null
+  reason?: string | null
+  ip?: string | null
+  deviceFingerprint?: string | null
+  userAgent?: string | null
+  createdAt?: Date | string
+  targetOffice?: Prisma.OfficeCreateNestedOneWithoutAdminAuditLogsInput
 }
 
 export type AdminAuditLogUncheckedCreateWithoutAdminInput = {
@@ -575,20 +684,51 @@ export type AdminAuditLogUpdateManyWithWhereWithoutAdminInput = {
   data: Prisma.XOR<Prisma.AdminAuditLogUpdateManyMutationInput, Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminInput>
 }
 
-export type AdminAuditLogScalarWhereInput = {
-  AND?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
-  OR?: Prisma.AdminAuditLogScalarWhereInput[]
-  NOT?: Prisma.AdminAuditLogScalarWhereInput | Prisma.AdminAuditLogScalarWhereInput[]
-  id?: Prisma.IntFilter<"AdminAuditLog"> | number
-  adminUserId?: Prisma.IntFilter<"AdminAuditLog"> | number
-  action?: Prisma.EnumAdminActionFilter<"AdminAuditLog"> | $Enums.AdminAction
-  targetOfficeId?: Prisma.IntNullableFilter<"AdminAuditLog"> | number | null
-  targetRequestId?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
-  reason?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
-  ip?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
-  deviceFingerprint?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
-  userAgent?: Prisma.StringNullableFilter<"AdminAuditLog"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"AdminAuditLog"> | Date | string
+export type AdminAuditLogCreateManyTargetOfficeInput = {
+  id?: number
+  adminUserId: number
+  action: $Enums.AdminAction
+  targetRequestId?: string | null
+  reason?: string | null
+  ip?: string | null
+  deviceFingerprint?: string | null
+  userAgent?: string | null
+  createdAt?: Date | string
+}
+
+export type AdminAuditLogUpdateWithoutTargetOfficeInput = {
+  action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
+  targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admin?: Prisma.UserUpdateOneRequiredWithoutAdminAuditLogsNestedInput
+}
+
+export type AdminAuditLogUncheckedUpdateWithoutTargetOfficeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  adminUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
+  targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdminAuditLogUncheckedUpdateManyWithoutTargetOfficeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  adminUserId?: Prisma.IntFieldUpdateOperationsInput | number
+  action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
+  targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AdminAuditLogCreateManyAdminInput = {
@@ -605,13 +745,13 @@ export type AdminAuditLogCreateManyAdminInput = {
 
 export type AdminAuditLogUpdateWithoutAdminInput = {
   action?: Prisma.EnumAdminActionFieldUpdateOperationsInput | $Enums.AdminAction
-  targetOfficeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetRequestId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deviceFingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  targetOffice?: Prisma.OfficeUpdateOneWithoutAdminAuditLogsNestedInput
 }
 
 export type AdminAuditLogUncheckedUpdateWithoutAdminInput = {
@@ -652,6 +792,7 @@ export type AdminAuditLogSelect<ExtArgs extends runtime.Types.Extensions.Interna
   userAgent?: boolean
   createdAt?: boolean
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }, ExtArgs["result"]["adminAuditLog"]>
 
 export type AdminAuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -666,6 +807,7 @@ export type AdminAuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   userAgent?: boolean
   createdAt?: boolean
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }, ExtArgs["result"]["adminAuditLog"]>
 
 export type AdminAuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -680,6 +822,7 @@ export type AdminAuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   userAgent?: boolean
   createdAt?: boolean
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }, ExtArgs["result"]["adminAuditLog"]>
 
 export type AdminAuditLogSelectScalar = {
@@ -698,18 +841,22 @@ export type AdminAuditLogSelectScalar = {
 export type AdminAuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "adminUserId" | "action" | "targetOfficeId" | "targetRequestId" | "reason" | "ip" | "deviceFingerprint" | "userAgent" | "createdAt", ExtArgs["result"]["adminAuditLog"]>
 export type AdminAuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }
 export type AdminAuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }
 export type AdminAuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  targetOffice?: boolean | Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>
 }
 
 export type $AdminAuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AdminAuditLog"
   objects: {
     admin: Prisma.$UserPayload<ExtArgs>
+    targetOffice: Prisma.$OfficePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1117,6 +1264,7 @@ readonly fields: AdminAuditLogFieldRefs;
 export interface Prisma__AdminAuditLogClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   admin<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  targetOffice<T extends Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminAuditLog$targetOfficeArgs<ExtArgs>>): Prisma.Prisma__OfficeClient<runtime.Types.Result.GetResult<Prisma.$OfficePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1549,6 +1697,25 @@ export type AdminAuditLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many AdminAuditLogs to delete.
    */
   limit?: number
+}
+
+/**
+ * AdminAuditLog.targetOffice
+ */
+export type AdminAuditLog$targetOfficeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Office
+   */
+  select?: Prisma.OfficeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Office
+   */
+  omit?: Prisma.OfficeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfficeInclude<ExtArgs> | null
+  where?: Prisma.OfficeWhereInput
 }
 
 /**

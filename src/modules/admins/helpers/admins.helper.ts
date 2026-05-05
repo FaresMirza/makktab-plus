@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuditRepository } from '../../audit/queries/audit.queries';
 import { AdminAction } from '../../../../prisma/src/generated/prisma-client/client';
+import { PrismaService } from '../../prisma/prisma.service';
 
 export interface AuditMeta {
-    adminUserId: number;
+    adminPublicId: string;
     ip?: string;
     userAgent?: string;
     deviceFingerprint?: string;
@@ -11,7 +12,24 @@ export interface AuditMeta {
 
 @Injectable()
 export class AdminsHelper {
-    constructor(private readonly auditRepository: AuditRepository) { }
+    constructor(
+        private readonly auditRepository: AuditRepository,
+        private readonly prisma: PrismaService,
+    ) { }
+
+    /**
+     * Resolve user publicId to internal id
+     */
+    async resolveUserId(publicId: string): Promise<number> {
+        const user = await this.prisma.user.findUnique({
+            where: { publicId },
+            select: { id: true },
+        });
+        if (!user) {
+            throw new NotFoundException(`Admin user not found`);
+        }
+        return user.id;
+    }
 
     /**
      * Log an admin action
@@ -25,8 +43,9 @@ export class AdminsHelper {
             reason?: string;
         },
     ) {
+        const adminUserId = await this.resolveUserId(meta.adminPublicId);
         return this.auditRepository.createAdminLog({
-            adminUserId: meta.adminUserId,
+            adminUserId,
             action,
             targetOfficeId: details.targetOfficeId,
             targetRequestId: details.targetRequestId,
@@ -37,11 +56,11 @@ export class AdminsHelper {
         });
     }
 
-    async getLastAdminLog(adminUserId: number) {
-        return this.auditRepository.findLastAdminLog(adminUserId);
+    async getLastAdminLog() {
+        return this.auditRepository.findLastAdminLog();
     }
 
-    async getLast100AdminLogs(adminUserId: number) {
-        return this.auditRepository.findLast100AdminLogs(adminUserId);
+    async getLast100AdminLogs() {
+        return this.auditRepository.findLast100AdminLogs();
     }
 }

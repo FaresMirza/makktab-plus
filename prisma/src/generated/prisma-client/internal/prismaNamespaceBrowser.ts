@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Role: 'Role',
   Project: 'Project',
+  ProjectFile: 'ProjectFile',
   Task: 'Task',
   OtpCode: 'OtpCode',
   ProjectAuditLog: 'ProjectAuditLog',
@@ -97,7 +98,12 @@ export const OfficeRequestScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   username: 'username',
+  city: 'city',
   passwordHash: 'passwordHash',
+  emailVerified: 'emailVerified',
+  verificationCodeHash: 'verificationCodeHash',
+  verificationAttempts: 'verificationAttempts',
+  verificationExpiresAt: 'verificationExpiresAt',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -146,11 +152,32 @@ export const ProjectScalarFieldEnum = {
   projectManagerUserId: 'projectManagerUserId',
   name: 'name',
   description: 'description',
+  clientName: 'clientName',
+  budget: 'budget',
+  startDate: 'startDate',
+  endDate: 'endDate',
   status: 'status',
   createdAt: 'createdAt'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectFileScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  projectId: 'projectId',
+  uploadedByUserId: 'uploadedByUserId',
+  fileName: 'fileName',
+  storedFileName: 'storedFileName',
+  fileUrl: 'fileUrl',
+  filePath: 'filePath',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectFileScalarFieldEnum = (typeof ProjectFileScalarFieldEnum)[keyof typeof ProjectFileScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

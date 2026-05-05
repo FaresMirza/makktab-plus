@@ -20,8 +20,18 @@ export type OfficeRequestModel = runtime.Types.Result.DefaultSelection<Prisma.$O
 
 export type AggregateOfficeRequest = {
   _count: OfficeRequestCountAggregateOutputType | null
+  _avg: OfficeRequestAvgAggregateOutputType | null
+  _sum: OfficeRequestSumAggregateOutputType | null
   _min: OfficeRequestMinAggregateOutputType | null
   _max: OfficeRequestMaxAggregateOutputType | null
+}
+
+export type OfficeRequestAvgAggregateOutputType = {
+  verificationAttempts: number | null
+}
+
+export type OfficeRequestSumAggregateOutputType = {
+  verificationAttempts: number | null
 }
 
 export type OfficeRequestMinAggregateOutputType = {
@@ -31,7 +41,12 @@ export type OfficeRequestMinAggregateOutputType = {
   email: string | null
   phone: string | null
   username: string | null
+  city: string | null
   passwordHash: string | null
+  emailVerified: boolean | null
+  verificationCodeHash: string | null
+  verificationAttempts: number | null
+  verificationExpiresAt: Date | null
   status: boolean | null
   createdAt: Date | null
 }
@@ -43,7 +58,12 @@ export type OfficeRequestMaxAggregateOutputType = {
   email: string | null
   phone: string | null
   username: string | null
+  city: string | null
   passwordHash: string | null
+  emailVerified: boolean | null
+  verificationCodeHash: string | null
+  verificationAttempts: number | null
+  verificationExpiresAt: Date | null
   status: boolean | null
   createdAt: Date | null
 }
@@ -55,12 +75,25 @@ export type OfficeRequestCountAggregateOutputType = {
   email: number
   phone: number
   username: number
+  city: number
   passwordHash: number
+  emailVerified: number
+  verificationCodeHash: number
+  verificationAttempts: number
+  verificationExpiresAt: number
   status: number
   createdAt: number
   _all: number
 }
 
+
+export type OfficeRequestAvgAggregateInputType = {
+  verificationAttempts?: true
+}
+
+export type OfficeRequestSumAggregateInputType = {
+  verificationAttempts?: true
+}
 
 export type OfficeRequestMinAggregateInputType = {
   id?: true
@@ -69,7 +102,12 @@ export type OfficeRequestMinAggregateInputType = {
   email?: true
   phone?: true
   username?: true
+  city?: true
   passwordHash?: true
+  emailVerified?: true
+  verificationCodeHash?: true
+  verificationAttempts?: true
+  verificationExpiresAt?: true
   status?: true
   createdAt?: true
 }
@@ -81,7 +119,12 @@ export type OfficeRequestMaxAggregateInputType = {
   email?: true
   phone?: true
   username?: true
+  city?: true
   passwordHash?: true
+  emailVerified?: true
+  verificationCodeHash?: true
+  verificationAttempts?: true
+  verificationExpiresAt?: true
   status?: true
   createdAt?: true
 }
@@ -93,7 +136,12 @@ export type OfficeRequestCountAggregateInputType = {
   email?: true
   phone?: true
   username?: true
+  city?: true
   passwordHash?: true
+  emailVerified?: true
+  verificationCodeHash?: true
+  verificationAttempts?: true
+  verificationExpiresAt?: true
   status?: true
   createdAt?: true
   _all?: true
@@ -137,6 +185,18 @@ export type OfficeRequestAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: OfficeRequestAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: OfficeRequestSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: OfficeRequestMinAggregateInputType
@@ -167,6 +227,8 @@ export type OfficeRequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: OfficeRequestCountAggregateInputType | true
+  _avg?: OfficeRequestAvgAggregateInputType
+  _sum?: OfficeRequestSumAggregateInputType
   _min?: OfficeRequestMinAggregateInputType
   _max?: OfficeRequestMaxAggregateInputType
 }
@@ -178,10 +240,17 @@ export type OfficeRequestGroupByOutputType = {
   email: string
   phone: string
   username: string
+  city: string
   passwordHash: string
+  emailVerified: boolean
+  verificationCodeHash: string | null
+  verificationAttempts: number
+  verificationExpiresAt: Date | null
   status: boolean | null
   createdAt: Date
   _count: OfficeRequestCountAggregateOutputType | null
+  _avg: OfficeRequestAvgAggregateOutputType | null
+  _sum: OfficeRequestSumAggregateOutputType | null
   _min: OfficeRequestMinAggregateOutputType | null
   _max: OfficeRequestMaxAggregateOutputType | null
 }
@@ -211,7 +280,12 @@ export type OfficeRequestWhereInput = {
   email?: Prisma.StringFilter<"OfficeRequest"> | string
   phone?: Prisma.StringFilter<"OfficeRequest"> | string
   username?: Prisma.StringFilter<"OfficeRequest"> | string
+  city?: Prisma.StringFilter<"OfficeRequest"> | string
   passwordHash?: Prisma.StringFilter<"OfficeRequest"> | string
+  emailVerified?: Prisma.BoolFilter<"OfficeRequest"> | boolean
+  verificationCodeHash?: Prisma.StringNullableFilter<"OfficeRequest"> | string | null
+  verificationAttempts?: Prisma.IntFilter<"OfficeRequest"> | number
+  verificationExpiresAt?: Prisma.DateTimeNullableFilter<"OfficeRequest"> | Date | string | null
   status?: Prisma.BoolNullableFilter<"OfficeRequest"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"OfficeRequest"> | Date | string
 }
@@ -223,7 +297,12 @@ export type OfficeRequestOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCodeHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationAttempts?: Prisma.SortOrder
+  verificationExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -238,7 +317,12 @@ export type OfficeRequestWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"OfficeRequest"> | string
   phone?: Prisma.StringFilter<"OfficeRequest"> | string
   username?: Prisma.StringFilter<"OfficeRequest"> | string
+  city?: Prisma.StringFilter<"OfficeRequest"> | string
   passwordHash?: Prisma.StringFilter<"OfficeRequest"> | string
+  emailVerified?: Prisma.BoolFilter<"OfficeRequest"> | boolean
+  verificationCodeHash?: Prisma.StringNullableFilter<"OfficeRequest"> | string | null
+  verificationAttempts?: Prisma.IntFilter<"OfficeRequest"> | number
+  verificationExpiresAt?: Prisma.DateTimeNullableFilter<"OfficeRequest"> | Date | string | null
   status?: Prisma.BoolNullableFilter<"OfficeRequest"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"OfficeRequest"> | Date | string
 }, "id">
@@ -250,12 +334,19 @@ export type OfficeRequestOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCodeHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationAttempts?: Prisma.SortOrder
+  verificationExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.OfficeRequestCountOrderByAggregateInput
+  _avg?: Prisma.OfficeRequestAvgOrderByAggregateInput
   _max?: Prisma.OfficeRequestMaxOrderByAggregateInput
   _min?: Prisma.OfficeRequestMinOrderByAggregateInput
+  _sum?: Prisma.OfficeRequestSumOrderByAggregateInput
 }
 
 export type OfficeRequestScalarWhereWithAggregatesInput = {
@@ -268,7 +359,12 @@ export type OfficeRequestScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   phone?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   username?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
+  city?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"OfficeRequest"> | string
+  emailVerified?: Prisma.BoolWithAggregatesFilter<"OfficeRequest"> | boolean
+  verificationCodeHash?: Prisma.StringNullableWithAggregatesFilter<"OfficeRequest"> | string | null
+  verificationAttempts?: Prisma.IntWithAggregatesFilter<"OfficeRequest"> | number
+  verificationExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OfficeRequest"> | Date | string | null
   status?: Prisma.BoolNullableWithAggregatesFilter<"OfficeRequest"> | boolean | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OfficeRequest"> | Date | string
 }
@@ -280,7 +376,12 @@ export type OfficeRequestCreateInput = {
   email: string
   phone: string
   username: string
+  city: string
   passwordHash: string
+  emailVerified?: boolean
+  verificationCodeHash?: string | null
+  verificationAttempts?: number
+  verificationExpiresAt?: Date | string | null
   status?: boolean | null
   createdAt?: Date | string
 }
@@ -292,7 +393,12 @@ export type OfficeRequestUncheckedCreateInput = {
   email: string
   phone: string
   username: string
+  city: string
   passwordHash: string
+  emailVerified?: boolean
+  verificationCodeHash?: string | null
+  verificationAttempts?: number
+  verificationExpiresAt?: Date | string | null
   status?: boolean | null
   createdAt?: Date | string
 }
@@ -304,7 +410,12 @@ export type OfficeRequestUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCodeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  verificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,7 +427,12 @@ export type OfficeRequestUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCodeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  verificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -328,7 +444,12 @@ export type OfficeRequestCreateManyInput = {
   email: string
   phone: string
   username: string
+  city: string
   passwordHash: string
+  emailVerified?: boolean
+  verificationCodeHash?: string | null
+  verificationAttempts?: number
+  verificationExpiresAt?: Date | string | null
   status?: boolean | null
   createdAt?: Date | string
 }
@@ -340,7 +461,12 @@ export type OfficeRequestUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCodeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  verificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,7 +478,12 @@ export type OfficeRequestUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationCodeHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  verificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -364,9 +495,18 @@ export type OfficeRequestCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCodeHash?: Prisma.SortOrder
+  verificationAttempts?: Prisma.SortOrder
+  verificationExpiresAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type OfficeRequestAvgOrderByAggregateInput = {
+  verificationAttempts?: Prisma.SortOrder
 }
 
 export type OfficeRequestMaxOrderByAggregateInput = {
@@ -376,7 +516,12 @@ export type OfficeRequestMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCodeHash?: Prisma.SortOrder
+  verificationAttempts?: Prisma.SortOrder
+  verificationExpiresAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -388,9 +533,30 @@ export type OfficeRequestMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  city?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  verificationCodeHash?: Prisma.SortOrder
+  verificationAttempts?: Prisma.SortOrder
+  verificationExpiresAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type OfficeRequestSumOrderByAggregateInput = {
+  verificationAttempts?: Prisma.SortOrder
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -406,7 +572,12 @@ export type OfficeRequestSelect<ExtArgs extends runtime.Types.Extensions.Interna
   email?: boolean
   phone?: boolean
   username?: boolean
+  city?: boolean
   passwordHash?: boolean
+  emailVerified?: boolean
+  verificationCodeHash?: boolean
+  verificationAttempts?: boolean
+  verificationExpiresAt?: boolean
   status?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["officeRequest"]>
@@ -418,7 +589,12 @@ export type OfficeRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   email?: boolean
   phone?: boolean
   username?: boolean
+  city?: boolean
   passwordHash?: boolean
+  emailVerified?: boolean
+  verificationCodeHash?: boolean
+  verificationAttempts?: boolean
+  verificationExpiresAt?: boolean
   status?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["officeRequest"]>
@@ -430,7 +606,12 @@ export type OfficeRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   email?: boolean
   phone?: boolean
   username?: boolean
+  city?: boolean
   passwordHash?: boolean
+  emailVerified?: boolean
+  verificationCodeHash?: boolean
+  verificationAttempts?: boolean
+  verificationExpiresAt?: boolean
   status?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["officeRequest"]>
@@ -442,12 +623,17 @@ export type OfficeRequestSelectScalar = {
   email?: boolean
   phone?: boolean
   username?: boolean
+  city?: boolean
   passwordHash?: boolean
+  emailVerified?: boolean
+  verificationCodeHash?: boolean
+  verificationAttempts?: boolean
+  verificationExpiresAt?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type OfficeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "officeName" | "fullName" | "email" | "phone" | "username" | "passwordHash" | "status" | "createdAt", ExtArgs["result"]["officeRequest"]>
+export type OfficeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "officeName" | "fullName" | "email" | "phone" | "username" | "city" | "passwordHash" | "emailVerified" | "verificationCodeHash" | "verificationAttempts" | "verificationExpiresAt" | "status" | "createdAt", ExtArgs["result"]["officeRequest"]>
 
 export type $OfficeRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OfficeRequest"
@@ -459,7 +645,12 @@ export type $OfficeRequestPayload<ExtArgs extends runtime.Types.Extensions.Inter
     email: string
     phone: string
     username: string
+    city: string
     passwordHash: string
+    emailVerified: boolean
+    verificationCodeHash: string | null
+    verificationAttempts: number
+    verificationExpiresAt: Date | null
     status: boolean | null
     createdAt: Date
   }, ExtArgs["result"]["officeRequest"]>
@@ -891,7 +1082,12 @@ export interface OfficeRequestFieldRefs {
   readonly email: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly phone: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly username: Prisma.FieldRef<"OfficeRequest", 'String'>
+  readonly city: Prisma.FieldRef<"OfficeRequest", 'String'>
   readonly passwordHash: Prisma.FieldRef<"OfficeRequest", 'String'>
+  readonly emailVerified: Prisma.FieldRef<"OfficeRequest", 'Boolean'>
+  readonly verificationCodeHash: Prisma.FieldRef<"OfficeRequest", 'String'>
+  readonly verificationAttempts: Prisma.FieldRef<"OfficeRequest", 'Int'>
+  readonly verificationExpiresAt: Prisma.FieldRef<"OfficeRequest", 'DateTime'>
   readonly status: Prisma.FieldRef<"OfficeRequest", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"OfficeRequest", 'DateTime'>
 }

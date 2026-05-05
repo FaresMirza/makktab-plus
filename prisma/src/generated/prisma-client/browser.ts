@@ -43,6 +43,11 @@ export type Role = Prisma.RoleModel
  */
 export type Project = Prisma.ProjectModel
 /**
+ * Model ProjectFile
+ * 
+ */
+export type ProjectFile = Prisma.ProjectFileModel
+/**
  * Model Task
  * 
  */

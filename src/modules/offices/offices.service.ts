@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { OfficesHelper } from './helpers/offices.helper';
@@ -94,8 +94,16 @@ export class OfficesService {
     // Build update data (only non-FK fields)
     const { ownerUserId, ...updateData } = updateOfficeDto;
 
-    const updatedOffice = await this.officesRepository.update(office.id, updateData);
-    return updatedOffice;
+    try {
+      const updatedOffice = await this.officesRepository.update(office.id, updateData);
+      return updatedOffice;
+    } catch (error: any) {
+      // Handle Prisma unique constraint violation (P2002)
+      if (error.code === 'P2002') {
+        throw new BadRequestException('Username or Email is already taken.');
+      }
+      throw error;
+    }
   }
 
   /**
