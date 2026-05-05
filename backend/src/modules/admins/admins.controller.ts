@@ -14,6 +14,7 @@ import {
     Headers,
     NotFoundException,
     ForbiddenException,
+    ConflictException,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -328,6 +329,18 @@ export class AdminsController {
     async deleteAdmin(@Param('id') id: string, @Req() req: any) {
         const admin = await this.prisma.user.findUnique({
             where: { publicId: id },
+            include: {
+                ownedOffice: { select: { publicId: true, name: true } },
+                _count: {
+                    select: {
+                        createdProjects: true,
+                        managedProjects: true,
+                        createdTasks: true,
+                        assignedTasks: true,
+                        uploadedProjectFiles: true,
+                    },
+                },
+            },
         });
 
         if (!admin || !admin.roles.some((role) => ['admin', 'super_admin'].includes(role))) {
@@ -342,9 +355,29 @@ export class AdminsController {
             throw new ForbiddenException('Cannot delete yourself');
         }
 
-        // Cascade-delete every record that holds a FK to this user.
-        // None of the User relations declare onDelete: Cascade in the schema,
-        // so without this we hit a P2003 FK violation and the request 500s.
+        // Refuse if the user still has tenant data hanging off them — deleting
+        // would either fail with P2003 (Office_ownerUserId_fkey, etc.) or
+        // silently orphan/cascade-destroy unrelated office data.
+        if (admin.ownedOffice) {
+            throw new ConflictException(
+                `Cannot delete: user owns office "${admin.ownedOffice.name}". Reassign or delete the office first.`,
+            );
+        }
+        const refs = admin._count;
+        const blockers: string[] = [];
+        if (refs.createdProjects) blockers.push(`${refs.createdProjects} project(s) created`);
+        if (refs.managedProjects) blockers.push(`${refs.managedProjects} project(s) managed`);
+        if (refs.createdTasks) blockers.push(`${refs.createdTasks} task(s) created`);
+        if (refs.assignedTasks) blockers.push(`${refs.assignedTasks} task(s) assigned`);
+        if (refs.uploadedProjectFiles) blockers.push(`${refs.uploadedProjectFiles} file(s) uploaded`);
+        if (blockers.length > 0) {
+            throw new ConflictException(
+                `Cannot delete: user still has ${blockers.join(', ')}. Reassign or delete those first.`,
+            );
+        }
+
+        // Cascade-delete every audit log that holds a FK to this user.
+        // None of the User audit relations declare onDelete: Cascade.
         return this.prisma.$transaction([
             this.prisma.otpCode.deleteMany({ where: { userId: admin.id } }),
             this.prisma.adminAuditLog.deleteMany({ where: { adminUserId: admin.id } }),
