@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { OtpService } from './otps.service';
 import { OtpHelper } from './helpers/otp.helper';
 import { OtpRepository } from './queries/otp.queries';
@@ -7,7 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { AuditModule } from '../audit/audit.module';
 
 @Module({
-    imports: [PrismaModule, UsersModule, AuditModule],
+    imports: [PrismaModule, forwardRef(() => UsersModule), AuditModule],
     providers: [OtpService, OtpHelper, OtpRepository],
     exports: [OtpService, OtpHelper, OtpRepository],
 })

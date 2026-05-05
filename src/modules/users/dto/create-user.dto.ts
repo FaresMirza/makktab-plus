@@ -23,11 +23,15 @@ export class CreateUserDto {
   @IsNotEmpty()
   username: string;
 
-  @ApiProperty({ description: 'The password of the user (minimum 8 characters)', example: 'password123' })
+  @ApiProperty({
+    description: 'Optional initial password. If omitted, the user must complete first-login via OTP to set their own password.',
+    example: 'password123',
+    required: false,
+  })
   @IsString()
   @MinLength(8)
-  @IsNotEmpty()
-  password: string;
+  @IsOptional()
+  password?: string;
 
   @ApiProperty({ description: 'The roles assigned to the user', example: ['admin', 'user'], isArray: true })
   @IsArray()

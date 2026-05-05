@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { OtpRepository } from '../queries/otp.queries';
 import { AuditRepository } from '../../audit/queries/audit.queries';
 import { PrismaService } from '../../prisma/prisma.service';
+import { EmailService } from '../../email/email.service';
 import { OTP_CONSTANTS, OTP_MESSAGES } from '../constants/otp.constants';
 import { OtpPurpose, OtpChannel, UserStatus, AuthAuditEvent } from 'prisma/src/generated/prisma-client/client';
 
@@ -19,6 +20,7 @@ export class OtpHelper {
         private readonly otpRepository: OtpRepository,
         private readonly auditRepository: AuditRepository,
         private readonly prisma: PrismaService,
+        private readonly emailService: EmailService,
     ) { }
 
     // ─── USER VALIDATION ──────────────────────────────────────────
@@ -178,16 +180,31 @@ export class OtpHelper {
     // ─── 6. MOCK NOTIFICATION ─────────────────────────────────────
 
     /**
-     * Send OTP via Email/SMS (mock implementation).
-     * Replace with real email/SMS service in production.
+     * Send the OTP to the user. Currently only the EMAIL channel is wired up
+     * (Gmail SMTP via EmailService). SMS would slot in here similarly.
      */
     async sendOtpNotification(
         email: string,
         otpCode: string,
         channel: OtpChannel,
     ): Promise<void> {
-        this.logger.log(`[MOCK ${channel}] OTP for ${email}: ${otpCode}`);
-        // TODO: Integrate with SendGrid / Twilio / AWS SES
+        if (channel !== OtpChannel.EMAIL) {
+            this.logger.warn(`[MOCK ${channel}] OTP for ${email}: ${otpCode} (channel not implemented)`);
+            return;
+        }
+
+        const subject = 'Your Makktab+ verification code';
+        const text = `Your verification code is: ${otpCode}\n\nThis code expires in ${OTP_CONSTANTS.OTP_EXPIRY_MINUTES} minutes. If you did not request it, you can ignore this email.`;
+        const html = `
+            <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #222;">
+                <h2 style="margin-bottom: 0.5em;">Your Makktab+ verification code</h2>
+                <p style="font-size: 16px;">Use the code below to continue:</p>
+                <p style="font-size: 28px; font-weight: bold; letter-spacing: 4px; margin: 16px 0;">${otpCode}</p>
+                <p style="color: #666;">This code expires in ${OTP_CONSTANTS.OTP_EXPIRY_MINUTES} minutes. If you didn't request it, you can ignore this email.</p>
+            </div>
+        `;
+
+        await this.emailService.send({ to: email, subject, text, html });
     }
 
     // ─── VERIFY OTP ───────────────────────────────────────────────
