@@ -7,7 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { AuditModule } from '../audit/audit.module';
 
 @Module({
-    imports: [PrismaModule, forwardRef(() => UsersModule), AuditModule],
+    imports: [PrismaModule, forwardRef(() => UsersModule), forwardRef(() => AuditModule)],
     providers: [OtpService, OtpHelper, OtpRepository],
     exports: [OtpService, OtpHelper, OtpRepository],
 })
