@@ -130,3 +130,7 @@ jobs:
             # changes). db + traefik are left running.
             docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --remove-orphans
             docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --force-recreate api frontend
+
+            # Reclaim disk from previous deploys' superseded image layers.
+            # Without this the server fills up after ~50 deploys.
+            docker image prune -a -f --filter "until=168h" || true
