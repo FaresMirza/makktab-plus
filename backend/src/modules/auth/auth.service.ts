@@ -66,13 +66,13 @@ export class AuthService {
 
         await this.authHelper.validatePassword(loginDto.password, user, ip, userAgent);
 
-        const otpResult = await this.otpService.sendOtp(
+        await this.otpService.sendOtp(
             { email: user.email, purpose: OtpPurpose.LOGIN, channel: OtpChannel.EMAIL },
             ip,
             userAgent,
         );
 
-        return { message: AUTH_MESSAGES.OTP_SENT, otp: otpResult.otp };
+        return { message: AUTH_MESSAGES.OTP_SENT };
     }
 
     async verifyLogin(dto: VerifyLoginOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
@@ -133,17 +133,16 @@ export class AuthService {
         const user = await this.usersRepository.findByUsername(usernameOrEmail)
             || await this.usersRepository.findByEmail(usernameOrEmail);
 
-        let otp: string | undefined;
         if (user) {
-            const otpResult = await this.otpService.sendOtp(
+            await this.otpService.sendOtp(
                 { email: user.email, purpose: OtpPurpose.RESET_PASSWORD, channel: OtpChannel.EMAIL },
                 ip,
                 userAgent,
             );
-            otp = otpResult.otp;
         }
 
-        return { message: AUTH_MESSAGES.OTP_SENT, otp };
+        // Always respond identically — never leak whether the account exists.
+        return { message: AUTH_MESSAGES.OTP_SENT };
     }
 
     async verifyForgotPassword(dto: ResetPasswordWithOtpDto, ip: string, userAgent: string, deviceFingerprint: string) {
@@ -232,13 +231,13 @@ export class AuthService {
             return { message: AUTH_MESSAGES.OTP_SENT };
         }
 
-        const otpResult = await this.otpService.sendOtp(
+        await this.otpService.sendOtp(
             { email: user.email, purpose: OtpPurpose.FIRST_LOGIN, channel: OtpChannel.EMAIL },
             ip,
             userAgent,
         );
 
-        return { message: AUTH_MESSAGES.OTP_SENT, otp: otpResult.otp };
+        return { message: AUTH_MESSAGES.OTP_SENT };
     }
 
     /**

@@ -53,9 +53,8 @@ export function RegisterPage() {
     }
     setLoading(true)
     try {
-      const res = await register(form)
+      await register(form)
       toast.success('تم إرسال رمز التحقق إلى بريدك')
-      if (res.otp) toast.message(`رمز التحقق (تطوير): ${res.otp}`)
       setStep('otp')
     } catch (err) {
       toast.error(getApiErrorMessage(err, 'فشل التسجيل'))

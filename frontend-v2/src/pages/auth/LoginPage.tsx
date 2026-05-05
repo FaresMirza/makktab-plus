@@ -23,12 +23,8 @@ export function LoginPage() {
       return
     }
     try {
-      const res = await beginLogin(username, password)
+      await beginLogin(username, password)
       toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني')
-      if (res.otp) {
-        // dev convenience — backend currently returns OTP in the response
-        toast.message(`رمز التحقق (تطوير): ${res.otp}`)
-      }
       setStep('otp')
     } catch (err) {
       toast.error(getApiErrorMessage(err, 'فشل تسجيل الدخول'))

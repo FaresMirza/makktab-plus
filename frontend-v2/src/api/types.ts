@@ -115,9 +115,8 @@ export interface MessageResponse {
   message: string
 }
 
-export interface OtpResponse extends MessageResponse {
-  otp?: string // backend currently returns OTP for dev visibility
-}
+// Backend never returns the OTP itself — delivery is via email only.
+export type OtpResponse = MessageResponse
 
 // Pagination — matches backend's makePaginated response.
 export interface PaginationMeta {

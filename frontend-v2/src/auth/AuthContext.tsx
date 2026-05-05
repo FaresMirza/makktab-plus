@@ -1,4 +1,4 @@
-import {
+ import {
   createContext,
   useCallback,
   useContext,
@@ -31,7 +31,7 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-  beginLogin: (username: string, password: string) => Promise<{ otp?: string }>
+  beginLogin: (username: string, password: string) => Promise<void>
   completeLogin: (otp: string) => Promise<AuthUser>
   logout: () => void
   isAuthenticated: boolean
@@ -80,9 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const beginLogin = useCallback(async (username: string, password: string) => {
     setState((s) => ({ ...s, loading: true }))
     try {
-      const res = await authApi.login({ username, password })
+      await authApi.login({ username, password })
       setState((s) => ({ ...s, pending: { username, password } }))
-      return { otp: res.otp }
     } finally {
       setState((s) => ({ ...s, loading: false }))
     }

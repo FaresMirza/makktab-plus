@@ -26,9 +26,8 @@ export function ForgotPasswordPage() {
     }
     setLoading(true)
     try {
-      const res = await forgotPassword(username)
+      await forgotPassword(username)
       toast.success('تم إرسال رمز التحقق')
-      if (res.otp) toast.message(`رمز التحقق (تطوير): ${res.otp}`)
       setStep('reset')
     } catch (err) {
       toast.error(getApiErrorMessage(err))

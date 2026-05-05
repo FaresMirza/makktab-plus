@@ -31,9 +31,8 @@ export function ActivatePage() {
     }
     setLoading(true)
     try {
-      const res = await resendFirstLoginOtp(username)
+      await resendFirstLoginOtp(username)
       toast.success('تم إرسال رمز التفعيل إلى بريدك')
-      if (res.otp) toast.message(`الرمز (تطوير): ${res.otp}`)
       setStep('finish')
     } catch (err) {
       toast.error(getApiErrorMessage(err))
