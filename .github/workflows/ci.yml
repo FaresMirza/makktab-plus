@@ -124,5 +124,9 @@ jobs:
             docker pull ghcr.io/${{ env.BACKEND_IMAGE }}:latest
             docker pull ghcr.io/${{ env.FRONTEND_IMAGE }}:latest
 
-            # Apply new stack — compose recreates only services whose config changed
+            # Apply new stack. Force-recreate api+frontend so freshly-pulled
+            # image digests actually replace the running containers (compose
+            # doesn't re-roll on its own when only the digest behind :latest
+            # changes). db + traefik are left running.
             docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --force-recreate api frontend
