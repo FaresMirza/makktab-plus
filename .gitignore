@@ -42,6 +42,8 @@ prisma/src/generated/
 *.temp
 .cache/
 
+# Claude Code
+.claude/
 # User uploads (keep folder structure, ignore contents)
 uploads/projects/*
 !uploads/projects/.gitkeep
