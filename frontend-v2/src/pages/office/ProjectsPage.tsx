@@ -30,6 +30,7 @@ const emptyForm: CreateProjectPayload = {
 
 export function OfficeProjectsPage() {
   const { user } = useAuth()
+  const canManage = user?.role === 'office_owner' || user?.role === 'super_admin'
   const qc = useQueryClient()
   const projects = useQuery({ queryKey: ['projects'], queryFn: () => listProjects() })
   const users = useQuery({ queryKey: ['users'], queryFn: () => listUsers() })
@@ -67,17 +68,19 @@ export function OfficeProjectsPage() {
     <div>
       <PageHeader
         title="المشاريع"
-        description="إدارة مشاريع المكتب"
+        description={canManage ? 'إدارة مشاريع المكتب' : 'قائمة مشاريع مكتبك'}
         actions={
-          <Button
-            onClick={() => {
-              setForm({ ...emptyForm, projectManagerUserId: user?.sub || '' })
-              setOpen(true)
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            مشروع جديد
-          </Button>
+          canManage && (
+            <Button
+              onClick={() => {
+                setForm({ ...emptyForm, projectManagerUserId: user?.sub || '' })
+                setOpen(true)
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              مشروع جديد
+            </Button>
+          )
         }
       />
 
@@ -95,7 +98,7 @@ export function OfficeProjectsPage() {
               <TH>المدير</TH>
               <TH>الحالة</TH>
               <TH>التواريخ</TH>
-              <TH className="text-left">إجراءات</TH>
+              {canManage && <TH className="text-left">إجراءات</TH>}
             </TR>
           </THead>
           <TBody>
@@ -124,11 +127,13 @@ export function OfficeProjectsPage() {
                 <TD className="text-xs text-muted">
                   {formatDate(p.startDate)} → {formatDate(p.endDate)}
                 </TD>
-                <TD className="text-left">
-                  <Button size="sm" variant="danger" onClick={() => setConfirmDelete(p.publicId)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TD>
+                {canManage && (
+                  <TD className="text-left">
+                    <Button size="sm" variant="danger" onClick={() => setConfirmDelete(p.publicId)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TD>
+                )}
               </TR>
             ))}
           </TBody>

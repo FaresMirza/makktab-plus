@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { createUser, deactivateUser, listUsers, type CreateUserPayload } from '@/api/users'
+import { useAuth } from '@/auth/AuthContext'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
@@ -21,6 +22,8 @@ const empty: CreateUserPayload = {
 }
 
 export function OfficeUsersPage() {
+  const { user } = useAuth()
+  const canManage = user?.role === 'office_owner' || user?.role === 'super_admin'
   const qc = useQueryClient()
   const users = useQuery({ queryKey: ['users'], queryFn: () => listUsers() })
   const [open, setOpen] = useState(false)
@@ -54,12 +57,14 @@ export function OfficeUsersPage() {
     <div>
       <PageHeader
         title="الموظفون"
-        description="إدارة فريق العمل في المكتب"
+        description={canManage ? 'إدارة فريق العمل في المكتب' : 'قائمة فريق العمل في مكتبك'}
         actions={
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="h-4 w-4" />
-            إضافة موظف
-          </Button>
+          canManage && (
+            <Button onClick={() => setOpen(true)}>
+              <Plus className="h-4 w-4" />
+              إضافة موظف
+            </Button>
+          )
         }
       />
 
@@ -71,12 +76,12 @@ export function OfficeUsersPage() {
             <TH>البريد</TH>
             <TH>الهاتف</TH>
             <TH>الحالة</TH>
-            <TH className="text-left">إجراءات</TH>
+            {canManage && <TH className="text-left">إجراءات</TH>}
           </TR>
         </THead>
         <TBody>
           {list.length === 0 ? (
-            <EmptyRow colSpan={6} />
+            <EmptyRow colSpan={canManage ? 6 : 5} />
           ) : (
             list.map((u) => (
               <TR key={u.publicId}>
@@ -97,11 +102,19 @@ export function OfficeUsersPage() {
                     {u.status}
                   </Badge>
                 </TD>
-                <TD className="text-left">
-                  <Button size="sm" variant="danger" onClick={() => deactivate.mutate(u.publicId)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TD>
+                {canManage && (
+                  <TD className="text-left">
+                    {u.publicId !== user?.sub && (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => deactivate.mutate(u.publicId)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </TD>
+                )}
               </TR>
             ))
           )}

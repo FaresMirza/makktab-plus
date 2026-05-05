@@ -62,6 +62,7 @@ const emptyTask: NewTaskForm = {
 export function OfficeProjectDetailPage() {
   const { publicId } = useParams<{ publicId: string }>()
   const { user } = useAuth()
+  const canManage = user?.role === 'office_owner' || user?.role === 'super_admin'
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -161,7 +162,7 @@ export function OfficeProjectDetailPage() {
         title={p.name}
         description={p.description}
         actions={
-          p.status !== 'COMPLETED' && (
+          canManage && p.status !== 'COMPLETED' && (
             <Button onClick={() => completeProject.mutate()} loading={completeProject.isPending}>
               <CheckCircle2 className="h-4 w-4" />
               إنهاء المشروع
@@ -198,16 +199,18 @@ export function OfficeProjectDetailPage() {
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>المهام</CardTitle>
-          <Button
-            size="sm"
-            onClick={() => {
-              setTaskForm(emptyTask)
-              setTaskOpen(true)
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            مهمة جديدة
-          </Button>
+          {canManage && (
+            <Button
+              size="sm"
+              onClick={() => {
+                setTaskForm(emptyTask)
+                setTaskOpen(true)
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              مهمة جديدة
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <Table>
@@ -217,43 +220,54 @@ export function OfficeProjectDetailPage() {
                 <TH>المسؤول</TH>
                 <TH>الحالة</TH>
                 <TH>الاستحقاق</TH>
-                <TH className="text-left">إجراءات</TH>
+                {canManage && <TH className="text-left">إجراءات</TH>}
               </TR>
             </THead>
             <TBody>
               {taskList.length === 0 ? (
-                <EmptyRow colSpan={5} label="لا توجد مهام" />
+                <EmptyRow colSpan={canManage ? 5 : 4} label="لا توجد مهام" />
               ) : (
-                taskList.map((t) => (
-                  <TR key={t.publicId}>
-                    <TD className="font-medium">{t.title}</TD>
-                    <TD>{t.assignedToUser?.fullName || '—'}</TD>
-                    <TD>
-                      <Select
-                        value={t.status}
-                        onChange={(e) =>
-                          updateT.mutate({
-                            id: t.publicId,
-                            payload: { status: e.target.value as TaskStatus },
-                          })
-                        }
-                        className="h-8 text-xs w-32"
-                      >
-                        {(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as TaskStatus[]).map((s) => (
-                          <option key={s} value={s}>
-                            {TASK_STATUS_LABEL[s]}
-                          </option>
-                        ))}
-                      </Select>
-                    </TD>
-                    <TD className="text-xs text-muted">{formatDate(t.dueDate)}</TD>
-                    <TD className="text-left">
-                      <Button size="sm" variant="danger" onClick={() => cancelT.mutate(t.publicId)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </TD>
-                  </TR>
-                ))
+                taskList.map((t) => {
+                  const isMine =
+                    t.assignedToUser?.publicId === user?.sub ||
+                    t.assignedToUserId === user?.sub
+                  // An employee can only edit the status of tasks assigned to
+                  // them; managers/owners can edit anything.
+                  const canEditStatus = canManage || isMine
+                  return (
+                    <TR key={t.publicId}>
+                      <TD className="font-medium">{t.title}</TD>
+                      <TD>{t.assignedToUser?.fullName || '—'}</TD>
+                      <TD>
+                        <Select
+                          value={t.status}
+                          disabled={!canEditStatus}
+                          onChange={(e) =>
+                            updateT.mutate({
+                              id: t.publicId,
+                              payload: { status: e.target.value as TaskStatus },
+                            })
+                          }
+                          className="h-8 text-xs w-32"
+                        >
+                          {(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as TaskStatus[]).map((s) => (
+                            <option key={s} value={s}>
+                              {TASK_STATUS_LABEL[s]}
+                            </option>
+                          ))}
+                        </Select>
+                      </TD>
+                      <TD className="text-xs text-muted">{formatDate(t.dueDate)}</TD>
+                      {canManage && (
+                        <TD className="text-left">
+                          <Button size="sm" variant="danger" onClick={() => cancelT.mutate(t.publicId)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TD>
+                      )}
+                    </TR>
+                  )
+                })
               )}
             </TBody>
           </Table>
@@ -264,22 +278,24 @@ export function OfficeProjectDetailPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>الملفات</CardTitle>
-          <div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0]
-                if (f) upload.mutate(f)
-                if (fileInputRef.current) fileInputRef.current.value = ''
-              }}
-            />
-            <Button size="sm" onClick={() => fileInputRef.current?.click()} loading={upload.isPending}>
-              {upload.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-              رفع ملف
-            </Button>
-          </div>
+          {canManage && (
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0]
+                  if (f) upload.mutate(f)
+                  if (fileInputRef.current) fileInputRef.current.value = ''
+                }}
+              />
+              <Button size="sm" onClick={() => fileInputRef.current?.click()} loading={upload.isPending}>
+                {upload.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                رفع ملف
+              </Button>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           <Table>
@@ -312,9 +328,11 @@ export function OfficeProjectDetailPage() {
                         >
                           <Download className="h-4 w-4" />
                         </a>
-                        <Button size="sm" variant="danger" onClick={() => removeFile.mutate(f.publicId)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {canManage && (
+                          <Button size="sm" variant="danger" onClick={() => removeFile.mutate(f.publicId)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </TD>
                   </TR>

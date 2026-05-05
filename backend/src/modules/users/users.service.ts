@@ -83,7 +83,9 @@ export class UsersService {
       passwordHash,
       // If the caller didn't pass a password, this is a link-activation user.
       status: rest.status || (password ? UserStatus.ACTIVE : UserStatus.PENDING),
-      roles: rest.roles || [],
+      // Default newly-created office members to 'employee' so role-based
+      // checks don't fall through to a no-role bucket.
+      roles: rest.roles && rest.roles.length > 0 ? rest.roles : ['employee'],
       activationTokenHash: password ? null : activationTokenHash,
       activationTokenExpiresAt: password ? null : activationTokenExpiresAt,
     };
