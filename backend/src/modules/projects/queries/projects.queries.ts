@@ -119,6 +119,27 @@ export class ProjectsRepository {
         });
     }
 
+    async findByOfficeFilteredPaginated(
+        officeId: number,
+        filters: { status?: ProjectStatus; projectManagerUserId?: number },
+        skip: number,
+        take: number,
+    ): Promise<[any[], number]> {
+        const where: Prisma.ProjectWhereInput = { officeId };
+        if (filters.status) where.status = filters.status;
+        if (filters.projectManagerUserId) where.projectManagerUserId = filters.projectManagerUserId;
+        return this.prisma.$transaction([
+            this.prisma.project.findMany({
+                where,
+                include: this.projectListInclude,
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take,
+            }),
+            this.prisma.project.count({ where }),
+        ]);
+    }
+
     async findByStatus(status: ProjectStatus) {
         return this.prisma.project.findMany({
             where: { status },

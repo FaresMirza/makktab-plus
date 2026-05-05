@@ -20,6 +20,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../../common/dto/pagination.dto';
 
 @Controller('projects')
 @UsePipes(new ValidationPipe({ 
@@ -74,6 +75,7 @@ export class ProjectsController {
   @Get()
   async findAll(
     @Req() req: any,
+    @Query() paging: PaginationQueryDto,
     @Query('status') status?: ProjectStatus,
     @Query('projectManagerUserId') projectManagerUserId?: string,
   ) {
@@ -82,6 +84,7 @@ export class ProjectsController {
       userPublicId,
       status,
       projectManagerUserId,
+      paging,
     );
   }
 

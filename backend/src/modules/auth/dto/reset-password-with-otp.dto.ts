@@ -1,10 +1,9 @@
-
-import { IsString, IsNotEmpty, MinLength, IsEmail } from 'class-validator';
-
-// Actually, standard class-validator match is not built-in usually, need custom. I will skip custom decorator for now and validate in service to be safe and avoid extra files unless I see a decorators folder.
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
 export class ResetPasswordWithOtpDto {
-    @IsEmail()
+    // Accepts either a username or an email — the service layer
+    // handles both via findByUsername || findByEmail.
+    @IsString()
     @IsNotEmpty()
     username: string;
 

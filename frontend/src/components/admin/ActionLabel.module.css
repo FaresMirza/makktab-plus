@@ -1,8 +1,0 @@
-.label {
-  font-weight: 600;
-  transition: transform 0.2s ease;
-}
-
-.label:hover {
-  transform: scale(1.02);
-}

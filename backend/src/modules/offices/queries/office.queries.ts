@@ -198,6 +198,37 @@ export class OfficesRepository {
         });
     }
 
+    /**
+     * AND-combined paginated filter. Returns [rows, total].
+     * Always excludes admin-owned offices.
+     */
+    async findFilteredPaginated(
+        filters: { status?: OfficeStatus; officeId?: number },
+        skip: number,
+        take: number,
+    ): Promise<[any[], number]> {
+        const where: Prisma.OfficeWhereInput = {
+            NOT: {
+                owner: {
+                    roles: { hasSome: ['admin', 'super_admin'] },
+                },
+            },
+        };
+        if (filters.status) where.status = filters.status;
+        if (filters.officeId !== undefined) where.id = filters.officeId;
+
+        return this.prisma.$transaction([
+            this.prisma.office.findMany({
+                where,
+                include: this.officeListInclude,
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take,
+            }),
+            this.prisma.office.count({ where }),
+        ]);
+    }
+
     async update(id: number, data: Prisma.OfficeUncheckedUpdateInput) {
         try {
             return this.prisma.office.update({

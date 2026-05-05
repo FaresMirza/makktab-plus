@@ -1,111 +1,91 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Param, 
-  Patch, 
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
   Delete,
   Query,
   HttpCode,
   HttpStatus,
   ValidationPipe,
-  UsePipes
+  UsePipes,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatus } from 'prisma/src/generated/prisma-client/client';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../../common/dto/pagination.dto';
+import { JwtUser } from '../../common/helpers/tenant.helper';
 
 @Controller('tasks')
-@UsePipes(new ValidationPipe({ 
-  whitelist: true, 
+@UseGuards(JwtAuthGuard)
+@UsePipes(new ValidationPipe({
+  whitelist: true,
   forbidNonWhitelisted: true,
-  transform: true 
+  transform: true,
 }))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  /**
-   * Create a new task
-   * POST /tasks
-   */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(@Body() createTaskDto: CreateTaskDto, @Req() req: any) {
+    return this.tasksService.create(createTaskDto, req.user as JwtUser);
   }
 
   /**
-   * Get all tasks with optional filters
-   * GET /tasks?projectId=xxx&status=xxx&assignedToUserId=xxx&createdByUserId=xxx
+   * Get tasks (paginated, tenant-scoped). All query filters AND-combine.
+   * GET /tasks?projectId=&status=&assignedToUserId=&createdByUserId=&page=&limit=
    */
   @Get()
   findAll(
+    @Req() req: any,
+    @Query() paging: PaginationQueryDto,
     @Query('projectId') projectId?: string,
     @Query('status') status?: TaskStatus,
     @Query('assignedToUserId') assignedToUserId?: string,
     @Query('createdByUserId') createdByUserId?: string,
   ) {
-    if (projectId) {
-      return this.tasksService.findByProject(projectId);
-    }
-    if (status) {
-      return this.tasksService.findByStatus(status);
-    }
-    if (assignedToUserId) {
-      return this.tasksService.findByAssignee(assignedToUserId);
-    }
-    if (createdByUserId) {
-      return this.tasksService.findByCreator(createdByUserId);
-    }
-    return this.tasksService.findAll();
+    return this.tasksService.findFiltered(
+      { projectId, status, assignedToUserId, createdByUserId },
+      req.user as JwtUser,
+      paging,
+    );
   }
 
-  /**
-   * Get overdue tasks
-   * GET /tasks/overdue
-   */
   @Get('overdue')
-  findOverdue() {
-    return this.tasksService.findOverdue();
+  findOverdue(@Req() req: any, @Query() paging: PaginationQueryDto) {
+    return this.tasksService.findOverdue(req.user as JwtUser, paging);
   }
 
-  /**
-   * Get a specific task by ID
-   * GET /tasks/:id
-   */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(id);
+  findOne(@Param('id') id: string, @Req() req: any) {
+    return this.tasksService.findOne(id, req.user as JwtUser);
   }
 
-  /**
-   * Update an existing task
-   * PATCH /tasks/:id
-   */
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(id, updateTaskDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+    @Req() req: any,
+  ) {
+    return this.tasksService.update(id, updateTaskDto, req.user as JwtUser);
   }
 
-  /**
-   * Soft delete a task (cancel)
-   * DELETE /tasks/:id
-   */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(id, false);
+  remove(@Param('id') id: string, @Req() req: any) {
+    return this.tasksService.remove(id, req.user as JwtUser, false);
   }
 
-  /**
-   * Hard delete a task (permanent)
-   * DELETE /tasks/:id/permanent
-   */
   @Delete(':id/permanent')
   @HttpCode(HttpStatus.OK)
-  removePermanent(@Param('id') id: string) {
-    return this.tasksService.remove(id, true);
+  removePermanent(@Param('id') id: string, @Req() req: any) {
+    return this.tasksService.remove(id, req.user as JwtUser, true);
   }
 }

@@ -17,6 +17,7 @@ import { AdminsModule } from './modules/admins/admins.module';
 import { EmailModule } from './modules/email/email.module';
 import { EnhancedThrottlerGuard } from './common/guards/custom-throttler.guard';
 import { ThrottlerStorageService } from './common/storage/throttler-storage.service';
+import { CommonModule } from './common/common.module';
 
 
 @Module({
@@ -36,6 +37,7 @@ import { ThrottlerStorageService } from './common/storage/throttler-storage.serv
     }),
     EmailModule,
     PrismaModule,
+    CommonModule,
     AuthModule,
     UsersModule,
     OfficesModule,

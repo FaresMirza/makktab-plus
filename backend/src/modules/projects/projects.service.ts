@@ -5,6 +5,7 @@ import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
 import { ProjectsHelper } from './helpers/projects.helper';
 import { ProjectsRepository } from './queries/projects.queries';
 import { UsersRepository } from '../users/queries/users.queries';
+import { PaginationQueryDto, makePaginated, pagingArgs } from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -321,61 +322,40 @@ export class ProjectsService {
   }
 
   /**
-   * Get all projects for the authenticated user's office with optional filters
+   * Get projects for the authenticated user's office.
+   * Tenant-scoped, AND-combined filters, paginated.
    */
   async findAllForAuthenticatedUser(
     userPublicId: string,
     status?: ProjectStatus,
     projectManagerUserId?: string,
+    paging?: PaginationQueryDto,
   ) {
     try {
-      this.logger.debug(`Fetching projects for user: ${userPublicId}`);
-      console.log(`[GET /projects] Fetching projects for user: ${userPublicId}, filters: status=${status}, projectManager=${projectManagerUserId}`);
-
-      // Step 1: Get user's office ID
-      console.log(`[GET /projects] Step 1: Getting user office ID`);
       const userOfficeId = await this.getUserOfficeId(userPublicId);
-      console.log(`[GET /projects] Step 1: User office ID = ${userOfficeId}`);
 
-      // Step 2: Query projects based on filters
-      console.log(`[GET /projects] Step 2: Querying projects from database`);
-
-      if (status) {
-        console.log(`[GET /projects] Filtering by status: ${status}`);
-        const projects = await this.projectsRepository.findByOfficeAndStatus(userOfficeId, status);
-        console.log(`[GET /projects] Found ${projects.length} projects with status ${status}`);
-        return projects;
-      }
-
+      const filters: { status?: ProjectStatus; projectManagerUserId?: number } = {};
+      if (status) filters.status = status;
       if (projectManagerUserId) {
-        console.log(`[GET /projects] Filtering by project manager: ${projectManagerUserId}`);
-        const projectManager = await this.projectsHelper.validateUserExists(
-          projectManagerUserId,
-          'Project manager',
-        );
-        console.log(`[GET /projects] Project manager ID: ${projectManager.id}`);
-        const projects = await this.projectsRepository.findByOfficeAndProjectManager(
-          userOfficeId,
-          projectManager.id,
-        );
-        console.log(`[GET /projects] Found ${projects.length} projects managed by ${projectManager.id}`);
-        return projects;
+        const pm = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+        filters.projectManagerUserId = pm.id;
       }
 
-      console.log(`[GET /projects] Fetching all projects for office ${userOfficeId}`);
-      const projects = await this.projectsRepository.findByOffice(userOfficeId);
-      console.log(`[GET /projects] Found ${projects.length} total projects`);
-      return projects;
+      const { skip, take } = pagingArgs(paging);
+      const [rows, total] = await this.projectsRepository.findByOfficeFilteredPaginated(
+        userOfficeId,
+        filters,
+        skip,
+        take,
+      );
+      return makePaginated(rows, total, paging);
     } catch (error) {
-      console.error(`[GET /projects] Error fetching projects for user ${userPublicId}:`, error);
       this.logger.error(`Error fetching projects for user ${userPublicId}:`, error);
-
       if (error instanceof NotFoundException || error instanceof ForbiddenException) {
         throw error;
       }
-
       throw new InternalServerErrorException(
-        `Failed to fetch projects: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to fetch projects: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
   }

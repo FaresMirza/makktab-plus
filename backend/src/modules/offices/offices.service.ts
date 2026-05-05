@@ -1,104 +1,80 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
 import { OfficesHelper } from './helpers/offices.helper';
 import { OfficesRepository } from './queries/office.queries';
 import { OfficeStatus } from 'prisma/src/generated/prisma-client/client';
+import { JwtUser, TenantHelper } from '../../common/helpers/tenant.helper';
+import { PaginationQueryDto, makePaginated, pagingArgs } from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class OfficesService {
   constructor(
     private readonly officesHelper: OfficesHelper,
     private readonly officesRepository: OfficesRepository,
+    private readonly tenantHelper: TenantHelper,
   ) { }
 
-  /**
-   * Create a new office
-   * - Validates that owner user exists (by publicId)
-   * - Validates that user doesn't already own an office
-   * - Resolves publicId → internal id for DB creation
-   */
   async create(createOfficeDto: CreateOfficeDto) {
     const { ownerUserId, ...rest } = createOfficeDto;
-
-    // Validates user exists AND doesn't own an office, returns the user entity
     const user = await this.officesHelper.validateUserDoesNotOwnOffice(ownerUserId);
-
-    // Create office using the internal user id
-    const office = await this.officesRepository.create({
+    return this.officesRepository.create({
       ...rest,
       ownerUserId: user.id,
       status: rest.status || OfficeStatus.ACTIVE,
     });
-
-    return office;
   }
 
   /**
-   * Get all offices
-   * - Includes owner information
-   * - Includes user and project counts
+   * Paginated list, tenant-scoped (non-admin sees only their own office).
    */
-  async findAll() {
-    return this.officesRepository.findAll();
+  async findAll(user: JwtUser, paging?: PaginationQueryDto) {
+    const officeId = await this.tenantHelper.tryResolveOfficeId(user);
+    const { skip, take } = pagingArgs(paging);
+    const [rows, total] = await this.officesRepository.findFilteredPaginated(
+      { officeId: officeId ?? undefined },
+      skip,
+      take,
+    );
+    return makePaginated(rows, total, paging);
   }
 
-  /**
-   * Get a specific office by publicId
-   * - Includes list of users
-   * - Includes list of projects
-   */
-  async findOne(publicId: string) {
+  async findOne(publicId: string, user: JwtUser) {
     const office = await this.officesRepository.findByPublicId(publicId);
-
     if (!office) {
       throw new NotFoundException(`Office with ID ${publicId} not found`);
     }
-
+    await this.tenantHelper.assertSameOffice(user, office.id);
     return office;
   }
 
-  /**
-   * Get office by owner user publicId
-   * - Returns the office owned by a specific user
-   */
-  async findByOwner(ownerUserPublicId: string) {
-    const user = await this.officesHelper.validateUserExists(ownerUserPublicId);
-    const office = await this.officesRepository.findByOwner(user.id);
-
+  async findByOwner(ownerUserPublicId: string, user: JwtUser) {
+    const owner = await this.officesHelper.validateUserExists(ownerUserPublicId);
+    const office = await this.officesRepository.findByOwner(owner.id);
     if (!office) {
       throw new NotFoundException(`No office found for user with ID ${ownerUserPublicId}`);
     }
-
+    await this.tenantHelper.assertSameOffice(user, office.id);
     return office;
   }
 
-  /**
-   * Get offices by status
-   * - Returns all offices with a specific status
-   */
-  async findByStatus(status: any) {
-    return this.officesRepository.findByStatus(status);
+  async findByStatus(status: OfficeStatus, user: JwtUser, paging?: PaginationQueryDto) {
+    const officeId = await this.tenantHelper.tryResolveOfficeId(user);
+    const { skip, take } = pagingArgs(paging);
+    const [rows, total] = await this.officesRepository.findFilteredPaginated(
+      { status, officeId: officeId ?? undefined },
+      skip,
+      take,
+    );
+    return makePaginated(rows, total, paging);
   }
 
-  /**
-   * Update an office
-   * - Accepts publicId
-   * - Can update name and status
-   * - Cannot update ownerUserId (use transfer ownership if needed)
-   */
   async update(publicId: string, updateOfficeDto: UpdateOfficeDto) {
-    // Check if office exists (by publicId), get internal entity
     const office = await this.officesHelper.validateOfficeExists(publicId);
-
-    // Build update data (only non-FK fields)
     const { ownerUserId, ...updateData } = updateOfficeDto;
-
     try {
-      const updatedOffice = await this.officesRepository.update(office.id, updateData);
-      return updatedOffice;
+      return await this.officesRepository.update(office.id, updateData);
     } catch (error: any) {
-      // Handle Prisma unique constraint violation (P2002)
       if (error.code === 'P2002') {
         throw new BadRequestException('Username or Email is already taken.');
       }
@@ -106,47 +82,31 @@ export class OfficesService {
     }
   }
 
-  /**
-   * Delete/Suspend an office
-   * - Soft delete: Sets status to SUSPENDED
-   * - Hard delete: Permanently removes office (use with caution)
-   */
   async remove(publicId: string, hardDelete = false) {
-    // Check if office exists (by publicId)
     const officeSimple = await this.officesHelper.validateOfficeExists(publicId);
-
     const office = await this.officesRepository.findByIdWithCounts(officeSimple.id);
     if (!office) {
       throw new NotFoundException(`Office with ID ${publicId} not found`);
     }
-
     if (hardDelete) {
-      // Check if office has related records
       if (office._count.users > 0 || office._count.projects > 0) {
         throw new ConflictException(
           'Cannot permanently delete office with existing users or projects. Please remove them first.',
         );
       }
-
       await this.officesRepository.delete(office.id);
       return { message: 'Office permanently deleted' };
-    } else {
-      return this.officesRepository.softDelete(office.id);
     }
+    return this.officesRepository.softDelete(office.id);
   }
 
-  /**
-   * Get office statistics
-   * - Returns counts of users, projects, and other metrics
-   */
-  async getStatistics(publicId: string) {
+  async getStatistics(publicId: string, user: JwtUser) {
     const officeSimple = await this.officesHelper.validateOfficeExists(publicId);
+    await this.tenantHelper.assertSameOffice(user, officeSimple.id);
     const office = await this.officesRepository.findByIdWithStatistics(officeSimple.id);
-
     if (!office) {
       throw new NotFoundException(`Office with ID ${publicId} not found`);
     }
-
     return this.officesHelper.formatStatistics(office);
   }
 }

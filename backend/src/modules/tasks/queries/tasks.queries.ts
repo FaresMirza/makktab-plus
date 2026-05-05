@@ -93,6 +93,106 @@ export class TasksRepository {
         });
     }
 
+    /**
+     * Build a where-clause from optional filters + optional office scope.
+     * All filters are AND-combined.
+     */
+    private buildWhere(filters: {
+        projectId?: number;
+        status?: TaskStatus;
+        assignedToUserId?: number;
+        createdByUserId?: number;
+        officeId?: number;
+    }): Prisma.TaskWhereInput {
+        const where: Prisma.TaskWhereInput = {};
+        if (filters.projectId !== undefined) where.projectId = filters.projectId;
+        if (filters.status !== undefined) where.status = filters.status;
+        if (filters.assignedToUserId !== undefined)
+            where.assignedToUserId = filters.assignedToUserId;
+        if (filters.createdByUserId !== undefined)
+            where.createdByUserId = filters.createdByUserId;
+        if (filters.officeId !== undefined) {
+            where.project = { officeId: filters.officeId };
+        }
+        return where;
+    }
+
+    async findFiltered(filters: {
+        projectId?: number;
+        status?: TaskStatus;
+        assignedToUserId?: number;
+        createdByUserId?: number;
+        officeId?: number;
+    }) {
+        return this.prisma.task.findMany({
+            where: this.buildWhere(filters),
+            include: this.taskListInclude,
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    /**
+     * Paginated variant of findFiltered. Returns a [rows, total] tuple.
+     */
+    async findFilteredPaginated(
+        filters: {
+            projectId?: number;
+            status?: TaskStatus;
+            assignedToUserId?: number;
+            createdByUserId?: number;
+            officeId?: number;
+        },
+        skip: number,
+        take: number,
+    ): Promise<[any[], number]> {
+        const where = this.buildWhere(filters);
+        return this.prisma.$transaction([
+            this.prisma.task.findMany({
+                where,
+                include: this.taskListInclude,
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take,
+            }),
+            this.prisma.task.count({ where }),
+        ]);
+    }
+
+    async findOverduePaginated(
+        officeId: number | null,
+        skip: number,
+        take: number,
+    ): Promise<[any[], number]> {
+        const where: Prisma.TaskWhereInput = {
+            dueDate: { lt: new Date() },
+            status: { not: TaskStatus.DONE },
+        };
+        if (officeId !== null) {
+            where.project = { officeId };
+        }
+        return this.prisma.$transaction([
+            this.prisma.task.findMany({
+                where,
+                include: {
+                    project: {
+                        select: {
+                            id: true,
+                            publicId: true,
+                            name: true,
+                            status: true,
+                        },
+                    },
+                    createdBy: { select: { id: true, publicId: true, fullName: true, email: true } },
+                    assignedTo: { select: { id: true, publicId: true, fullName: true, email: true } },
+                },
+                orderBy: { dueDate: 'asc' },
+                skip,
+                take,
+            }),
+            this.prisma.task.count({ where }),
+        ]);
+    }
+
     async findById(id: number) {
         return this.prisma.task.findUnique({
             where: { id },

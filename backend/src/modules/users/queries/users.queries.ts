@@ -140,6 +140,45 @@ export class UsersRepository {
         });
     }
 
+    /**
+     * AND-combined filter + paginated. Returns [rows, total].
+     * Office scoping matches owners or memberships.
+     */
+    async findFilteredPaginated(
+        filters: { officeId?: number; role?: string; status?: UserStatus },
+        skip: number,
+        take: number,
+    ): Promise<[any[], number]> {
+        const where: Prisma.UserWhereInput = {};
+        const ands: Prisma.UserWhereInput[] = [];
+        if (filters.officeId !== undefined) {
+            ands.push({
+                OR: [
+                    { offices: { some: { id: filters.officeId } } },
+                    { ownedOffice: { id: filters.officeId } },
+                ],
+            });
+        }
+        if (filters.role) {
+            ands.push({ roles: { has: filters.role } });
+        }
+        if (filters.status) {
+            ands.push({ status: filters.status });
+        }
+        if (ands.length > 0) where.AND = ands;
+
+        return this.prisma.$transaction([
+            this.prisma.user.findMany({
+                where,
+                include: this.userListInclude,
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take,
+            }),
+            this.prisma.user.count({ where }),
+        ]);
+    }
+
     async findByRole(role: string) {
         return this.prisma.user.findMany({
             where: {
