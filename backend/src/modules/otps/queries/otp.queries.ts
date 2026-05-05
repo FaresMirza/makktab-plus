@@ -14,7 +14,7 @@ export class OtpRepository {
      */
     async createOtp(data: {
         userId: number;
-        officeId: number;
+        officeId: number | null;
         email: string;
         purpose: OtpPurpose;
         channel: string;
@@ -28,7 +28,7 @@ export class OtpRepository {
         return this.prisma.otpCode.create({
             data: {
                 userId: data.userId,
-                officeId: data.officeId,
+                officeId: data.officeId ?? undefined,
                 email: data.email,
                 purpose: data.purpose,
                 channel: data.channel as any,

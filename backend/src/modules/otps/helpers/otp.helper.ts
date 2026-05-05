@@ -305,31 +305,20 @@ export class OtpHelper {
     }
 
     /**
-     * Get the office internal ID from the user entity.
-     * Uses fallback database query for platform admins who do not own an office.
+     * Resolve the office internal ID for an OTP record.
+     * Platform admins / super_admins legitimately have no office; for them
+     * we return null and the OtpCode is stored without an officeId
+     * (the column is nullable for exactly this reason).
      */
-    private async getUserOfficeId(user: any): Promise<number> {
-        if (user.roles && (user.roles.includes('admin') || user.roles.includes('super_admin'))) {
-            // Find a fallback office ID belonging to any super_admin/admin
-            const fallbackOffice = await this.prisma.office.findFirst({
-                where: {
-                    owner: {
-                        roles: {
-                            hasSome: ['admin', 'super_admin']
-                        }
-                    }
-                },
-                select: { id: true }
-            });
-            if (fallbackOffice) {
-                return fallbackOffice.id;
-            }
-        }
+    private async getUserOfficeId(user: any): Promise<number | null> {
         if (user.ownedOffice) {
             return user.ownedOffice.id;
         }
         if (user.offices && user.offices.length > 0) {
             return user.offices[0].id;
+        }
+        if (user.roles && (user.roles.includes('admin') || user.roles.includes('super_admin'))) {
+            return null;
         }
         throw new BadRequestException('User is not associated with any office.');
     }
