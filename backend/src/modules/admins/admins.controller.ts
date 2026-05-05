@@ -342,19 +342,18 @@ export class AdminsController {
             throw new ForbiddenException('Cannot delete yourself');
         }
 
+        // Cascade-delete every record that holds a FK to this user.
+        // None of the User relations declare onDelete: Cascade in the schema,
+        // so without this we hit a P2003 FK violation and the request 500s.
         return this.prisma.$transaction([
-            this.prisma.otpCode.deleteMany({
-                where: { userId: admin.id },
-            }),
-            this.prisma.adminAuditLog.deleteMany({
-                where: { adminUserId: admin.id },
-            }),
+            this.prisma.otpCode.deleteMany({ where: { userId: admin.id } }),
+            this.prisma.adminAuditLog.deleteMany({ where: { adminUserId: admin.id } }),
+            this.prisma.authAuditLog.deleteMany({ where: { userId: admin.id } }),
+            this.prisma.projectAuditLog.deleteMany({ where: { actorUserId: admin.id } }),
+            this.prisma.taskAuditLog.deleteMany({ where: { actorUserId: admin.id } }),
             this.prisma.user.delete({
                 where: { id: admin.id },
-                select: {
-                    publicId: true,
-                    email: true,
-                }
+                select: { publicId: true, email: true },
             }),
         ]);
     }
