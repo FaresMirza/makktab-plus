@@ -5,6 +5,7 @@ import { RegistrationHelper } from './helpers/registration.helper';
 import { AUTH_MESSAGES, AUTH_CONSTANTS } from './constants/messages.constant';
 import { UsersRepository } from '../users/queries/users.queries';
 import { OtpService } from '../otps/otps.service';
+import { EmailService } from '../email/email.service';
 import { RegistrationRepository } from './queries/registration.queries';
 import { LoginDto } from './dto/login.dto';
 import { VerifyLoginOtpDto } from './dto/verify-login-otp.dto';
@@ -27,6 +28,7 @@ export class AuthService {
         private readonly otpService: OtpService,
         private readonly jwtService: JwtService,
         private readonly registrationRepository: RegistrationRepository,
+        private readonly emailService: EmailService,
     ) { }
 
     async login(loginDto: LoginDto, ip: string, userAgent: string) {
@@ -332,9 +334,26 @@ export class AuthService {
             verificationExpiresAt: expiresAt,
         });
 
-        console.log(`[Registration OTP] Email: ${dto.email}, Code: ${rawCode}`);
+        // Email the verification code to the registering user.
+        await this.emailService.send({
+            to: dto.email,
+            subject: 'رمز تحقق تسجيل المكتب — Makktab Plus',
+            text:
+                `مرحباً ${dto.ownerFullName},\n\n` +
+                `رمز التحقق الخاص بطلب تسجيل مكتبك هو: ${rawCode}\n\n` +
+                `الرمز صالح لمدة ${AUTH_CONSTANTS.OTP_EXPIRY_MINUTES} دقيقة.\n\n` +
+                `إن لم تكن قد طلبت ذلك يمكنك تجاهل هذه الرسالة.`,
+            html:
+                `<div style="font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;color:#111;line-height:1.6">` +
+                `<p>مرحباً <strong>${dto.ownerFullName}</strong>,</p>` +
+                `<p>رمز التحقق الخاص بطلب تسجيل مكتبك:</p>` +
+                `<p style="font-size:28px;font-weight:700;letter-spacing:6px;background:#0a0a0a;color:#fff;padding:14px 18px;border-radius:8px;display:inline-block">${rawCode}</p>` +
+                `<p>الرمز صالح لمدة ${AUTH_CONSTANTS.OTP_EXPIRY_MINUTES} دقيقة.</p>` +
+                `<p style="color:#666;font-size:12px">إن لم تكن قد طلبت ذلك يمكنك تجاهل هذه الرسالة.</p>` +
+                `</div>`,
+        });
 
-        return { message: AUTH_MESSAGES.REGISTRATION_SUCCESS, otp: rawCode };
+        return { message: AUTH_MESSAGES.REGISTRATION_SUCCESS };
     }
 
     async verifyRegistration(dto: VerifyRegisterDto, ip: string, userAgent: string) {
