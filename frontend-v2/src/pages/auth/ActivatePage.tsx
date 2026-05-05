@@ -1,47 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { CheckCircle2, ShieldX } from 'lucide-react'
 import { AuthShell } from '@/components/layout/AuthShell'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
-import { resendFirstLoginOtp, verifyFirstLogin } from '@/api/auth'
+import { activateAccount } from '@/api/auth'
 import { getApiErrorMessage } from '@/lib/utils'
 
 /**
- * First-login activation: a new employee/admin user receives an email
- * with a username; they enter it here, request an OTP, and set their
- * initial password to activate the account.
+ * Link-based activation. The email a new user receives has a URL like
+ * /activate?u=<publicId>&t=<rawToken>. The user lands here, picks a
+ * password, and submits — the account flips to ACTIVE and they can log in.
  */
 export function ActivatePage() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
-  const [step, setStep] = useState<'username' | 'finish'>(params.get('username') ? 'finish' : 'username')
-  const [username, setUsername] = useState(params.get('username') || '')
-  const [otp, setOtp] = useState('')
+
+  const userPublicId = params.get('u') || ''
+  const token = params.get('t') || ''
+  const linkValid = !!userPublicId && !!token
+
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
 
-  const sendOtp = async () => {
-    if (!username) {
-      toast.error('أدخل اسم المستخدم أو البريد')
-      return
+  // Bail early if the URL is malformed
+  useEffect(() => {
+    if (!linkValid) {
+      // No toast — the page itself shows a clear message.
     }
-    setLoading(true)
-    try {
-      await resendFirstLoginOtp(username)
-      toast.success('تم إرسال رمز التفعيل إلى بريدك')
-      setStep('finish')
-    } catch (err) {
-      toast.error(getApiErrorMessage(err))
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [linkValid])
 
-  const submitFinish = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (newPassword.length < 8) {
       toast.error('كلمة المرور يجب أن تكون 8 أحرف على الأقل')
@@ -53,14 +47,61 @@ export function ActivatePage() {
     }
     setLoading(true)
     try {
-      await verifyFirstLogin({ username, otp, newPassword, confirmPassword })
-      toast.success('تم تفعيل حسابك — قم بتسجيل الدخول')
-      navigate('/login')
+      await activateAccount({ userPublicId, token, newPassword })
+      setDone(true)
+      toast.success('تم تفعيل الحساب — يمكنك تسجيل الدخول الآن')
     } catch (err) {
-      toast.error(getApiErrorMessage(err))
+      toast.error(getApiErrorMessage(err, 'الرابط غير صالح أو منتهي الصلاحية'))
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!linkValid) {
+    return (
+      <AuthShell>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2 text-amber-400">
+              <ShieldX className="h-5 w-5" />
+              <CardTitle>رابط غير صالح</CardTitle>
+            </div>
+            <CardDescription>
+              الرابط الذي وصلتك ناقص أو غير سليم. تأكد من فتح الرابط كاملاً
+              من بريدك الإلكتروني، أو اطلب من مكتبك إعادة إرسال دعوة التفعيل.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full" onClick={() => navigate('/login')}>
+              العودة لتسجيل الدخول
+            </Button>
+          </CardContent>
+        </Card>
+      </AuthShell>
+    )
+  }
+
+  if (done) {
+    return (
+      <AuthShell>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2 text-emerald-400">
+              <CheckCircle2 className="h-5 w-5" />
+              <CardTitle>تم التفعيل بنجاح</CardTitle>
+            </div>
+            <CardDescription>
+              يمكنك الآن تسجيل الدخول باستخدام بريدك أو اسم المستخدم وكلمة المرور التي اخترتها.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full" onClick={() => navigate('/login')}>
+              تسجيل الدخول
+            </Button>
+          </CardContent>
+        </Card>
+      </AuthShell>
+    )
   }
 
   return (
@@ -69,68 +110,39 @@ export function ActivatePage() {
         <CardHeader>
           <CardTitle>تفعيل الحساب</CardTitle>
           <CardDescription>
-            {step === 'username'
-              ? 'أدخل اسم المستخدم لإرسال رمز التفعيل'
-              : 'أدخل الرمز واختر كلمة المرور'}
+            اختر كلمة مرور قوية لتفعيل حسابك (8 أحرف على الأقل).
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {step === 'username' ? (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="username">اسم المستخدم أو البريد</Label>
-                <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoFocus
-                />
-              </div>
-              <Button onClick={sendOtp} loading={loading} className="w-full">
-                إرسال رمز التفعيل
-              </Button>
-              <div className="text-center text-sm pt-2">
-                <Link to="/login" className="text-muted hover:text-accent">
-                  العودة لتسجيل الدخول
-                </Link>
-              </div>
+          <form onSubmit={submit} className="space-y-4">
+            <div>
+              <Label htmlFor="newPassword">كلمة المرور</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                autoFocus
+              />
             </div>
-          ) : (
-            <form onSubmit={submitFinish} className="space-y-4">
-              <div>
-                <Label htmlFor="otp">رمز التفعيل</Label>
-                <Input
-                  id="otp"
-                  inputMode="numeric"
-                  maxLength={6}
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  className="text-center tracking-[0.5em] text-lg"
-                />
-              </div>
-              <div>
-                <Label htmlFor="newPassword">كلمة المرور</Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" loading={loading} className="w-full">
-                تفعيل الحساب
-              </Button>
-            </form>
-          )}
+            <div>
+              <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <Button type="submit" loading={loading} className="w-full">
+              تفعيل الحساب
+            </Button>
+            <div className="text-center text-sm pt-2">
+              <Link to="/login" className="text-muted hover:text-accent">
+                لديك حساب مفعّل؟ تسجيل الدخول
+              </Link>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </AuthShell>

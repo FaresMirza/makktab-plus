@@ -17,6 +17,8 @@ import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { FirstLoginResendDto } from './dto/first-login-resend.dto';
 import { FirstLoginVerifyDto } from './dto/first-login-verify.dto';
+import { ActivateAccountDto } from './dto/activate-account.dto';
+import * as bcrypt from 'bcrypt';
 import { OtpPurpose, OtpChannel, UserStatus } from 'prisma/src/generated/prisma-client/client';
 
 @Injectable()
@@ -353,6 +355,51 @@ export class AuthService {
         });
 
         return { message: AUTH_MESSAGES.REGISTRATION_SUCCESS };
+    }
+
+    /**
+     * Activate a new account via the email magic link.
+     * `userPublicId` + `token` come from the link; `newPassword` is chosen
+     * by the user. Token is verified against the bcrypt hash stored on the
+     * user record. On success the user is set ACTIVE, the password is
+     * stored, and the activation token is cleared (one-time use).
+     */
+    async activateAccount(dto: ActivateAccountDto, ip: string, userAgent: string, deviceFingerprint: string) {
+        const { userPublicId, token, newPassword } = dto;
+
+        const user = await this.usersRepository.findByPublicIdSimple(userPublicId);
+        if (!user || user.status !== UserStatus.PENDING) {
+            throw new BadRequestException(AUTH_MESSAGES.INVALID_REQUEST);
+        }
+        if (!user.activationTokenHash || !user.activationTokenExpiresAt) {
+            throw new BadRequestException(AUTH_MESSAGES.INVALID_REQUEST);
+        }
+        if (new Date() > user.activationTokenExpiresAt) {
+            throw new BadRequestException(AUTH_MESSAGES.VERIFICATION_EXPIRED);
+        }
+
+        const ok = await bcrypt.compare(token, user.activationTokenHash);
+        if (!ok) {
+            throw new BadRequestException(AUTH_MESSAGES.INVALID_REQUEST);
+        }
+
+        const passwordHash = await this.authHelper.hashPassword(newPassword);
+        await this.usersRepository.update(user.id, {
+            passwordHash,
+            status: UserStatus.ACTIVE,
+            activationTokenHash: null,
+            activationTokenExpiresAt: null,
+        } as any);
+
+        await this.authHelper.logAudit({
+            userId: user.id,
+            event: 'PASSWORD_CHANGED',
+            ip,
+            userAgent,
+            deviceFingerprint,
+        });
+
+        return { message: AUTH_MESSAGES.FIRST_LOGIN_COMPLETED };
     }
 
     async verifyRegistration(dto: VerifyRegisterDto, ip: string, userAgent: string) {

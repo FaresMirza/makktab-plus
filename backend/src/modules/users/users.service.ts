@@ -1,14 +1,19 @@
-import { ForbiddenException, Injectable, NotFoundException, Logger, Inject, forwardRef } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { randomBytes } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersHelper } from './helpers/users.helper';
 import { UsersRepository } from './queries/users.queries';
 import { OfficesRepository } from '../offices/queries/office.queries';
-import { OtpService } from '../otps/otps.service';
-import { UserStatus, OtpPurpose, OtpChannel } from 'prisma/src/generated/prisma-client/client';
+import { EmailService } from '../email/email.service';
+import { UserStatus } from 'prisma/src/generated/prisma-client/client';
 import { JwtUser, TenantHelper } from '../../common/helpers/tenant.helper';
 import { PaginationQueryDto, makePaginated, pagingArgs } from '../../common/dto/pagination.dto';
+
+const ACTIVATION_TOKEN_BYTES = 32;
+const ACTIVATION_TOKEN_TTL_HOURS = 7 * 24; // 7 days
+const APP_URL = process.env.APP_URL || 'https://app.makktabplus.online';
 
 @Injectable()
 export class UsersService {
@@ -19,8 +24,7 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
     private readonly officesRepository: OfficesRepository,
     private readonly tenantHelper: TenantHelper,
-    @Inject(forwardRef(() => OtpService))
-    private readonly otpService: OtpService,
+    private readonly emailService: EmailService,
   ) { }
 
   /**
@@ -59,16 +63,29 @@ export class UsersService {
       resolvedOfficePublicId = office.publicId;
     }
 
+    // The user starts inactive with an unusable random password — they'll
+    // set their real password through the activation link.
     const passwordToHash = password ?? randomBytes(32).toString('hex');
     const passwordHash = await this.usersHelper.hashPassword(passwordToHash);
+
+    // Generate the one-time activation token (raw goes in the email,
+    // hash goes in the DB).
+    const rawToken = randomBytes(ACTIVATION_TOKEN_BYTES).toString('hex');
+    const activationTokenHash = await bcrypt.hash(rawToken, 10);
+    const activationTokenExpiresAt = new Date(
+      Date.now() + ACTIVATION_TOKEN_TTL_HOURS * 60 * 60 * 1000,
+    );
 
     const userData: any = {
       ...rest,
       email,
       username,
       passwordHash,
-      status: rest.status || UserStatus.PENDING,
+      // If the caller didn't pass a password, this is a link-activation user.
+      status: rest.status || (password ? UserStatus.ACTIVE : UserStatus.PENDING),
       roles: rest.roles || [],
+      activationTokenHash: password ? null : activationTokenHash,
+      activationTokenExpiresAt: password ? null : activationTokenExpiresAt,
     };
 
     if (resolvedOfficePublicId) {
@@ -81,21 +98,38 @@ export class UsersService {
 
     const created = await this.usersRepository.create(userData);
 
-    let firstLoginOtpSent = false;
-    try {
-      await this.otpService.sendOtp({
-        email: created.email,
-        purpose: OtpPurpose.FIRST_LOGIN,
-        channel: OtpChannel.EMAIL,
-      });
-      firstLoginOtpSent = true;
-    } catch (err) {
-      this.logger.warn(
-        `Failed to send FIRST_LOGIN OTP to ${created.email}: ${(err as Error).message}`,
-      );
+    // Email the activation link (only when there's no password — meaning
+    // this is the link-activation flow).
+    let activationLinkSent = false;
+    if (!password) {
+      const link = `${APP_URL}/activate?u=${created.publicId}&t=${rawToken}`;
+      try {
+        await this.emailService.send({
+          to: created.email,
+          subject: 'تفعيل حسابك — Makktab Plus',
+          text:
+            `مرحباً ${created.fullName},\n\n` +
+            `تم إنشاء حسابك على منصة Makktab Plus. لتفعيل الحساب وتعيين كلمة المرور، اتبع الرابط التالي:\n\n` +
+            `${link}\n\n` +
+            `الرابط صالح لمدة ${ACTIVATION_TOKEN_TTL_HOURS / 24} أيام. إن لم تكن تتوقع هذه الرسالة يمكنك تجاهلها.`,
+          html:
+            `<div style="font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl;color:#111;line-height:1.7">` +
+            `<p>مرحباً <strong>${created.fullName}</strong>,</p>` +
+            `<p>تم إنشاء حسابك على منصة <strong>Makktab Plus</strong>. لتفعيل الحساب وتعيين كلمة المرور:</p>` +
+            `<p style="margin:24px 0"><a href="${link}" style="background:#0a0a0a;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:600">تفعيل الحساب</a></p>` +
+            `<p style="color:#666;font-size:13px">إذا لم يعمل الزر انسخ الرابط في المتصفح:<br/><span style="word-break:break-all">${link}</span></p>` +
+            `<p style="color:#666;font-size:12px">الرابط صالح لمدة ${ACTIVATION_TOKEN_TTL_HOURS / 24} أيام.</p>` +
+            `</div>`,
+        });
+        activationLinkSent = true;
+      } catch (err) {
+        this.logger.warn(
+          `Failed to send activation email to ${created.email}: ${(err as Error).message}`,
+        );
+      }
     }
 
-    return { ...this.usersHelper.formatUser(created), firstLoginOtpSent };
+    return { ...this.usersHelper.formatUser(created), activationLinkSent };
   }
 
   /**

@@ -46,8 +46,21 @@ export const verifyForgotPassword = (payload: {
     .post<MessageResponse>('/auth/forgot-password/verify', payload, { headers: fpHeaders() })
     .then((r) => r.data)
 
-// ── First-login activation ─────────────────────────────────────
+// ── First-login activation (link-based) ────────────────────────
 
+export interface ActivateAccountPayload {
+  userPublicId: string
+  token: string
+  newPassword: string
+}
+
+export const activateAccount = (payload: ActivateAccountPayload) =>
+  api
+    .post<MessageResponse>('/auth/activate', payload, { headers: fpHeaders() })
+    .then((r) => r.data)
+
+// Legacy OTP-based first-login (kept for the backend's FIRST_LOGIN OTP
+// purpose, but the standard activation flow now uses /auth/activate).
 export const resendFirstLoginOtp = (usernameOrEmail: string) =>
   api
     .post<OtpResponse>('/auth/first-login/resend', { username: usernameOrEmail })

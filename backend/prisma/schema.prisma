@@ -54,10 +54,12 @@ model User {
   refreshTokenHash   String?
   lastPasswordChange DateTime?
   roles              String[]
-  status             UserStatus
-  lockedUntil        DateTime?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  status                   UserStatus
+  lockedUntil              DateTime?
+  activationTokenHash      String?
+  activationTokenExpiresAt DateTime?
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @updatedAt
 
   offices              Office[]
   ownedOffice          Office?       @relation("OfficeOwner")

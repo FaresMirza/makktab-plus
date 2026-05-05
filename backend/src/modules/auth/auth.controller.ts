@@ -10,6 +10,7 @@ import { RegisterDto } from './dto/register.dto';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { FirstLoginResendDto } from './dto/first-login-resend.dto';
 import { FirstLoginVerifyDto } from './dto/first-login-verify.dto';
+import { ActivateAccountDto } from './dto/activate-account.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AUTH_ROUTES } from './constants/routes.constant';
 
@@ -98,5 +99,20 @@ export class AuthController {
     @Post(AUTH_ROUTES.REGISTER_VERIFY)
     async verifyRegistration(@Body() dto: VerifyRegisterDto, @Ip() ip: string, @Req() req: any) {
         return this.authService.verifyRegistration(dto, ip, req.headers['user-agent']);
+    }
+
+    /**
+     * Link-based account activation (employee accounts created by an
+     * office owner). Caller submits the user's publicId, the raw token
+     * from the email link, and a chosen password.
+     */
+    @Post('activate')
+    async activateAccount(
+        @Body() dto: ActivateAccountDto,
+        @Ip() ip: string,
+        @Req() req: any,
+        @Headers('x-device-fingerprint') deviceFingerprint: string,
+    ) {
+        return this.authService.activateAccount(dto, ip, req.headers['user-agent'], deviceFingerprint);
     }
 }
