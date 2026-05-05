@@ -80,4 +80,46 @@ export class TenantHelper {
       throw new ForbiddenException('Resource is in a different office');
     }
   }
+
+  /**
+   * Authorize project-management actions (creating tasks, attaching files,
+   * deleting tasks, etc.). The caller passes if any of the following:
+   *  - platform admin / super_admin
+   *  - office owner (their User.ownedOffice matches the project's office)
+   *  - has 'manager' role AND is in the same office
+   *  - is the project's projectManagerUser (the assigned manager)
+   * Otherwise → ForbiddenException.
+   */
+  async assertCanManageProject(
+    user: JwtUser,
+    project: { officeId: number; projectManagerUserId: number },
+  ): Promise<void> {
+    if (this.isPlatformAdmin(user)) return;
+
+    const userRecord = await this.prisma.user.findUnique({
+      where: { publicId: user.userId },
+      select: {
+        id: true,
+        ownedOffice: { select: { id: true } },
+        offices: { select: { id: true } },
+      },
+    });
+    if (!userRecord) {
+      throw new ForbiddenException('Authenticated user not found');
+    }
+
+    // Project's assigned manager?
+    if (project.projectManagerUserId === userRecord.id) return;
+
+    // Office owner of THIS office?
+    if (userRecord.ownedOffice?.id === project.officeId) return;
+
+    // Office manager (role 'manager') in the same office?
+    const inSameOffice =
+      userRecord.ownedOffice?.id === project.officeId ||
+      userRecord.offices.some((o) => o.id === project.officeId);
+    if (inSameOffice && user.roles?.includes('manager')) return;
+
+    throw new ForbiddenException('You cannot manage this project');
+  }
 }

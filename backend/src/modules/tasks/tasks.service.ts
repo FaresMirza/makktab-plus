@@ -37,6 +37,22 @@ export class TasksService {
     }
   }
 
+  /**
+   * Look up the parent project's tenancy fields for a given task.
+   * Used by the management-permission check.
+   */
+  private async getProjectForTask(taskInternalId: number) {
+    const task = await this.prisma.task.findUnique({
+      where: { id: taskInternalId },
+      select: {
+        assignedToUserId: true,
+        project: { select: { officeId: true, projectManagerUserId: true } },
+      },
+    });
+    if (!task) throw new NotFoundException('Task not found');
+    return task;
+  }
+
   async create(createTaskDto: CreateTaskDto, user: JwtUser) {
     const { projectId, createdByUserId, assignedToUserId, title, description, status, dueDate } = createTaskDto;
 
@@ -44,8 +60,12 @@ export class TasksService {
     const creator = await this.tasksHelper.validateUserExists(createdByUserId, 'Creator');
     const assignee = await this.tasksHelper.validateUserExists(assignedToUserId, 'Assignee');
 
-    // Tenant: caller must be a platform admin OR the project must belong to their office
-    await this.tenantHelper.assertSameOffice(user, project.officeId);
+    // Only platform admins, the office owner/manager, or the project's
+    // assigned manager may create tasks in the project.
+    await this.tenantHelper.assertCanManageProject(user, {
+      officeId: project.officeId,
+      projectManagerUserId: project.projectManagerUserId,
+    });
 
     return this.tasksRepository.create({
       title,
@@ -126,7 +146,30 @@ export class TasksService {
 
   async update(publicId: string, updateTaskDto: UpdateTaskDto, user: JwtUser) {
     const task = await this.tasksHelper.validateTaskExists(publicId);
-    await this.assertTaskInScope(task.id, user);
+    const taskCtx = await this.getProjectForTask(task.id);
+
+    // Decide whether the caller is allowed:
+    //   - manageable by them (owner / manager / project manager / admin), OR
+    //   - they're the assignee AND the only field they're touching is `status`.
+    const fields = Object.keys(updateTaskDto).filter(
+      (k) => (updateTaskDto as any)[k] !== undefined,
+    );
+    const onlyStatusChange = fields.length === 1 && fields[0] === 'status';
+
+    if (onlyStatusChange) {
+      // Must be the assignee OR have manage rights.
+      const userRecord = await this.prisma.user.findUnique({
+        where: { publicId: user.userId },
+        select: { id: true },
+      });
+      const isAssignee =
+        !!userRecord && taskCtx.assignedToUserId === userRecord.id;
+      if (!isAssignee) {
+        await this.tenantHelper.assertCanManageProject(user, taskCtx.project);
+      }
+    } else {
+      await this.tenantHelper.assertCanManageProject(user, taskCtx.project);
+    }
 
     const updateData: any = {};
     if (updateTaskDto.title !== undefined) updateData.title = updateTaskDto.title;
@@ -144,7 +187,8 @@ export class TasksService {
 
   async remove(publicId: string, user: JwtUser, hardDelete = false) {
     const task = await this.tasksHelper.validateTaskExists(publicId);
-    await this.assertTaskInScope(task.id, user);
+    const taskCtx = await this.getProjectForTask(task.id);
+    await this.tenantHelper.assertCanManageProject(user, taskCtx.project);
 
     if (hardDelete) {
       await this.tasksRepository.delete(task.id);

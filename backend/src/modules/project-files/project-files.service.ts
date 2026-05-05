@@ -11,6 +11,7 @@ import { join } from 'path';
 import { ProjectFilesRepository } from './queries/project-files.queries';
 import { ProjectsRepository } from '../projects/queries/projects.queries';
 import { UsersRepository } from '../users/queries/users.queries';
+import { JwtUser, TenantHelper } from '../../common/helpers/tenant.helper';
 
 @Injectable()
 export class ProjectFilesService {
@@ -20,6 +21,7 @@ export class ProjectFilesService {
     private readonly projectFilesRepository: ProjectFilesRepository,
     private readonly projectsRepository: ProjectsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly tenantHelper: TenantHelper,
   ) {}
 
   /**
@@ -83,6 +85,12 @@ export class ProjectFilesService {
       if (!user) {
         throw new NotFoundException(`User with ID ${userPublicId} not found`);
       }
+
+      // Only office owner / manager / project manager / platform admin can upload.
+      await this.tenantHelper.assertCanManageProject(
+        { userId: userPublicId, username: user.username, roles: user.roles } as JwtUser,
+        { officeId: project.officeId, projectManagerUserId: project.projectManagerUserId },
+      );
 
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
       const fileUrl = `/uploads/projects/${file.filename}`;
@@ -166,6 +174,19 @@ export class ProjectFilesService {
     if (file.project.officeId !== userOfficeId) {
       throw new ForbiddenException('You do not have access to this file');
     }
+
+    // Permission check: same as upload — only owner/manager/project manager.
+    const user = await this.usersRepository.findByPublicId(userPublicId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userPublicId} not found`);
+    }
+    await this.tenantHelper.assertCanManageProject(
+      { userId: userPublicId, username: user.username, roles: user.roles } as JwtUser,
+      {
+        officeId: file.project.officeId,
+        projectManagerUserId: file.project.projectManagerUserId,
+      },
+    );
 
     await this.projectFilesRepository.delete(file.id);
 

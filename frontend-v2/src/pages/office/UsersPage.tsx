@@ -9,16 +9,20 @@ import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
+import { Select } from '@/components/ui/Select'
 import { CenteredSpinner } from '@/components/ui/Spinner'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table'
 import { getApiErrorMessage } from '@/lib/utils'
 
-const empty: CreateUserPayload = {
+type RoleChoice = 'employee' | 'manager'
+
+const empty: CreateUserPayload & { roleChoice: RoleChoice } = {
   fullName: '',
   email: '',
   phone: '',
   username: '',
+  roleChoice: 'employee',
 }
 
 export function OfficeUsersPage() {
@@ -27,7 +31,7 @@ export function OfficeUsersPage() {
   const qc = useQueryClient()
   const users = useQuery({ queryKey: ['users'], queryFn: () => listUsers() })
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<CreateUserPayload>(empty)
+  const [form, setForm] = useState<CreateUserPayload & { roleChoice: RoleChoice }>(empty)
 
   const create = useMutation({
     mutationFn: (payload: CreateUserPayload) => createUser(payload),
@@ -130,7 +134,8 @@ export function OfficeUsersPage() {
               toast.error('جميع الحقول مطلوبة')
               return
             }
-            create.mutate(form)
+            const { roleChoice, ...payload } = form
+            create.mutate({ ...payload, roles: [roleChoice] })
           }}
         >
           <p className="text-xs text-muted bg-elevated/40 border border-border rounded-lg p-3">
@@ -152,6 +157,16 @@ export function OfficeUsersPage() {
             <div>
               <Label>الجوال</Label>
               <Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+            </div>
+            <div className="sm:col-span-2">
+              <Label>الدور</Label>
+              <Select
+                value={form.roleChoice}
+                onChange={(e) => setForm((f) => ({ ...f, roleChoice: e.target.value as RoleChoice }))}
+              >
+                <option value="employee">موظف — صلاحيات أساسية</option>
+                <option value="manager">مدير — نفس صلاحيات مالك المكتب</option>
+              </Select>
             </div>
           </div>
           <div className="flex justify-start gap-2 pt-2">

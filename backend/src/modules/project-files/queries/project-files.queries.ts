@@ -40,7 +40,14 @@ export class ProjectFilesRepository {
       where: { publicId },
       include: {
         uploadedBy: { select: this.uploaderSelect },
-        project: { select: { id: true, publicId: true, officeId: true } },
+        project: {
+          select: {
+            id: true,
+            publicId: true,
+            officeId: true,
+            projectManagerUserId: true,
+          },
+        },
       },
     });
   }

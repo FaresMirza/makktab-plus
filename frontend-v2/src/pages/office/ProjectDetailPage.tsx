@@ -62,7 +62,7 @@ const emptyTask: NewTaskForm = {
 export function OfficeProjectDetailPage() {
   const { publicId } = useParams<{ publicId: string }>()
   const { user } = useAuth()
-  const canManage = user?.role === 'office_owner' || user?.role === 'super_admin'
+  const isOfficeAdmin = user?.role === 'office_owner' || user?.role === 'super_admin'
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -150,6 +150,9 @@ export function OfficeProjectDetailPage() {
   const taskList = tasks.data?.data ?? []
   const fileList = files.data ?? []
   const userList = users.data?.data ?? []
+  // Office owner / manager / admin OR the assigned project manager.
+  const canManage =
+    isOfficeAdmin || p.projectManager?.publicId === user?.sub
 
   return (
     <div>
