@@ -68,6 +68,22 @@ export class AuthHelper {
         return user;
     }
 
+    /**
+     * Look up a user by username OR email. Used by login flows so that
+     * the same input field accepts both forms (the UI labels it that way).
+     * Throws UnauthorizedException with the generic INVALID_CREDENTIALS
+     * message if no match — never reveal whether email vs username failed.
+     */
+    async validateUserExistsByUsernameOrEmail(input: string) {
+        const user =
+            (await this.usersRepository.findByUsername(input)) ||
+            (await this.usersRepository.findByEmail(input));
+        if (!user) {
+            throw new UnauthorizedException(AUTH_MESSAGES.INVALID_CREDENTIALS);
+        }
+        return user;
+    }
+
     throwInvalidCredentials(): never {
         throw new UnauthorizedException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }

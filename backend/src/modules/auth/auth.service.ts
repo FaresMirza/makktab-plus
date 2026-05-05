@@ -34,7 +34,7 @@ export class AuthService {
     async login(loginDto: LoginDto, ip: string, userAgent: string) {
         let user;
         try {
-            user = await this.authHelper.validateUserExistsByUsername(loginDto.username);
+            user = await this.authHelper.validateUserExistsByUsernameOrEmail(loginDto.username);
         } catch (error) {
             await this.authHelper.logAudit({
                 event: 'INVALID_CREDENTIALS',
@@ -80,7 +80,7 @@ export class AuthService {
 
         let user;
         try {
-            user = await this.authHelper.validateUserExistsByUsername(username);
+            user = await this.authHelper.validateUserExistsByUsernameOrEmail(username);
         } catch (e) {
             await this.authHelper.logAudit({ event: 'INVALID_CREDENTIALS', reason: 'User not found during OTP verify', ip, userAgent, deviceFingerprint });
             this.authHelper.throwInvalidCredentials();
