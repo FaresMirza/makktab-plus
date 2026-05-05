@@ -31,9 +31,6 @@ coverage/
 logs/
 *.log
 
-# Prisma
-prisma/src/generated/
-
 # Claude Code
 .claude/settings.json
 
@@ -44,6 +41,3 @@ prisma/src/generated/
 
 # Claude Code
 .claude/
-# User uploads (keep folder structure, ignore contents)
-uploads/projects/*
-!uploads/projects/.gitkeep

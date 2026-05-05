@@ -1,0 +1,79 @@
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  animation: fadeIn 0.1s ease-in;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-medium);
+  text-align: right;
+  transition: color 0.2s ease;
+}
+
+.inputGroup:focus-within .label {
+  color: var(--primary-dark);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  text-align: right;
+  transition: all 0.3s ease;
+}
+
+.input:hover {
+  border-color: var(--primary-light);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px var(--success-shadow);
+}
+
+.input::placeholder {
+  color: var(--text-light);
+  opacity: 0.7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .label {
+    font-size: 13px;
+  }
+  
+  .input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inputGroup {
+    gap: 6px;
+  }
+  
+  .input {
+    padding: 10px 12px;
+  }
+}
+

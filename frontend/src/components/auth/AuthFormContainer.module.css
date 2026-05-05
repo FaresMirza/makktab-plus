@@ -1,0 +1,83 @@
+.formContainer {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 50px 60px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px var(--overlay-md);
+  position: relative;
+  animation: fadeInScale 0.15s ease-out;
+}
+
+.topLogoContainer {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.topLogo {
+  height: 50px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.topLogo:hover {
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .formContainer {
+    padding: 40px 40px;
+    max-width: 450px;
+  }
+  
+  .topLogoContainer {
+    top: 16px;
+    right: 16px;
+  }
+  
+  .topLogo {
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    padding: 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+  }
+  
+  .topLogoContainer {
+    top: 12px;
+    right: 12px;
+  }
+  
+  .topLogo {
+    height: 35px;
+  }
+}
+

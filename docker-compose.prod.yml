@@ -1,4 +1,16 @@
 services:
+  traefik:
+    image: traefik:v3.1
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   db:
     image: postgres:15-alpine
     restart: unless-stopped
@@ -6,8 +18,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
       POSTGRES_DB: ${POSTGRES_DB:-makktab}
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -19,8 +29,6 @@ services:
   api:
     image: ${API_IMAGE:-ghcr.io/faresmirza/makktab-plus:latest}
     restart: unless-stopped
-    ports:
-      - "80:3000"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@db:5432/${POSTGRES_DB:-makktab}?schema=public
       PORT: 3000
@@ -32,6 +40,20 @@ services:
         condition: service_healthy
     command: >
       sh -c "npx prisma migrate deploy && node dist/src/main"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN}`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
+
+  frontend:
+    image: ${FRONTEND_IMAGE:-ghcr.io/faresmirza/makktab-plus-frontend:latest}
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`app.${DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
 volumes:
   pgdata:

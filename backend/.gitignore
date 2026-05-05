@@ -1,0 +1,6 @@
+# Prisma generated client
+prisma/src/generated/
+
+# User uploads (keep folder structure, ignore contents)
+uploads/projects/*
+!uploads/projects/.gitkeep

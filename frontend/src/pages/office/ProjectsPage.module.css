@@ -1,0 +1,360 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.headerRight {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-medium);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subtitle i {
+  color: var(--primary-lighter);
+}
+
+.headerLeft {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Filter Tabs */
+.filterTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.filterTab {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-medium);
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+}
+
+.filterTab:hover {
+  color: var(--primary-dark);
+}
+
+.filterTabActive {
+  color: var(--primary-dark);
+  font-weight: 600;
+  border-bottom-color: var(--primary-dark);
+}
+
+/* Projects Grid */
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+/* Project Card */
+.projectCard {
+  background: var(--bg-white);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.projectCard:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.projectName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+/* Card Info Lines */
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.infoLine {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-medium);
+  gap: 6px;
+}
+
+.infoLine i {
+  color: #94a3b8;
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+}
+
+/* Progress Section */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-medium);
+}
+
+/* Info Row (date + budget) */
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-medium);
+  gap: 6px;
+}
+
+.infoItem i {
+  color: var(--primary-lighter);
+  font-size: 13px;
+}
+
+/* Card Footer */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--bg-light);
+  gap: 12px;
+}
+
+.tasksCount {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.tasksLabel {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.footerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.footerActions :global(.p-button) {
+  gap: 8px;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-medium);
+}
+
+.emptyState i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  color: var(--border-medium);
+}
+
+/* Dialog Form */
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 12px 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+/* Dialog Footer Buttons */
+.formGrid :global(.p-dialog-footer) {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* FileUpload Button Styling */
+.formGrid :global(.p-fileupload-choose) {
+  background: #2d3e50 !important;
+  border: none !important;
+  color: var(--border-medium) !important;
+  padding: 12px 16px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.formGrid :global(.p-fileupload-choose:hover) {
+  background: #1f2a38 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Calendar Icon Styling */
+.formGrid :global(.p-datepicker-trigger) {
+  background: #2d3e50 !important;
+  color: var(--border-medium) !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.formGrid :global(.p-datepicker-trigger:hover) {
+  background: #1f2a38 !important;
+}
+
+/* Uploaded Files in Create Dialog */
+.uploadedFilesList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.uploadedFileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+}
+
+.uploadedFileInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uploadedFileInfo i {
+  color: var(--primary-lighter);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.uploadedFileName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #27374e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploadedFileSize {
+  font-size: 12px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* Toast Z-Index Override */
+:global(.p-toast) {
+  z-index: 99999 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .projectsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerLeft {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .filterTabs {
+    overflow-x: auto;
+  }
+
+  .filterTab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .projectsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}

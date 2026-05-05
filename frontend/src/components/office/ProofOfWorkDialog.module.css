@@ -1,0 +1,46 @@
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 12px 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2d4d5c;
+}
+
+.attachmentsList {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.attachmentsItems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.attachmentName {
+  flex: 1;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+}

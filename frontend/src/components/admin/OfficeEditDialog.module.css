@@ -1,0 +1,43 @@
+.dialog {
+  width: 520px;
+  direction: rtl;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 12px 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-dark);
+  transition: color 0.2s ease;
+}
+
+.label:hover {
+  color: var(--primary-dark);
+}
+
+.saveButton {
+  background: var(--primary-dark);
+  border: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.saveButton:hover {
+  background: var(--primary-darker);
+  transform: scale(1.02);
+}
+
+.input {
+  width: 100%;
+}
+
+.inputDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

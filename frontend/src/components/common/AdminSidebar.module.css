@@ -1,0 +1,135 @@
+.sidebar {
+  width: 220px;
+  background: #27374e;
+  border-left: none;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.logoIcon {
+  font-size: 32px;
+  color: #dde6ed;
+  transition: transform 0.3s ease;
+}
+
+.logoIcon:hover {
+  transform: scale(1.1);
+}
+
+.logoText {
+  margin: 8px 0 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #9ba4b5;
+  font-size: 15px;
+  font-weight: 500;
+  direction: rtl;
+  text-align: right;
+}
+
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(-2px);
+}
+
+.menuItemActive {
+  background: #3d5269;
+  color: #ffffff;
+}
+
+.menuItemActive:hover {
+  background: #3d5269;
+}
+
+.menuIcon {
+  font-size: 18px;
+}
+
+.logoutButton {
+  margin: 16px 12px 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.logoutButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 180px;
+  }
+
+  .logoText {
+    font-size: 16px;
+  }
+
+  .menuItem {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .logoutButton {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
+

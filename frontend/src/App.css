@@ -1,0 +1,91 @@
+/* Password Component Styling */
+.p-password {
+  width: 100% !important;
+  display: block !important;
+}
+
+.p-password > span {
+  width: 100% !important;
+  display: block !important;
+}
+
+.p-password .p-inputtext {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.p-password .p-input-icon-right {
+  width: 100% !important;
+}
+
+.p-password button {
+  left: 0.75rem !important;
+  right: auto !important;
+}
+
+/* Input Focus States */
+.p-inputtext:focus,
+.p-password input:focus {
+  border-color: var(--primary-dark) !important;
+  box-shadow: 0 0 0 0.2rem rgba(30, 58, 95, 0.25) !important;
+}
+
+/* Global z-index management */
+/* Sidebar should always be on top except for overlays */
+.p-dialog-mask,
+.p-overlaypanel,
+.p-menu-overlay,
+.p-toast {
+  z-index: 2000 !important;
+}
+
+/* ConfirmDialog should be above Dialog */
+.p-confirmdialog {
+  z-index: 2100 !important;
+}
+
+/* Center align all DataTable cells and headers for employee table */
+.employee-table .p-datatable-thead > tr > th {
+  text-align: center !important;
+}
+
+.employee-table .p-datatable-tbody > tr > td {
+  text-align: center !important;
+}
+
+.employee-table .p-datatable-thead > tr > th > div {
+  justify-content: center !important;
+}
+
+/* Center align all DataTable cells and headers for my tasks table */
+.my-tasks-table .p-datatable-thead > tr > th {
+  text-align: center !important;
+}
+
+.my-tasks-table .p-datatable-tbody > tr > td {
+  text-align: center !important;
+}
+
+.my-tasks-table .p-datatable-thead > tr > th > div {
+  justify-content: center !important;
+}
+
+/* Center align all DataTable cells and headers for project details tables */
+.my-assigned-tasks-table .p-datatable-thead > tr > th,
+.all-project-tasks-table .p-datatable-thead > tr > th,
+.employee-assigned-tasks-table .p-datatable-thead > tr > th {
+  text-align: center !important;
+}
+
+.my-assigned-tasks-table .p-datatable-tbody > tr > td,
+.all-project-tasks-table .p-datatable-tbody > tr > td,
+.employee-assigned-tasks-table .p-datatable-tbody > tr > td {
+  text-align: center !important;
+}
+
+.my-assigned-tasks-table .p-datatable-thead > tr > th > div,
+.all-project-tasks-table .p-datatable-thead > tr > th > div,
+.employee-assigned-tasks-table .p-datatable-thead > tr > th > div {
+  justify-content: center !important;
+}
+ 

@@ -1,0 +1,32 @@
+.pageContainer {
+  padding: 2rem;
+  background-color: var(--surface-b);
+  min-height: 100vh;
+  direction: rtl;
+}
+
+.tableCard {
+  background: var(--surface-card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+}
+
+/* Base styles for global status badges since it may not be in this module */
+:global(.status-badge) {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+:global(.status-active) {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+:global(.status-inactive) {
+  background-color: #ffcdd2;
+  color: #c63737;
+}
