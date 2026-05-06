@@ -17,7 +17,7 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { TaskStatus } from 'prisma/src/generated/prisma-client/client';
+import { ListTasksQueryDto } from './dto/list-tasks.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { PaginationQueryDto } from '../../common/dto/pagination.dto';
 import { JwtUser } from '../../common/helpers/tenant.helper';
@@ -43,18 +43,12 @@ export class TasksController {
    * GET /tasks?projectId=&status=&assignedToUserId=&createdByUserId=&page=&limit=
    */
   @Get()
-  findAll(
-    @Req() req: any,
-    @Query() paging: PaginationQueryDto,
-    @Query('projectId') projectId?: string,
-    @Query('status') status?: TaskStatus,
-    @Query('assignedToUserId') assignedToUserId?: string,
-    @Query('createdByUserId') createdByUserId?: string,
-  ) {
+  findAll(@Req() req: any, @Query() query: ListTasksQueryDto) {
+    const { page, limit, projectId, status, assignedToUserId, createdByUserId } = query;
     return this.tasksService.findFiltered(
       { projectId, status, assignedToUserId, createdByUserId },
       req.user as JwtUser,
-      paging,
+      { page, limit },
     );
   }
 
