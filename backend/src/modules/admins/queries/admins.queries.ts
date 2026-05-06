@@ -116,11 +116,17 @@ export class AdminsRepository {
     // ─── OFFICE REQUEST QUERIES ───────────────────────────────
 
     /**
-     * Get all pending office requests (status = null)
+     * Get pending office requests visible to admins.
+     *
+     * We filter to email-verified requests only — a row is created the
+     * moment the user submits the form (so we can store the hashed
+     * password etc.), but it's not surfaced to the platform admin until
+     * the user has confirmed their email via OTP. Unverified rows are
+     * effectively invisible drafts.
      */
     async findPendingOfficeRequests() {
         return this.prisma.officeRequest.findMany({
-            where: { status: null },
+            where: { status: null, emailVerified: true },
             select: {
                 id: true,
                 officeName: true,

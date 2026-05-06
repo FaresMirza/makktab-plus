@@ -153,12 +153,8 @@ export function RegisterPage() {
             </form>
           ) : (
             <form onSubmit={submitOtp} className="space-y-4">
-              <p className="text-xs text-muted bg-elevated/40 border border-border rounded-lg p-3 leading-relaxed">
-                تم تسجيل طلبك بنجاح وهو الآن في انتظار موافقة الإدارة. أدخل
-                رمز التحقق المرسل إلى بريدك لتأكيد البريد، أو تخطَّ هذه الخطوة.
-              </p>
               <div>
-                <Label htmlFor="otp">رمز التحقق (اختياري)</Label>
+                <Label htmlFor="otp">رمز التحقق</Label>
                 <Input
                   id="otp"
                   inputMode="numeric"
@@ -172,13 +168,6 @@ export function RegisterPage() {
               <Button type="submit" loading={loading} className="w-full">
                 تأكيد البريد
               </Button>
-              <button
-                type="button"
-                onClick={() => setStep('done')}
-                className="w-full text-sm text-muted hover:text-accent pt-2"
-              >
-                تخطَّ هذه الخطوة — لم يصلني الرمز
-              </button>
             </form>
           )}
         </CardContent>

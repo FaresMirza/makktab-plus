@@ -100,6 +100,16 @@ export class AdminsService {
             return { message: 'Office request rejected' };
         }
 
+        // Approval requires the applicant to have verified their email
+        // via OTP. Unverified rows aren't surfaced in admin listings, but
+        // we also block direct-by-id approvals here in case someone
+        // crafts the request manually.
+        if (!request.emailVerified) {
+            throw new BadRequestException(
+                'Cannot approve: the applicant has not verified their email yet.',
+            );
+        }
+
         const office = await this.adminsRepository.approveOfficeRequest(request);
 
         await this.adminsHelper.logAction(auditMeta, AdminAction.OFFICE_REQUEST_APPROVED, {
