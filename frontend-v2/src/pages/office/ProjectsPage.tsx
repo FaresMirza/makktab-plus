@@ -175,11 +175,21 @@ export function OfficeProjectsPage() {
             </div>
             <div>
               <Label>تاريخ البدء</Label>
-              <Input type="date" value={form.startDate ?? ''} onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))} />
+              <Input
+                type="date"
+                min={new Date().toISOString().split('T')[0]}
+                value={form.startDate ?? ''}
+                onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
+              />
             </div>
             <div>
               <Label>تاريخ الانتهاء</Label>
-              <Input type="date" value={form.endDate ?? ''} onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))} />
+              <Input
+                type="date"
+                min={form.startDate || new Date().toISOString().split('T')[0]}
+                value={form.endDate ?? ''}
+                onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
+              />
             </div>
             <div className="col-span-2">
               <Label>مدير المشروع</Label>

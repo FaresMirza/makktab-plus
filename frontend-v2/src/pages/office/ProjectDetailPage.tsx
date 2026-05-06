@@ -49,7 +49,6 @@ interface NewTaskForm {
   description: string
   assignedToUserId: string
   dueDate: string
-  status: TaskStatus
 }
 
 const emptyTask: NewTaskForm = {
@@ -57,8 +56,6 @@ const emptyTask: NewTaskForm = {
   description: '',
   assignedToUserId: '',
   dueDate: '',
-  // New tasks always start in-progress; only the assignee flips to DONE.
-  status: 'IN_PROGRESS',
 }
 
 export function OfficeProjectDetailPage() {
@@ -366,7 +363,8 @@ export function OfficeProjectDetailPage() {
               projectId: publicId!,
               createdByUserId: user.sub,
               assignedToUserId: taskForm.assignedToUserId,
-              status: taskForm.status,
+              // Status omitted — backend defaults to TODO; the assignee
+              // is the one who flips it to IN_PROGRESS / DONE.
               dueDate: taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : undefined,
             })
           }}
@@ -394,23 +392,17 @@ export function OfficeProjectDetailPage() {
                 ))}
               </Select>
             </div>
-            <div>
-              <Label>الحالة الابتدائية</Label>
-              <Select
-                value={taskForm.status}
-                onChange={(e) => setTaskForm((f) => ({ ...f, status: e.target.value as TaskStatus }))}
-              >
-                <option value="IN_PROGRESS">{TASK_STATUS_LABEL.IN_PROGRESS}</option>
-                <option value="DONE">{TASK_STATUS_LABEL.DONE}</option>
-              </Select>
-            </div>
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <Label>تاريخ الاستحقاق</Label>
               <Input
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 value={taskForm.dueDate}
                 onChange={(e) => setTaskForm((f) => ({ ...f, dueDate: e.target.value }))}
               />
+              <div className="text-xs text-muted mt-1">
+                لا يمكن اختيار تاريخ في الماضي.
+              </div>
             </div>
           </div>
           <div className="flex justify-start gap-2 pt-2">

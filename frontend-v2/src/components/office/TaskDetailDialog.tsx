@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Download, Loader2, Trash2, Upload } from 'lucide-react'
+import { CheckCircle2, Download, Loader2, Paperclip, Trash2, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import { updateTask, cancelTask } from '@/api/tasks'
 import { listTaskFiles, uploadTaskFile, deleteProjectFile } from '@/api/files'
@@ -39,6 +39,12 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
   const { user } = useAuth()
   const qc = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const proofInputRef = useRef<HTMLInputElement>(null)
+  // When the assignee picks "DONE" we hold off on actually sending the
+  // status change until they confirm — and optionally attach a PDF
+  // proof-of-completion.
+  const [completing, setCompleting] = useState(false)
+  const [proofFile, setProofFile] = useState<File | null>(null)
 
   const isAssignee =
     !!task &&
@@ -62,6 +68,28 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
     onSuccess: () => {
       toast.success('تم تحديث الحالة')
       qc.invalidateQueries({ queryKey: ['tasks'] })
+    },
+    onError: (e) => toast.error(getApiErrorMessage(e)),
+  })
+
+  const completeMutation = useMutation({
+    mutationFn: async () => {
+      // Upload proof first (best effort) then flip status to DONE.
+      if (proofFile) {
+        await uploadTaskFile(task!.publicId, proofFile)
+      }
+      return updateTask(task!.publicId, { status: 'DONE' })
+    },
+    onSuccess: () => {
+      toast.success(
+        proofFile
+          ? 'تم إنهاء المهمة وإرفاق إثبات الإنجاز'
+          : 'تم إنهاء المهمة',
+      )
+      qc.invalidateQueries({ queryKey: ['tasks'] })
+      qc.invalidateQueries({ queryKey: ['task-files', task?.publicId] })
+      setCompleting(false)
+      setProofFile(null)
     },
     onError: (e) => toast.error(getApiErrorMessage(e)),
   })
@@ -124,9 +152,18 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
           <Label htmlFor="task-status">تغيير الحالة</Label>
           <Select
             id="task-status"
-            disabled={!canChangeStatus || updateStatus.isPending}
+            disabled={!canChangeStatus || updateStatus.isPending || completing}
             value={task.status === 'DONE' ? 'DONE' : 'IN_PROGRESS'}
-            onChange={(e) => updateStatus.mutate(e.target.value as TaskStatus)}
+            onChange={(e) => {
+              const newStatus = e.target.value as TaskStatus
+              if (newStatus === 'DONE' && task.status !== 'DONE') {
+                // Open the proof-of-completion section before flipping.
+                setCompleting(true)
+                setProofFile(null)
+              } else {
+                updateStatus.mutate(newStatus)
+              }
+            }}
           >
             <option value="IN_PROGRESS">{STATUS_LABEL.IN_PROGRESS}</option>
             <option value="DONE">{STATUS_LABEL.DONE}</option>
@@ -137,6 +174,73 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
             </div>
           )}
         </div>
+
+        {/* Proof-of-completion panel (shown when assignee chooses DONE) */}
+        {completing && (
+          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-4 space-y-3">
+            <div className="flex items-center gap-2 text-emerald-300 font-medium">
+              <CheckCircle2 className="h-4 w-4" />
+              تأكيد إنهاء المهمة
+            </div>
+            <p className="text-xs text-muted leading-relaxed">
+              يمكنك إرفاق ملف PDF كإثبات لإنجاز المهمة (اختياري). بعد التأكيد
+              ستتحوّل حالة المهمة إلى «مكتملة».
+            </p>
+
+            <input
+              ref={proofInputRef}
+              type="file"
+              accept="application/pdf,.pdf"
+              className="hidden"
+              onChange={(e) => setProofFile(e.target.files?.[0] || null)}
+            />
+            {proofFile ? (
+              <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-surface border border-border text-sm">
+                <span className="truncate">{proofFile.name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProofFile(null)
+                    if (proofInputRef.current) proofInputRef.current.value = ''
+                  }}
+                  className="text-xs text-muted hover:text-red-400"
+                >
+                  إزالة
+                </button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => proofInputRef.current?.click()}
+              >
+                <Paperclip className="h-4 w-4" />
+                إرفاق ملف PDF
+              </Button>
+            )}
+
+            <div className="flex flex-wrap gap-2 pt-1">
+              <Button
+                onClick={() => completeMutation.mutate()}
+                loading={completeMutation.isPending}
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                {proofFile ? 'تأكيد الإنهاء مع الإثبات' : 'تأكيد الإنهاء بدون إثبات'}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setCompleting(false)
+                  setProofFile(null)
+                }}
+              >
+                إلغاء
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Files */}
         <div>
