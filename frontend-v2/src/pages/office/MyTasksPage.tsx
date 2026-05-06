@@ -30,7 +30,12 @@ export function OfficeTasksPage() {
   const qc = useQueryClient()
   const tasks = useQuery({
     queryKey: ['tasks', 'mine', user?.sub],
-    queryFn: () => listTasks({ assignedToUserId: user!.sub }),
+    queryFn: async () => {
+      console.log('[MyTasksPage] firing /tasks?assignedToUserId=', user?.sub)
+      const res = await listTasks({ assignedToUserId: user!.sub })
+      console.log('[MyTasksPage] response total/data.length:', res.meta?.total, res.data?.length)
+      return res
+    },
     enabled: !!user?.sub,
   })
 
@@ -46,10 +51,13 @@ export function OfficeTasksPage() {
   if (tasks.isLoading) return <CenteredSpinner />
 
   const list = tasks.data?.data ?? []
+  // Visible build/render fingerprint so we can confirm which bundle is loaded
+  const debugStamp = `build=2026-05-06b · me=${user?.sub?.slice(0, 8) ?? 'n/a'} · loaded=${list.length} of ${tasks.data?.meta?.total ?? '?'}`
 
   return (
     <div>
       <PageHeader title="مهامي" description="جميع المهام المسندة إليك" />
+      <div className="text-xs text-muted mb-3 font-mono">{debugStamp}</div>
 
       <Table>
         <THead>
