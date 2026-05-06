@@ -57,7 +57,8 @@ const emptyTask: NewTaskForm = {
   description: '',
   assignedToUserId: '',
   dueDate: '',
-  status: 'TODO',
+  // New tasks always start in-progress; only the assignee flips to DONE.
+  status: 'IN_PROGRESS',
 }
 
 export function OfficeProjectDetailPage() {
@@ -233,12 +234,6 @@ export function OfficeProjectDetailPage() {
                 <EmptyRow colSpan={canManage ? 5 : 4} label="لا توجد مهام" />
               ) : (
                 taskList.map((t) => {
-                  const isMine =
-                    t.assignedToUser?.publicId === user?.sub ||
-                    t.assignedToUserId === user?.sub
-                  // An employee can only edit the status of tasks assigned to
-                  // them; managers/owners can edit anything.
-                  const canEditStatus = canManage || isMine
                   return (
                     <TR
                       key={t.publicId}
@@ -247,24 +242,20 @@ export function OfficeProjectDetailPage() {
                     >
                       <TD className="font-medium">{t.title}</TD>
                       <TD>{t.assignedToUser?.fullName || '—'}</TD>
-                      <TD onClick={(e) => e.stopPropagation()}>
-                        <Select
-                          value={t.status}
-                          disabled={!canEditStatus}
-                          onChange={(e) =>
-                            updateT.mutate({
-                              id: t.publicId,
-                              payload: { status: e.target.value as TaskStatus },
-                            })
+                      <TD>
+                        <Badge
+                          tone={
+                            t.status === 'DONE'
+                              ? 'success'
+                              : t.status === 'IN_PROGRESS'
+                                ? 'info'
+                                : t.status === 'CANCELLED'
+                                  ? 'danger'
+                                  : 'warning'
                           }
-                          className="h-8 text-xs w-32"
                         >
-                          {(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as TaskStatus[]).map((s) => (
-                            <option key={s} value={s}>
-                              {TASK_STATUS_LABEL[s]}
-                            </option>
-                          ))}
-                        </Select>
+                          {TASK_STATUS_LABEL[t.status]}
+                        </Badge>
                       </TD>
                       <TD className="text-xs text-muted">{formatDate(t.dueDate)}</TD>
                       {canManage && (
@@ -404,16 +395,13 @@ export function OfficeProjectDetailPage() {
               </Select>
             </div>
             <div>
-              <Label>الحالة</Label>
+              <Label>الحالة الابتدائية</Label>
               <Select
                 value={taskForm.status}
                 onChange={(e) => setTaskForm((f) => ({ ...f, status: e.target.value as TaskStatus }))}
               >
-                {(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as TaskStatus[]).map((s) => (
-                  <option key={s} value={s}>
-                    {TASK_STATUS_LABEL[s]}
-                  </option>
-                ))}
+                <option value="IN_PROGRESS">{TASK_STATUS_LABEL.IN_PROGRESS}</option>
+                <option value="DONE">{TASK_STATUS_LABEL.DONE}</option>
               </Select>
             </div>
             <div className="col-span-2">

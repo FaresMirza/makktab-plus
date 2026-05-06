@@ -54,8 +54,11 @@ export function RegisterPage() {
     setLoading(true)
     try {
       await register(form)
-      toast.success('تم إرسال رمز التحقق إلى بريدك')
-      setStep('otp')
+      toast.success('تم تسجيل الطلب — بانتظار موافقة الإدارة')
+      // Skip the OTP-verify step. The OfficeRequest is already created in
+      // pending state; the platform admin can approve it without the user
+      // having to confirm an emailed code (which sometimes never arrives).
+      setStep('done')
     } catch (err) {
       toast.error(getApiErrorMessage(err, 'فشل التسجيل'))
     } finally {

@@ -44,8 +44,10 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
     !!task &&
     (task.assignedToUser?.publicId === user?.sub || task.assignedToUserId === user?.sub)
 
-  // The assignee can change status of their own task; managers do anything.
-  const canChangeStatus = canManageProject || isAssignee
+  // Status is owned by the assignee only — even office owners and project
+  // managers don't override it. Project managers can still create / delete
+  // tasks, just not flip their state.
+  const canChangeStatus = isAssignee
   // Files: assignee or manager can upload+delete on their task.
   const canManageFiles = canManageProject || isAssignee
 
@@ -117,22 +119,21 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
           </div>
         </div>
 
-        {/* Status change */}
+        {/* Status change — assignee only, two options */}
         <div>
           <Label htmlFor="task-status">تغيير الحالة</Label>
           <Select
             id="task-status"
             disabled={!canChangeStatus || updateStatus.isPending}
-            value={task.status}
+            value={task.status === 'DONE' ? 'DONE' : 'IN_PROGRESS'}
             onChange={(e) => updateStatus.mutate(e.target.value as TaskStatus)}
           >
-            {(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'] as TaskStatus[]).map((s) => (
-              <option key={s} value={s}>{STATUS_LABEL[s]}</option>
-            ))}
+            <option value="IN_PROGRESS">{STATUS_LABEL.IN_PROGRESS}</option>
+            <option value="DONE">{STATUS_LABEL.DONE}</option>
           </Select>
           {!canChangeStatus && (
             <div className="text-xs text-muted mt-1">
-              فقط المسؤول عن المهمة أو مدير المشروع يمكنه تغيير الحالة.
+              فقط المسؤول عن المهمة يمكنه تغيير الحالة.
             </div>
           )}
         </div>
