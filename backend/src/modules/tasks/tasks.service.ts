@@ -134,6 +134,8 @@ export class TasksService {
 
     const { skip, take } = pagingArgs(paging);
     const [rows, total] = await this.tasksRepository.findFilteredPaginated(resolved, skip, take);
+    // TEMP DEBUG — remove once /tasks fetch issue is solved
+    console.log(`[GET /tasks] caller=${user.userId} (${user.username}) filters=${JSON.stringify({ ...filters, resolved })} total=${total} returned=${rows.length}`);
     return makePaginated(rows, total, paging);
   }
 
