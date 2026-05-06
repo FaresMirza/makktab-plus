@@ -54,11 +54,8 @@ export function RegisterPage() {
     setLoading(true)
     try {
       await register(form)
-      toast.success('تم تسجيل الطلب — بانتظار موافقة الإدارة')
-      // Skip the OTP-verify step. The OfficeRequest is already created in
-      // pending state; the platform admin can approve it without the user
-      // having to confirm an emailed code (which sometimes never arrives).
-      setStep('done')
+      toast.success('تم إرسال رمز التحقق إلى بريدك')
+      setStep('otp')
     } catch (err) {
       toast.error(getApiErrorMessage(err, 'فشل التسجيل'))
     } finally {
@@ -156,8 +153,12 @@ export function RegisterPage() {
             </form>
           ) : (
             <form onSubmit={submitOtp} className="space-y-4">
+              <p className="text-xs text-muted bg-elevated/40 border border-border rounded-lg p-3 leading-relaxed">
+                تم تسجيل طلبك بنجاح وهو الآن في انتظار موافقة الإدارة. أدخل
+                رمز التحقق المرسل إلى بريدك لتأكيد البريد، أو تخطَّ هذه الخطوة.
+              </p>
               <div>
-                <Label htmlFor="otp">رمز التحقق</Label>
+                <Label htmlFor="otp">رمز التحقق (اختياري)</Label>
                 <Input
                   id="otp"
                   inputMode="numeric"
@@ -171,6 +172,13 @@ export function RegisterPage() {
               <Button type="submit" loading={loading} className="w-full">
                 تأكيد البريد
               </Button>
+              <button
+                type="button"
+                onClick={() => setStep('done')}
+                className="w-full text-sm text-muted hover:text-accent pt-2"
+              >
+                تخطَّ هذه الخطوة — لم يصلني الرمز
+              </button>
             </form>
           )}
         </CardContent>
