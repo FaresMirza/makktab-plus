@@ -121,13 +121,27 @@ export class ProjectsRepository {
 
     async findByOfficeFilteredPaginated(
         officeId: number,
-        filters: { status?: ProjectStatus; projectManagerUserId?: number },
+        filters: {
+            status?: ProjectStatus;
+            projectManagerUserId?: number;
+            // When set, restrict to projects where the user is either the
+            // assigned manager OR has at least one assigned task. Used for
+            // employees and project-managers-only.
+            restrictToUserId?: number;
+        },
         skip: number,
         take: number,
     ): Promise<[any[], number]> {
         const where: Prisma.ProjectWhereInput = { officeId };
         if (filters.status) where.status = filters.status;
         if (filters.projectManagerUserId) where.projectManagerUserId = filters.projectManagerUserId;
+        if (filters.restrictToUserId !== undefined) {
+            const me = filters.restrictToUserId;
+            where.OR = [
+                { projectManagerUserId: me },
+                { tasks: { some: { assignedToUserId: me } } },
+            ];
+        }
         return this.prisma.$transaction([
             this.prisma.project.findMany({
                 where,

@@ -96,6 +96,11 @@ export class TasksRepository {
     /**
      * Build a where-clause from optional filters + optional office scope.
      * All filters are AND-combined.
+     *
+     * If `restrictToUserId` is set, also AND in:
+     *   (assignedToUserId = restrictToUserId
+     *     OR project.projectManagerUserId = restrictToUserId)
+     * which is the visibility rule for non-admin office members.
      */
     private buildWhere(filters: {
         projectId?: number;
@@ -103,6 +108,7 @@ export class TasksRepository {
         assignedToUserId?: number;
         createdByUserId?: number;
         officeId?: number;
+        restrictToUserId?: number;
     }): Prisma.TaskWhereInput {
         const where: Prisma.TaskWhereInput = {};
         if (filters.projectId !== undefined) where.projectId = filters.projectId;
@@ -113,6 +119,13 @@ export class TasksRepository {
             where.createdByUserId = filters.createdByUserId;
         if (filters.officeId !== undefined) {
             where.project = { officeId: filters.officeId };
+        }
+        if (filters.restrictToUserId !== undefined) {
+            const me = filters.restrictToUserId;
+            where.OR = [
+                { assignedToUserId: me },
+                { project: { projectManagerUserId: me } },
+            ];
         }
         return where;
     }
@@ -141,6 +154,7 @@ export class TasksRepository {
             assignedToUserId?: number;
             createdByUserId?: number;
             officeId?: number;
+            restrictToUserId?: number;
         },
         skip: number,
         take: number,

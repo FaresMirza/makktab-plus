@@ -323,7 +323,11 @@ export class ProjectsService {
 
   /**
    * Get projects for the authenticated user's office.
-   * Tenant-scoped, AND-combined filters, paginated.
+   *
+   * Visibility:
+   *   - office owner / manager / platform admin: all projects in the office
+   *   - everyone else: only projects where they are the assigned manager
+   *     OR have at least one task assigned
    */
   async findAllForAuthenticatedUser(
     userPublicId: string,
@@ -334,11 +338,27 @@ export class ProjectsService {
     try {
       const userOfficeId = await this.getUserOfficeId(userPublicId);
 
-      const filters: { status?: ProjectStatus; projectManagerUserId?: number } = {};
+      const me = await this.usersRepository.findByPublicId(userPublicId);
+      if (!me) throw new NotFoundException('User not found');
+
+      const filters: {
+        status?: ProjectStatus;
+        projectManagerUserId?: number;
+        restrictToUserId?: number;
+      } = {};
       if (status) filters.status = status;
       if (projectManagerUserId) {
         const pm = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
         filters.projectManagerUserId = pm.id;
+      }
+
+      const isPlatformAdmin =
+        me.roles?.includes('admin') || me.roles?.includes('super_admin');
+      const isOfficeOwner = !!me.ownedOffice && me.ownedOffice.id === userOfficeId;
+      const isOfficeManager = me.roles?.includes('manager') ?? false;
+      const isOfficeAdmin = isPlatformAdmin || isOfficeOwner || isOfficeManager;
+      if (!isOfficeAdmin) {
+        filters.restrictToUserId = me.id;
       }
 
       const { skip, take } = pagingArgs(paging);
@@ -347,6 +367,11 @@ export class ProjectsService {
         filters,
         skip,
         take,
+      );
+      console.log(
+        `[GET /projects] caller=${userPublicId} (${me.username}) ` +
+        `isAdmin=${isOfficeAdmin} restrictTo=${filters.restrictToUserId ?? 'none'} ` +
+        `total=${total} returned=${rows.length}`,
       );
       return makePaginated(rows, total, paging);
     } catch (error) {

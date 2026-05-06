@@ -94,6 +94,13 @@ export class TasksService {
 
   /**
    * AND-combined filtered list, tenant scoped, paginated.
+   *
+   * Visibility rules layered on top of explicit filters:
+   *  - platform admin / office owner / office manager: see all tasks in
+   *    the office (only the office filter applies).
+   *  - everyone else (employee / project-manager-only): tasks where they
+   *    are assignee OR they manage the parent project. The query AND-s
+   *    that with whatever explicit filters the caller passed.
    */
   async findFiltered(
     filters: {
@@ -111,6 +118,7 @@ export class TasksService {
       assignedToUserId?: number;
       createdByUserId?: number;
       officeId?: number;
+      restrictToUserId?: number;
     } = {};
 
     if (filters.projectId) {
@@ -132,10 +140,33 @@ export class TasksService {
       resolved.officeId = officeId;
     }
 
+    // Visibility: non-admin/non-owner/non-manager users only see tasks
+    // they're assigned to OR projects they manage.
+    const me = await this.prisma.user.findUnique({
+      where: { publicId: user.userId },
+      select: {
+        id: true,
+        ownedOffice: { select: { id: true } },
+      },
+    });
+    const isPlatformAdmin = this.tenantHelper.isPlatformAdmin(user);
+    const isOfficeOwner =
+      !!officeId && !!me?.ownedOffice && me.ownedOffice.id === officeId;
+    const isOfficeManager =
+      !!officeId && (user.roles?.includes('manager') ?? false);
+    const isOfficeAdmin = isPlatformAdmin || isOfficeOwner || isOfficeManager;
+    if (!isOfficeAdmin && me) {
+      resolved.restrictToUserId = me.id;
+    }
+
     const { skip, take } = pagingArgs(paging);
     const [rows, total] = await this.tasksRepository.findFilteredPaginated(resolved, skip, take);
-    // TEMP DEBUG — remove once /tasks fetch issue is solved
-    console.log(`[GET /tasks] caller=${user.userId} (${user.username}) filters=${JSON.stringify({ ...filters, resolved })} total=${total} returned=${rows.length}`);
+    console.log(
+      `[GET /tasks] caller=${user.userId} (${user.username}) ` +
+      `isAdmin=${isOfficeAdmin} ` +
+      `filters=${JSON.stringify({ ...filters, resolved })} ` +
+      `total=${total} returned=${rows.length}`,
+    );
     return makePaginated(rows, total, paging);
   }
 
