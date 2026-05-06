@@ -33,7 +33,8 @@ import { Select } from '@/components/ui/Select'
 import { CenteredSpinner } from '@/components/ui/Spinner'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table'
-import type { TaskStatus } from '@/api/types'
+import { TaskDetailDialog } from '@/components/office/TaskDetailDialog'
+import type { Task, TaskStatus } from '@/api/types'
 import { formatDate, formatDateTime, getApiErrorMessage } from '@/lib/utils'
 
 const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
@@ -85,6 +86,7 @@ export function OfficeProjectDetailPage() {
 
   const [taskOpen, setTaskOpen] = useState(false)
   const [taskForm, setTaskForm] = useState<NewTaskForm>(emptyTask)
+  const [openTask, setOpenTask] = useState<Task | null>(null)
 
   const createT = useMutation({
     mutationFn: (payload: CreateTaskPayload) => createTask(payload),
@@ -238,10 +240,14 @@ export function OfficeProjectDetailPage() {
                   // them; managers/owners can edit anything.
                   const canEditStatus = canManage || isMine
                   return (
-                    <TR key={t.publicId}>
+                    <TR
+                      key={t.publicId}
+                      onClick={() => setOpenTask(t)}
+                      className="cursor-pointer"
+                    >
                       <TD className="font-medium">{t.title}</TD>
                       <TD>{t.assignedToUser?.fullName || '—'}</TD>
-                      <TD>
+                      <TD onClick={(e) => e.stopPropagation()}>
                         <Select
                           value={t.status}
                           disabled={!canEditStatus}
@@ -262,8 +268,12 @@ export function OfficeProjectDetailPage() {
                       </TD>
                       <TD className="text-xs text-muted">{formatDate(t.dueDate)}</TD>
                       {canManage && (
-                        <TD className="text-left">
-                          <Button size="sm" variant="danger" onClick={() => cancelT.mutate(t.publicId)}>
+                        <TD className="text-left" onClick={(e) => e.stopPropagation()}>
+                          <Button
+                            size="sm"
+                            variant="danger"
+                            onClick={() => cancelT.mutate(t.publicId)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TD>
@@ -421,6 +431,12 @@ export function OfficeProjectDetailPage() {
           </div>
         </form>
       </Dialog>
+
+      <TaskDetailDialog
+        task={openTask}
+        canManageProject={canManage}
+        onClose={() => setOpenTask(null)}
+      />
     </div>
   )
 }

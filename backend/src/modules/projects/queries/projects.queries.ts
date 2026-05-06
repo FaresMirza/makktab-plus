@@ -119,6 +119,31 @@ export class ProjectsRepository {
         });
     }
 
+    /**
+     * Delete a project and every record referencing it.
+     *
+     * The schema has Task.projectId, ProjectAuditLog.projectId, TaskAuditLog
+     * (via Task), and ProjectFile (cascade). Without this transaction the
+     * project delete fails with P2003 on Task_projectId_fkey because Task
+     * is RESTRICT.
+     */
+    async deleteWithChildren(internalId: number) {
+        return this.prisma.$transaction([
+            // Audit logs referencing tasks of this project
+            this.prisma.taskAuditLog.deleteMany({
+                where: { task: { projectId: internalId } },
+            }),
+            // Tasks themselves
+            this.prisma.task.deleteMany({ where: { projectId: internalId } }),
+            // Project files (also cascades from Project but be explicit)
+            this.prisma.projectFile.deleteMany({ where: { projectId: internalId } }),
+            // Audit logs on the project itself
+            this.prisma.projectAuditLog.deleteMany({ where: { projectId: internalId } }),
+            // Finally, the project
+            this.prisma.project.delete({ where: { id: internalId } }),
+        ]);
+    }
+
     async findByOfficeFilteredPaginated(
         officeId: number,
         filters: {

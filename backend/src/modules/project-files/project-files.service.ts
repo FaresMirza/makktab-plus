@@ -12,6 +12,7 @@ import { ProjectFilesRepository } from './queries/project-files.queries';
 import { ProjectsRepository } from '../projects/queries/projects.queries';
 import { UsersRepository } from '../users/queries/users.queries';
 import { JwtUser, TenantHelper } from '../../common/helpers/tenant.helper';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ProjectFilesService {
@@ -22,6 +23,7 @@ export class ProjectFilesService {
     private readonly projectsRepository: ProjectsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly tenantHelper: TenantHelper,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**
@@ -163,6 +165,119 @@ export class ProjectFilesService {
   /**
    * Delete a file from a project (tenant-isolated).
    */
+  /**
+   * Upload a file attached to a specific task. Allowed if the caller is
+   * the task's assignee, or has manage rights on the parent project.
+   */
+  async uploadTaskFile(
+    taskPublicId: string,
+    userPublicId: string,
+    file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('No file provided');
+
+    try {
+      const task = await this.prisma.task.findUnique({
+        where: { publicId: taskPublicId },
+        select: {
+          id: true,
+          assignedToUserId: true,
+          project: {
+            select: { id: true, officeId: true, projectManagerUserId: true },
+          },
+        },
+      });
+      if (!task) throw new NotFoundException('Task not found');
+
+      const user = await this.usersRepository.findByPublicId(userPublicId);
+      if (!user) throw new NotFoundException('User not found');
+
+      // Permission: assignee can upload to their own task; otherwise
+      // require project-manager / office-owner / admin rights.
+      const isAssignee = task.assignedToUserId === user.id;
+      if (!isAssignee) {
+        await this.tenantHelper.assertCanManageProject(
+          { userId: userPublicId, username: user.username, roles: user.roles } as JwtUser,
+          {
+            officeId: task.project.officeId,
+            projectManagerUserId: task.project.projectManagerUserId,
+          },
+        );
+      }
+
+      const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+      const fileUrl = `/uploads/projects/${file.filename}`;
+
+      const record = await this.projectFilesRepository.create({
+        projectId: task.project.id,
+        taskId: task.id,
+        uploadedByUserId: user.id,
+        fileName: originalName,
+        storedFileName: file.filename,
+        fileUrl,
+        filePath: file.path,
+        fileSize: file.size,
+        mimeType: file.mimetype,
+      });
+
+      return {
+        publicId: record.publicId,
+        fileName: record.fileName,
+        fileUrl: record.fileUrl,
+        fileSize: record.fileSize,
+        mimeType: record.mimeType,
+        createdAt: record.createdAt,
+        uploadedBy: record.uploadedBy,
+      };
+    } catch (error) {
+      if (file?.path) {
+        await fs.unlink(file.path).catch(() => undefined);
+      }
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      this.logger.error(
+        `Error uploading task file (task=${taskPublicId}):`,
+        error,
+      );
+      throw new InternalServerErrorException(
+        `Failed to upload task file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+  }
+
+  /**
+   * List files attached to a specific task. Visible to anyone in the
+   * task's office (read-only).
+   */
+  async listTaskFiles(taskPublicId: string, userPublicId: string) {
+    const task = await this.prisma.task.findUnique({
+      where: { publicId: taskPublicId },
+      select: { id: true, project: { select: { officeId: true } } },
+    });
+    if (!task) throw new NotFoundException('Task not found');
+
+    const userOfficeId = await this.getUserOfficeId(userPublicId);
+    if (task.project.officeId !== userOfficeId) {
+      throw new ForbiddenException('You do not have access to this task');
+    }
+
+    const files = await this.projectFilesRepository.findByTaskId(task.id);
+    return files.map((f) => ({
+      publicId: f.publicId,
+      fileName: f.fileName,
+      fileUrl: f.fileUrl,
+      fileSize: f.fileSize,
+      mimeType: f.mimeType,
+      createdAt: f.createdAt,
+      uploadedBy: f.uploadedBy,
+    }));
+  }
+
   async deleteFile(filePublicId: string, userPublicId: string) {
     const userOfficeId = await this.getUserOfficeId(userPublicId);
 

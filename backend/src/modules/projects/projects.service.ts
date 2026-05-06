@@ -457,22 +457,16 @@ export class ProjectsService {
       const userOfficeId = await this.getUserOfficeId(userPublicId);
       console.log(`[DELETE /projects/:id] Step 1: User office ID = ${userOfficeId}`);
 
-      // Step 2: Verify project exists and belongs to user's office (CRITICAL TENANT ISOLATION)
-      console.log(`[DELETE /projects/:id] Step 2: Verifying project access (tenant isolation check)`);
       const project = await this.verifyProjectAccess(projectPublicId, userOfficeId);
-      console.log(`[DELETE /projects/:id] Step 2: ✓ Project access verified - office matches (officeId=${project.officeId})`);
 
-      // Step 3: Hard delete - permanently remove from database
-      console.log(`[DELETE /projects/:id] Step 3: Performing hard delete - permanently removing from database`);
-
-      await this.projectsRepository.delete(project.id);
-      console.log(`[DELETE /projects/:id] ✓ Project permanently deleted from database: ${projectPublicId}`);
-      this.logger.debug(`Project ${projectPublicId} permanently deleted`);
+      // Cascade-delete every record that references this project before
+      // dropping the project itself (Task FK is RESTRICT, audit logs too).
+      await this.projectsRepository.deleteWithChildren(project.id);
 
       return {
         message: 'Project successfully deleted',
         publicId: projectPublicId,
-        officeId: userOfficeId
+        officeId: userOfficeId,
       };
     } catch (error) {
       console.error(`[DELETE /projects/:id] Error deleting project ${projectPublicId}:`, error);

@@ -35,6 +35,16 @@ export class ProjectFilesRepository {
     });
   }
 
+  async findByTaskId(taskId: number) {
+    return this.prisma.projectFile.findMany({
+      where: { taskId },
+      include: {
+        uploadedBy: { select: this.uploaderSelect },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async findByPublicId(publicId: string) {
     return this.prisma.projectFile.findUnique({
       where: { publicId },
