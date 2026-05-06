@@ -45,10 +45,14 @@ export interface Task {
   description?: string
   status: TaskStatus
   dueDate?: string
-  assignedToUser?: { publicId: string; fullName: string }
-  assignedToUserId?: string
-  createdByUser?: { publicId: string; fullName: string }
+  // Prisma relation names → these are what the backend actually returns.
+  assignedTo?: { publicId: string; fullName: string }
+  createdBy?: { publicId: string; fullName: string }
   project?: { publicId: string; name: string }
+  // Internal id-style fields (rarely used; available when the BE include
+  // selected the FK columns directly).
+  assignedToUserId?: string
+  createdByUserId?: string
   projectId?: string
   createdAt?: string
 }

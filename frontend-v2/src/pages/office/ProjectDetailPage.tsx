@@ -238,7 +238,7 @@ export function OfficeProjectDetailPage() {
                       className="cursor-pointer"
                     >
                       <TD className="font-medium">{t.title}</TD>
-                      <TD>{t.assignedToUser?.fullName || '—'}</TD>
+                      <TD>{t.assignedTo?.fullName || '—'}</TD>
                       <TD>
                         <Badge
                           tone={

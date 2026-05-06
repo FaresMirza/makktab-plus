@@ -48,7 +48,8 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
 
   const isAssignee =
     !!task &&
-    (task.assignedToUser?.publicId === user?.sub || task.assignedToUserId === user?.sub)
+    (task.assignedTo?.publicId === user?.sub ||
+      task.assignedToUserId === user?.sub)
 
   // Status is owned by the assignee only — even office owners and project
   // managers don't override it. Project managers can still create / delete
@@ -135,7 +136,7 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div>
             <div className="text-xs text-muted">المسؤول</div>
-            <div className="text-accent">{task.assignedToUser?.fullName || '—'}</div>
+            <div className="text-accent">{task.assignedTo?.fullName || '—'}</div>
           </div>
           <div>
             <div className="text-xs text-muted">الاستحقاق</div>
