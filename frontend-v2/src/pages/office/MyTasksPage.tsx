@@ -52,7 +52,16 @@ export function OfficeTasksPage() {
 
   const list = tasks.data?.data ?? []
   // Visible build/render fingerprint so we can confirm which bundle is loaded
-  const debugStamp = `build=2026-05-06b · me=${user?.sub?.slice(0, 8) ?? 'n/a'} · loaded=${list.length} of ${tasks.data?.meta?.total ?? '?'}`
+  const errMsg = tasks.error
+    ? ((tasks.error as any)?.response?.status ?? 'err') +
+      ': ' +
+      ((tasks.error as any)?.response?.data?.message ?? (tasks.error as Error).message)
+    : null
+  const debugStamp =
+    `build=2026-05-06c · me=${user?.sub?.slice(0, 8) ?? 'n/a'} · ` +
+    `status=${tasks.status} fetchStatus=${tasks.fetchStatus} ` +
+    `loaded=${list.length} of ${tasks.data?.meta?.total ?? '?'}` +
+    (errMsg ? ` · ERROR ${errMsg}` : '')
 
   return (
     <div>
