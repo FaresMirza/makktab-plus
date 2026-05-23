@@ -28,7 +28,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 @ApiTags('Admins')
 @Controller('admins')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('admin')
+@Roles('admin', 'super_admin')
 export class AdminsController {
     constructor(
         private readonly adminsService: AdminsService,
