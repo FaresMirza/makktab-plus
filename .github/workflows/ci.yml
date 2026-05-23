@@ -120,15 +120,19 @@ jobs:
             # Log in to GHCR on the server
             echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Pull both latest images
-            docker pull ghcr.io/${{ env.BACKEND_IMAGE }}:latest
-            docker pull ghcr.io/${{ env.FRONTEND_IMAGE }}:latest
+            # Pull via compose so the local tag we refresh matches the exact
+            # image reference compose looks up on `up`. (Plain `docker pull`
+            # with github.repository preserves the casing of the org/repo,
+            # which doesn't match the lowercase image refs in the compose
+            # file — the tag we refreshed wasn't the tag compose looked at,
+            # so containers stayed on a stale image.)
+            docker compose -f ~/makktab-plus/docker-compose.prod.yml pull api frontend
 
-            # Apply new stack. Force-recreate api+frontend so freshly-pulled
-            # image digests actually replace the running containers (compose
-            # doesn't re-roll on its own when only the digest behind :latest
-            # changes). db + traefik are left running.
+            # Ensure the whole stack is up (no-op if everything's healthy).
             docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --remove-orphans
+
+            # Force-recreate api+frontend with the freshly-pulled images.
+            # db + traefik stay running.
             docker compose -f ~/makktab-plus/docker-compose.prod.yml up -d --force-recreate api frontend
 
             # Reclaim disk from previous deploys' superseded image layers.
