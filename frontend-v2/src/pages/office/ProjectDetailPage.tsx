@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useReactToPrint } from 'react-to-print'
 import {
   ArrowRight,
   Plus,
@@ -9,6 +10,8 @@ import {
   Download,
   CheckCircle2,
   Loader2,
+  FileText,
+  Printer,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getProject, updateProject } from '@/api/projects'
@@ -34,6 +37,7 @@ import { CenteredSpinner } from '@/components/ui/Spinner'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table'
 import { TaskDetailDialog } from '@/components/office/TaskDetailDialog'
+import { ProjectReport } from '@/components/office/ProjectReport'
 import type { Task, TaskStatus } from '@/api/types'
 import { formatDate, formatDateTime, getApiErrorMessage } from '@/lib/utils'
 
@@ -85,6 +89,12 @@ export function OfficeProjectDetailPage() {
   const [taskOpen, setTaskOpen] = useState(false)
   const [taskForm, setTaskForm] = useState<NewTaskForm>(emptyTask)
   const [openTask, setOpenTask] = useState<Task | null>(null)
+  const [reportOpen, setReportOpen] = useState(false)
+  const reportRef = useRef<HTMLDivElement>(null)
+  const printReport = useReactToPrint({
+    contentRef: reportRef,
+    documentTitle: `Project Report - ${project.data?.name ?? ''}`,
+  })
 
   const createT = useMutation({
     mutationFn: (payload: CreateTaskPayload) => createTask(payload),
@@ -165,12 +175,18 @@ export function OfficeProjectDetailPage() {
         title={p.name}
         description={p.description}
         actions={
-          canManage && p.status !== 'COMPLETED' && (
-            <Button onClick={() => completeProject.mutate()} loading={completeProject.isPending}>
-              <CheckCircle2 className="h-4 w-4" />
-              إنهاء المشروع
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={() => setReportOpen(true)}>
+              <FileText className="h-4 w-4" />
+              تقرير المشروع (PDF)
             </Button>
-          )
+            {canManage && p.status !== 'COMPLETED' && (
+              <Button onClick={() => completeProject.mutate()} loading={completeProject.isPending}>
+                <CheckCircle2 className="h-4 w-4" />
+                إنهاء المشروع
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -417,6 +433,23 @@ export function OfficeProjectDetailPage() {
         canManageProject={canManage}
         onClose={() => setOpenTask(null)}
       />
+
+      <Dialog
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        title="معاينة تقرير المشروع"
+        className="max-w-4xl"
+      >
+        <div className="flex justify-end mb-3">
+          <Button onClick={() => printReport()}>
+            <Printer className="h-4 w-4" />
+            طباعة / حفظ PDF
+          </Button>
+        </div>
+        <div className="max-h-[70vh] overflow-auto rounded-md border border-border bg-white">
+          <ProjectReport ref={reportRef} project={p} tasks={taskList} />
+        </div>
+      </Dialog>
     </div>
   )
 }
