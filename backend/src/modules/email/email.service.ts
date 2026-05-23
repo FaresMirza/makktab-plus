@@ -42,13 +42,16 @@ export class EmailService implements OnModuleInit {
             return;
         }
 
-        this.transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: { user, pass },
-        });
+        const host = this.config.get<string>('SMTP_HOST');
+        const port = parseInt(this.config.get<string>('SMTP_PORT') ?? '587', 10);
+
+        this.transporter = host
+            ? nodemailer.createTransport({ host, port, secure: port === 465, auth: { user, pass } })
+            : nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
 
         this.fromAddress = this.config.get<string>('SMTP_FROM') || user;
-        this.logger.log(`EmailService ready (Gmail SMTP, from=${this.fromAddress})`);
+        const label = host ? `${host}:${port}` : 'Gmail SMTP';
+        this.logger.log(`EmailService ready (${label}, from=${this.fromAddress})`);
     }
 
     async send(params: SendEmailParams): Promise<void> {
