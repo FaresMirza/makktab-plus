@@ -45,6 +45,7 @@ export interface Task {
   description?: string
   status: TaskStatus
   dueDate?: string
+  completedAt?: string
   // Prisma relation names → these are what the backend actually returns.
   assignedTo?: { publicId: string; fullName: string }
   createdBy?: { publicId: string; fullName: string }

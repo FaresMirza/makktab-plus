@@ -175,17 +175,18 @@ export const ProjectReport = forwardRef<HTMLDivElement, Props>(({ project, tasks
         >
           <thead>
             <tr style={{ background: '#f1f5f9' }}>
-              <Th width="10%">#</Th>
-              <Th width="45%">المهمة</Th>
-              <Th width="25%">الموظف</Th>
-              <Th width="20%">الحالة</Th>
+              <Th width="6%">#</Th>
+              <Th width="36%">المهمة</Th>
+              <Th width="22%">الموظف</Th>
+              <Th width="18%">الحالة</Th>
+              <Th width="18%">تاريخ الإنجاز</Th>
             </tr>
           </thead>
           <tbody>
             {tasks.length === 0 ? (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   style={{
                     border: '1px solid #e2e8f0',
                     padding: '14px',
@@ -204,6 +205,13 @@ export const ProjectReport = forwardRef<HTMLDivElement, Props>(({ project, tasks
                   <Td>{t.assignedTo?.fullName || '—'}</Td>
                   <Td>
                     <StatusPill status={t.status} />
+                  </Td>
+                  <Td>
+                    {t.status === 'DONE' ? (
+                      <span style={{ color: '#0f172a' }}>{formatDateAR(t.completedAt)}</span>
+                    ) : (
+                      <span style={{ color: '#94a3b8' }}>—</span>
+                    )}
                   </Td>
                 </tr>
               ))

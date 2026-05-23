@@ -207,7 +207,12 @@ export class TasksService {
     const updateData: any = {};
     if (updateTaskDto.title !== undefined) updateData.title = updateTaskDto.title;
     if (updateTaskDto.description !== undefined) updateData.description = updateTaskDto.description;
-    if (updateTaskDto.status !== undefined) updateData.status = updateTaskDto.status;
+    if (updateTaskDto.status !== undefined) {
+      updateData.status = updateTaskDto.status;
+      // Stamp/clear completedAt on the status transition so the project
+      // report can show "when did the assignee finish this".
+      updateData.completedAt = updateTaskDto.status === TaskStatus.DONE ? new Date() : null;
+    }
     if (updateTaskDto.dueDate) updateData.dueDate = new Date(updateTaskDto.dueDate);
 
     if (updateTaskDto.assignedToUserId) {
