@@ -200,4 +200,14 @@ export class UsersRepository {
             },
         });
     }
+
+    async findActivePlatformAdmins() {
+        return this.prisma.user.findMany({
+            where: {
+                status: UserStatus.ACTIVE,
+                roles: { hasSome: ['admin', 'super_admin'] },
+            },
+            select: { email: true, fullName: true },
+        });
+    }
 }

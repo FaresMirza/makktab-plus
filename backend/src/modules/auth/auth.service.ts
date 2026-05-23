@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthHelper } from './helpers/auth.helper';
 import { RegistrationHelper } from './helpers/registration.helper';
@@ -23,6 +23,8 @@ import { OtpPurpose, OtpChannel, UserStatus } from 'prisma/src/generated/prisma-
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private readonly authHelper: AuthHelper,
         private readonly registrationHelper: RegistrationHelper,
@@ -428,6 +430,51 @@ export class AuthService {
 
         await this.registrationRepository.markEmailVerified(request.id);
 
+        // Notify platform admins that a new office request is now ready for review.
+        // Wrapped so a mail failure can't break the user's verification flow.
+        this.notifyAdminsOfPendingOfficeRequest(request).catch((err) => {
+            this.logger.error(`Failed to notify admins of office request ${request.id}: ${(err as Error).message}`);
+        });
+
         return { message: AUTH_MESSAGES.EMAIL_VERIFIED };
+    }
+
+    private async notifyAdminsOfPendingOfficeRequest(request: {
+        officeName: string;
+        fullName: string;
+        email: string;
+        phone: string;
+        username: string;
+    }) {
+        const admins = await this.usersRepository.findActivePlatformAdmins();
+        if (admins.length === 0) return;
+
+        const subject = `طلب مكتب جديد بانتظار المراجعة: ${request.officeName}`;
+        const html = `
+            <div dir="rtl" style="font-family: -apple-system, system-ui, sans-serif; line-height: 1.7; color: #0f172a;">
+                <h2 style="margin-bottom: 12px;">طلب تسجيل مكتب جديد</h2>
+                <p>تم التحقّق من بريد مقدّم الطلب وهو الآن بانتظار مراجعتك:</p>
+                <table style="border-collapse: collapse; margin-top: 12px;">
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">اسم المكتب:</td><td style="padding: 4px 0;"><strong>${request.officeName}</strong></td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">المسؤول:</td><td style="padding: 4px 0;">${request.fullName}</td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">اسم المستخدم:</td><td style="padding: 4px 0;">${request.username}</td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">البريد:</td><td style="padding: 4px 0;">${request.email}</td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">الهاتف:</td><td style="padding: 4px 0;">${request.phone}</td></tr>
+                </table>
+                <p style="margin-top: 20px;">راجع الطلب من لوحة الإدارة لاعتماده أو رفضه.</p>
+            </div>
+        `;
+        const text = `طلب مكتب جديد بانتظار المراجعة\n\nاسم المكتب: ${request.officeName}\nالمسؤول: ${request.fullName}\nاسم المستخدم: ${request.username}\nالبريد: ${request.email}\nالهاتف: ${request.phone}\n\nراجع الطلب من لوحة الإدارة.`;
+
+        await Promise.allSettled(
+            admins.map((admin) =>
+                this.emailService.send({
+                    to: admin.email,
+                    subject,
+                    text,
+                    html,
+                }),
+            ),
+        );
     }
 }
