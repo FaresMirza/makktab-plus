@@ -138,6 +138,7 @@ model Task {
   description      String?
   status           TaskStatus
   dueDate          DateTime?
+  completedAt      DateTime?
   createdAt        DateTime   @default(now())
 
   project    Project        @relation(fields: [projectId], references: [id])
