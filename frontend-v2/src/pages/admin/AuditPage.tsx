@@ -34,7 +34,7 @@ export function AdminAuditPage() {
             data!.map((log) => (
               <TR key={log.id}>
                 <TD className="font-medium">{log.action}</TD>
-                <TD>{log.admin?.username || '—'}</TD>
+                <TD>{log.admin?.fullName || log.admin?.username || '—'}</TD>
                 <TD>{log.targetOffice?.name || '—'}</TD>
                 <TD className="text-muted text-xs">{log.ip || log.ipAddress || '—'}</TD>
                 <TD className="text-muted text-xs">{formatDateTime(log.createdAt)}</TD>

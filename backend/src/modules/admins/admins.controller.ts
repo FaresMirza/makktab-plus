@@ -136,6 +136,7 @@ export class AdminsController {
                     select: {
                         publicId: true,
                         fullName: true,
+                        username: true,
                         email: true,
                     },
                 },
