@@ -11,6 +11,10 @@ export default {
         border: 'var(--border)',
         muted: 'var(--muted)',
         accent: 'var(--accent)',
+        brand: 'var(--brand)',
+        'brand-strong': 'var(--brand-strong)',
+        'brand-soft': 'var(--brand-soft)',
+        'brand-contrast': 'var(--brand-contrast)',
       },
       fontFamily: {
         sans: [

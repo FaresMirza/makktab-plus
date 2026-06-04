@@ -12,6 +12,7 @@ export class RegistrationRepository {
         phone: string;
         username: string;
         city: string;
+        registrationNumber: string;
         passwordHash: string;
         verificationCodeHash: string;
         verificationExpiresAt: Date;
@@ -66,6 +67,20 @@ export class RegistrationRepository {
     async emailExistsInRequests(email: string): Promise<boolean> {
         const request = await this.prisma.officeRequest.findFirst({
             where: { email, status: null },
+        });
+        return !!request;
+    }
+
+    async registrationNumberExistsInOffices(registrationNumber: string): Promise<boolean> {
+        const office = await this.prisma.office.findFirst({
+            where: { registrationNumber },
+        });
+        return !!office;
+    }
+
+    async registrationNumberExistsInRequests(registrationNumber: string): Promise<boolean> {
+        const request = await this.prisma.officeRequest.findFirst({
+            where: { registrationNumber, status: null },
         });
         return !!request;
     }

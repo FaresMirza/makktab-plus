@@ -43,13 +43,14 @@ export function AdminPendingOfficesPage() {
             <TH>البريد</TH>
             <TH>الجوال</TH>
             <TH>المدينة</TH>
+            <TH>السجل التجاري</TH>
             <TH>تاريخ الطلب</TH>
             <TH className="text-left">إجراء</TH>
           </TR>
         </THead>
         <TBody>
           {list.length === 0 ? (
-            <EmptyRow colSpan={7} label="لا توجد طلبات معلّقة" />
+            <EmptyRow colSpan={8} label="لا توجد طلبات معلّقة" />
           ) : (
             list.map((req) => {
               const pending = decide.isPending && decide.variables?.id === req.id
@@ -60,6 +61,7 @@ export function AdminPendingOfficesPage() {
                   <TD className="text-muted text-xs">{req.email}</TD>
                   <TD className="text-muted text-xs">{req.phone}</TD>
                   <TD>{req.city}</TD>
+                  <TD className="font-mono text-xs">{req.registrationNumber}</TD>
                   <TD className="text-xs text-muted">{formatDate(req.createdAt)}</TD>
                   <TD className="text-left">
                     <div className="flex items-center gap-2 justify-end">

@@ -319,6 +319,7 @@ export class AuthService {
     async register(dto: RegisterDto, ip: string, userAgent: string) {
         await this.registrationHelper.validateUsernameUnique(dto.username);
         await this.registrationHelper.validateEmailUnique(dto.email);
+        await this.registrationHelper.validateRegistrationNumberUnique(dto.registrationNumber);
 
         const passwordHash = await this.authHelper.hashPassword(dto.password);
         const { rawCode, codeHash } = await this.registrationHelper.generateVerificationCode();
@@ -332,6 +333,7 @@ export class AuthService {
             phone: dto.phone,
             username: dto.username,
             city: dto.city,
+            registrationNumber: dto.registrationNumber,
             passwordHash,
             verificationCodeHash: codeHash,
             verificationExpiresAt: expiresAt,
@@ -445,6 +447,8 @@ export class AuthService {
         email: string;
         phone: string;
         username: string;
+        city?: string;
+        registrationNumber?: string;
     }) {
         const admins = await this.usersRepository.findActivePlatformAdmins();
         if (admins.length === 0) return;
@@ -460,11 +464,13 @@ export class AuthService {
                     <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">اسم المستخدم:</td><td style="padding: 4px 0;">${request.username}</td></tr>
                     <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">البريد:</td><td style="padding: 4px 0;">${request.email}</td></tr>
                     <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">الهاتف:</td><td style="padding: 4px 0;">${request.phone}</td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">المدينة:</td><td style="padding: 4px 0;">${request.city ?? '—'}</td></tr>
+                    <tr><td style="padding: 4px 12px 4px 0; color: #64748b;">السجل التجاري:</td><td style="padding: 4px 0;">${request.registrationNumber ?? '—'}</td></tr>
                 </table>
                 <p style="margin-top: 20px;">راجع الطلب من لوحة الإدارة لاعتماده أو رفضه.</p>
             </div>
         `;
-        const text = `طلب مكتب جديد بانتظار المراجعة\n\nاسم المكتب: ${request.officeName}\nالمسؤول: ${request.fullName}\nاسم المستخدم: ${request.username}\nالبريد: ${request.email}\nالهاتف: ${request.phone}\n\nراجع الطلب من لوحة الإدارة.`;
+        const text = `طلب مكتب جديد بانتظار المراجعة\n\nاسم المكتب: ${request.officeName}\nالمسؤول: ${request.fullName}\nاسم المستخدم: ${request.username}\nالبريد: ${request.email}\nالهاتف: ${request.phone}\nالمدينة: ${request.city ?? '—'}\nالسجل التجاري: ${request.registrationNumber ?? '—'}\n\nراجع الطلب من لوحة الإدارة.`;
 
         await Promise.allSettled(
             admins.map((admin) =>

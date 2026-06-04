@@ -3,29 +3,36 @@
 @tailwind utilities;
 
 @layer base {
-  /* Dark theme (default) */
   :root,
   :root.dark {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --elevated: #171717;
-    --border: #262626;
-    --muted: #a3a3a3;
-    --accent: #fafafa;
-    --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(255, 255, 255, 0.04);
+    --bg: #071512;
+    --surface: #10231f;
+    --elevated: #17332d;
+    --border: rgba(213, 190, 151, 0.16);
+    --muted: #9eb2aa;
+    --accent: #f8f2e7;
+    --brand: #c79a43;
+    --brand-strong: #e1b968;
+    --brand-soft: rgba(199, 154, 67, 0.16);
+    --brand-contrast: #211505;
+    --shadow-soft: 0 18px 45px -24px rgba(1, 8, 7, 0.82),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
     color-scheme: dark;
   }
 
   :root.light {
-    --bg: #f8f8f8;
-    --surface: #ffffff;
-    --elevated: #f1f1f1;
-    --border: #e5e5e5;
-    --muted: #6b7280;
-    --accent: #0a0a0a;
-    --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.06),
-      0 0 0 1px rgba(0, 0, 0, 0.04);
+    --bg: #f4efe6;
+    --surface: rgba(255, 252, 247, 0.92);
+    --elevated: #ece2d1;
+    --border: rgba(94, 76, 44, 0.12);
+    --muted: #6f746e;
+    --accent: #17302a;
+    --brand: #a87418;
+    --brand-strong: #c48c29;
+    --brand-soft: rgba(168, 116, 24, 0.14);
+    --brand-contrast: #fff8ee;
+    --shadow-soft: 0 22px 42px -28px rgba(48, 34, 14, 0.28),
+      0 0 0 1px rgba(81, 58, 23, 0.05);
     color-scheme: light;
   }
 
@@ -40,6 +47,10 @@
   body {
     @apply bg-bg text-accent font-sans;
     min-height: 100vh;
+    background-image:
+      radial-gradient(circle at top, rgba(199, 154, 67, 0.14), transparent 28%),
+      radial-gradient(circle at bottom left, rgba(44, 114, 97, 0.2), transparent 30%);
+    background-attachment: fixed;
   }
 
   *::selection {
@@ -81,5 +92,19 @@
 
   .shadow-soft {
     box-shadow: var(--shadow-soft);
+  }
+
+  .brand-panel {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--brand) 18%, var(--surface)) 0%, var(--surface) 48%),
+      var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .timeline-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 65%, transparent) 1px, transparent 1px);
+    background-size: 48px 100%;
   }
 }

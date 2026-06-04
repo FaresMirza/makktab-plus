@@ -10,12 +10,16 @@ export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-bg flex">
+    <div className="min-h-screen bg-bg flex relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-0 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-soft blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
+      </div>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col relative">
         {/* Mobile top bar */}
-        <header className="lg:hidden sticky top-0 z-20 bg-surface/80 backdrop-blur border-b border-border h-14 flex items-center justify-between px-4">
+        <header className="lg:hidden sticky top-0 z-20 bg-surface/85 backdrop-blur border-b border-border h-14 flex items-center justify-between px-4">
           <button
             onClick={() => setSidebarOpen(true)}
             className="h-9 w-9 rounded-md hover:bg-elevated flex items-center justify-center text-muted hover:text-accent"

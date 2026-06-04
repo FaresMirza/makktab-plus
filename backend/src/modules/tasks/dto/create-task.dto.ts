@@ -38,6 +38,16 @@ export class CreateTaskDto {
   @IsOptional()
   status?: TaskStatus;
 
+  @ApiProperty({ description: 'The planned start date and time of the task', example: '2026-02-12T09:00:00Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  startAt: string;
+
+  @ApiProperty({ description: 'The planned end date and time of the task', example: '2026-02-12T17:00:00Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  endAt: string;
+
   @ApiProperty({ description: 'The due date of the task', example: '2026-02-15T00:00:00Z', required: false })
   @IsDateString()
   @IsOptional()

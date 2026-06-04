@@ -24,6 +24,8 @@ export interface CreateTaskPayload {
   createdByUserId: string
   assignedToUserId: string
   status?: TaskStatus
+  startAt: string
+  endAt: string
   dueDate?: string
 }
 
@@ -35,6 +37,8 @@ export interface UpdateTaskPayload {
   description?: string
   assignedToUserId?: string
   status?: TaskStatus
+  startAt?: string
+  endAt?: string
   dueDate?: string
 }
 

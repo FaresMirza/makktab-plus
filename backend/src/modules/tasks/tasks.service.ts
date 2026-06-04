@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskStatus } from 'prisma/src/generated/prisma-client/client';
@@ -20,6 +20,44 @@ export class TasksService {
     private readonly tenantHelper: TenantHelper,
     private readonly prisma: PrismaService,
   ) { }
+
+  private normalizeTaskTimeline(
+    project: { startDate: Date | null; endDate: Date | null },
+    startAt?: string | Date | null,
+    endAt?: string | Date | null,
+  ) {
+    if (!project.startDate || !project.endDate) {
+      throw new BadRequestException('Project timeline must be set before adding task dates.');
+    }
+    if (!startAt || !endAt) {
+      throw new BadRequestException('Task start and end times are required.');
+    }
+
+    const parsedStart = new Date(startAt);
+    const parsedEnd = new Date(endAt);
+    if (Number.isNaN(parsedStart.getTime()) || Number.isNaN(parsedEnd.getTime())) {
+      throw new BadRequestException('Task dates are invalid.');
+    }
+    if (parsedStart >= parsedEnd) {
+      throw new BadRequestException('Task end time must be after the start time.');
+    }
+
+    const projectStart = new Date(project.startDate);
+    projectStart.setHours(0, 0, 0, 0);
+
+    const projectEnd = new Date(project.endDate);
+    projectEnd.setHours(23, 59, 59, 999);
+
+    if (parsedStart < projectStart || parsedEnd > projectEnd) {
+      throw new BadRequestException('Task dates must stay within the parent project timeline.');
+    }
+
+    return {
+      startAt: parsedStart,
+      endAt: parsedEnd,
+      dueDate: parsedEnd,
+    };
+  }
 
   /**
    * Verify a task's project lives in the caller's office (admins bypass).
@@ -54,7 +92,7 @@ export class TasksService {
   }
 
   async create(createTaskDto: CreateTaskDto, user: JwtUser) {
-    const { projectId, createdByUserId, assignedToUserId, title, description, status, dueDate } = createTaskDto;
+    const { projectId, createdByUserId, assignedToUserId, title, description, status, dueDate, startAt, endAt } = createTaskDto;
 
     const project = await this.tasksHelper.validateProjectExists(projectId);
     const creator = await this.tasksHelper.validateUserExists(createdByUserId, 'Creator');
@@ -67,6 +105,8 @@ export class TasksService {
       projectManagerUserId: project.projectManagerUserId,
     });
 
+    const timeline = this.normalizeTaskTimeline(project, startAt, endAt);
+
     return this.tasksRepository.create({
       title,
       description,
@@ -74,7 +114,9 @@ export class TasksService {
       createdByUserId: creator.id,
       assignedToUserId: assignee.id,
       status: status || TaskStatus.TODO,
-      dueDate: dueDate ? new Date(dueDate) : null,
+      startAt: timeline.startAt,
+      endAt: timeline.endAt,
+      dueDate: dueDate ? new Date(dueDate) : timeline.dueDate,
     });
   }
 
@@ -213,7 +255,28 @@ export class TasksService {
       // report can show "when did the assignee finish this".
       updateData.completedAt = updateTaskDto.status === TaskStatus.DONE ? new Date() : null;
     }
-    if (updateTaskDto.dueDate) updateData.dueDate = new Date(updateTaskDto.dueDate);
+    if (
+      updateTaskDto.startAt !== undefined ||
+      updateTaskDto.endAt !== undefined ||
+      updateTaskDto.dueDate !== undefined
+    ) {
+      const currentTask = await this.tasksRepository.findById(task.id);
+      if (!currentTask) {
+        throw new NotFoundException('Task not found');
+      }
+
+      const timeline = this.normalizeTaskTimeline(
+        currentTask.project,
+        updateTaskDto.startAt ?? currentTask.startAt,
+        updateTaskDto.endAt ?? currentTask.endAt,
+      );
+
+      updateData.startAt = timeline.startAt;
+      updateData.endAt = timeline.endAt;
+      updateData.dueDate = updateTaskDto.dueDate
+        ? new Date(updateTaskDto.dueDate)
+        : timeline.dueDate;
+    }
 
     if (updateTaskDto.assignedToUserId) {
       const assignee = await this.tasksHelper.validateUserExists(updateTaskDto.assignedToUserId, 'Assignee');

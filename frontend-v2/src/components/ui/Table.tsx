@@ -3,21 +3,21 @@ import { cn } from '@/lib/utils'
 
 export function Table({ className, ...rest }: HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+    <div className="overflow-x-auto rounded-[1.4rem] brand-panel">
       <table className={cn('w-full text-sm', className)} {...rest} />
     </div>
   )
 }
 
 export function THead({ className, ...rest }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn('border-b border-border bg-elevated/50', className)} {...rest} />
+  return <thead className={cn('border-b border-border bg-brand-soft', className)} {...rest} />
 }
 
 export function TR({ className, ...rest }: HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
       className={cn(
-        'border-b border-border last:border-0 hover:bg-elevated/40 transition-colors',
+        'border-b border-border last:border-0 hover:bg-brand-soft transition-colors',
         className,
       )}
       {...rest}

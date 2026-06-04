@@ -66,7 +66,7 @@ export function Sidebar({ open, onClose }: Props) {
       <aside
         className={cn(
           'fixed lg:sticky top-0 right-0 z-40 h-screen w-72 lg:w-64 shrink-0',
-          'bg-surface border-l border-border flex flex-col',
+          'bg-surface/95 border-l border-border flex flex-col backdrop-blur',
           'transition-transform duration-200 ease-out',
           open ? 'translate-x-0' : 'translate-x-full lg:translate-x-0',
         )}
@@ -103,9 +103,9 @@ export function Sidebar({ open, onClose }: Props) {
               onClick={onClose}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors',
                   isActive
-                    ? 'bg-elevated text-accent font-medium'
+                    ? 'bg-brand-soft text-accent font-medium'
                     : 'text-muted hover:text-accent hover:bg-elevated/60',
                 )
               }

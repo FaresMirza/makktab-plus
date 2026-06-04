@@ -12,7 +12,7 @@ import { Dialog } from '@/components/ui/Dialog'
 import { Label } from '@/components/ui/Label'
 import { Select } from '@/components/ui/Select'
 import { CenteredSpinner } from '@/components/ui/Spinner'
-import { formatDate, formatDateTime, getApiErrorMessage } from '@/lib/utils'
+import { formatDateTime, getApiErrorMessage } from '@/lib/utils'
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
   TODO: 'قيد الانتظار',
@@ -139,8 +139,9 @@ export function TaskDetailDialog({ task, canManageProject, onClose }: Props) {
             <div className="text-accent">{task.assignedTo?.fullName || '—'}</div>
           </div>
           <div>
-            <div className="text-xs text-muted">الاستحقاق</div>
-            <div className="text-accent">{formatDate(task.dueDate)}</div>
+            <div className="text-xs text-muted">بداية ونهاية المهمة</div>
+            <div className="text-accent">{formatDateTime(task.startAt)}</div>
+            <div className="text-accent">{formatDateTime(task.endAt)}</div>
           </div>
           <div>
             <div className="text-xs text-muted">الحالة الحالية</div>

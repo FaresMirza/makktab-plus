@@ -20,6 +20,8 @@ export interface User {
 export interface Office {
   publicId: string
   name: string
+  city?: string
+  registrationNumber?: string
   status: OfficeStatus
   owner?: { publicId: string; fullName: string; username: string; email: string }
   _count?: { users: number; projects?: number }
@@ -44,6 +46,8 @@ export interface Task {
   title: string
   description?: string
   status: TaskStatus
+  startAt?: string
+  endAt?: string
   dueDate?: string
   completedAt?: string
   // Prisma relation names → these are what the backend actually returns.
@@ -75,6 +79,7 @@ export interface OfficeRequest {
   email: string
   phone: string
   city: string
+  registrationNumber: string
   createdAt: string
 }
 

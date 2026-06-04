@@ -48,6 +48,8 @@ export class ProjectsRepository {
                     title: true,
                     description: true,
                     status: true,
+                    startAt: true,
+                    endAt: true,
                     dueDate: true,
                     createdAt: true,
                     assignedTo: { select: { id: true, publicId: true, fullName: true, email: true } },
@@ -286,5 +288,18 @@ export class ProjectsRepository {
         return this.prisma.project.findFirst({
             where: { officeId, name },
         });
+    }
+
+    async hasTasksOutsideTimeline(projectId: number, startDate: Date, endDate: Date) {
+        const count = await this.prisma.task.count({
+            where: {
+                projectId,
+                OR: [
+                    { startAt: { not: null, lt: startDate } },
+                    { endAt: { not: null, gt: endDate } },
+                ],
+            },
+        });
+        return count > 0;
     }
 }

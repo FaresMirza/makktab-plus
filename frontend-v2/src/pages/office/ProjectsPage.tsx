@@ -145,8 +145,12 @@ export function OfficeProjectsPage() {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault()
-            if (!form.name || !form.projectManagerUserId) {
-              toast.error('الاسم والمدير حقول مطلوبة')
+            if (!form.name || !form.projectManagerUserId || !form.startDate || !form.endDate) {
+              toast.error('الاسم والمدير وتواريخ المشروع حقول مطلوبة')
+              return
+            }
+            if (new Date(form.startDate) > new Date(form.endDate)) {
+              toast.error('تاريخ نهاية المشروع يجب أن يكون بعد البداية')
               return
             }
             create.mutate(form)
@@ -177,7 +181,6 @@ export function OfficeProjectsPage() {
               <Label>تاريخ البدء</Label>
               <Input
                 type="date"
-                min={new Date().toISOString().split('T')[0]}
                 value={form.startDate ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
               />
@@ -186,7 +189,7 @@ export function OfficeProjectsPage() {
               <Label>تاريخ الانتهاء</Label>
               <Input
                 type="date"
-                min={form.startDate || new Date().toISOString().split('T')[0]}
+                min={form.startDate || undefined}
                 value={form.endDate ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
               />

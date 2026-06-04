@@ -25,6 +25,28 @@ export function formatDateTime(value: string | Date | null | undefined): string 
   })
 }
 
+export function toDateInputValue(value: string | Date | null | undefined): string {
+  if (!value) return ''
+  const d = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(d.getTime())) return ''
+  const year = d.getFullYear()
+  const month = `${d.getMonth() + 1}`.padStart(2, '0')
+  const day = `${d.getDate()}`.padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+export function toDateTimeLocalValue(value: string | Date | null | undefined): string {
+  if (!value) return ''
+  const d = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(d.getTime())) return ''
+  const year = d.getFullYear()
+  const month = `${d.getMonth() + 1}`.padStart(2, '0')
+  const day = `${d.getDate()}`.padStart(2, '0')
+  const hours = `${d.getHours()}`.padStart(2, '0')
+  const minutes = `${d.getMinutes()}`.padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export function getApiErrorMessage(error: unknown, fallback = 'حدث خطأ'): string {
   const e = error as { response?: { data?: { message?: string | string[] } }; message?: string }
   const m = e?.response?.data?.message

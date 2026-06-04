@@ -134,6 +134,8 @@ export class AdminsRepository {
                 email: true,
                 phone: true,
                 username: true,
+                city: true,
+                registrationNumber: true,
                 status: true,
                 createdAt: true,
             },
@@ -170,6 +172,8 @@ export class AdminsRepository {
         email: string;
         phone: string;
         username: string;
+        city: string;
+        registrationNumber: string;
         passwordHash: string;
     }) {
         return this.prisma.$transaction(async (tx) => {
@@ -190,6 +194,8 @@ export class AdminsRepository {
             const office = await tx.office.create({
                 data: {
                     name: request.officeName,
+                    city: request.city,
+                    registrationNumber: request.registrationNumber,
                     ownerUserId: user.id,
                     status: OfficeStatus.ACTIVE,
                 },

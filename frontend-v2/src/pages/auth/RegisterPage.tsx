@@ -16,6 +16,7 @@ interface FormState {
   email: string
   phone: string
   city: string
+  registrationNumber: string
   password: string
 }
 
@@ -26,6 +27,7 @@ const initial: FormState = {
   email: '',
   phone: '',
   city: '',
+  registrationNumber: '',
   password: '',
 }
 
@@ -49,6 +51,10 @@ export function RegisterPage() {
     }
     if (form.password.length < 6) {
       toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل')
+      return
+    }
+    if (!/^\d{10}$/.test(form.registrationNumber)) {
+      toast.error('رقم السجل التجاري يجب أن يكون 10 أرقام')
       return
     }
     setLoading(true)
@@ -136,6 +142,16 @@ export function RegisterPage() {
                 <div>
                   <Label htmlFor="city">المدينة</Label>
                   <Input id="city" value={form.city} onChange={(e) => set('city', e.target.value)} />
+                </div>
+                <div>
+                  <Label htmlFor="registrationNumber">السجل التجاري</Label>
+                  <Input
+                    id="registrationNumber"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={form.registrationNumber}
+                    onChange={(e) => set('registrationNumber', e.target.value.replace(/\D/g, ''))}
+                  />
                 </div>
                 <div className="col-span-2">
                   <Label htmlFor="password">كلمة المرور</Label>

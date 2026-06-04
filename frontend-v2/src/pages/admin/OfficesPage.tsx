@@ -41,6 +41,8 @@ export function AdminOfficesPage() {
     const q = search.toLowerCase()
     return (
       o.name?.toLowerCase().includes(q) ||
+      o.city?.toLowerCase().includes(q) ||
+      o.registrationNumber?.toLowerCase().includes(q) ||
       o.owner?.fullName?.toLowerCase().includes(q) ||
       o.owner?.email?.toLowerCase().includes(q)
     )
@@ -54,7 +56,7 @@ export function AdminOfficesPage() {
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
         <Input
           className="pr-10"
-          placeholder="بحث بالاسم أو البريد"
+          placeholder="بحث بالاسم أو البريد أو السجل"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -64,6 +66,8 @@ export function AdminOfficesPage() {
         <THead>
           <TR>
             <TH>المكتب</TH>
+            <TH>المدينة</TH>
+            <TH>السجل التجاري</TH>
             <TH>المالك</TH>
             <TH>الموظفون</TH>
             <TH>الحالة</TH>
@@ -73,11 +77,13 @@ export function AdminOfficesPage() {
         </THead>
         <TBody>
           {offices.length === 0 ? (
-            <EmptyRow colSpan={6} />
+            <EmptyRow colSpan={8} />
           ) : (
             offices.map((office) => (
               <TR key={office.publicId}>
                 <TD className="font-medium">{office.name}</TD>
+                <TD>{office.city || '—'}</TD>
+                <TD className="font-mono text-xs">{office.registrationNumber || '—'}</TD>
                 <TD>
                   <div className="text-sm">{office.owner?.fullName || '—'}</div>
                   <div className="text-xs text-muted">{office.owner?.email}</div>

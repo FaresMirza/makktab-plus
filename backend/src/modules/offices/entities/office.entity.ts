@@ -4,6 +4,8 @@ export class Office {
   id: number;
   publicId: string;
   name: string;
+  city?: string;
+  registrationNumber?: string;
   ownerUserId: number;
   status: OfficeStatus;
   createdAt: Date;

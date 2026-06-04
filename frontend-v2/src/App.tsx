@@ -13,6 +13,7 @@ import { AdminAuditPage } from '@/pages/admin/AuditPage'
 import { OfficeDashboardPage } from '@/pages/office/DashboardPage'
 import { OfficeProjectsPage } from '@/pages/office/ProjectsPage'
 import { OfficeProjectDetailPage } from '@/pages/office/ProjectDetailPage'
+import { OfficeProjectGanttPage } from '@/pages/office/ProjectGanttPage'
 import { OfficeTasksPage } from '@/pages/office/MyTasksPage'
 import { OfficeUsersPage } from '@/pages/office/UsersPage'
 import { ChangePasswordPage } from '@/pages/office/ChangePasswordPage'
@@ -46,6 +47,7 @@ export function App() {
           <Route index element={<OfficeDashboardPage />} />
           <Route path="projects" element={<OfficeProjectsPage />} />
           <Route path="projects/:publicId" element={<OfficeProjectDetailPage />} />
+          <Route path="projects/:publicId/gantt" element={<OfficeProjectGanttPage />} />
           <Route path="tasks" element={<OfficeTasksPage />} />
           <Route path="users" element={<OfficeUsersPage />} />
           <Route path="password" element={<ChangePasswordPage />} />

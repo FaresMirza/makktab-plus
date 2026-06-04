@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, Logger, InternalServerErrorException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Logger, InternalServerErrorException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectStatus } from 'prisma/src/generated/prisma-client/client';
@@ -16,6 +16,34 @@ export class ProjectsService {
     private readonly projectsRepository: ProjectsRepository,
     private readonly usersRepository: UsersRepository,
   ) { }
+
+  private normalizeProjectTimeline(startDate?: string | Date | null, endDate?: string | Date | null) {
+    if (!startDate || !endDate) {
+      throw new BadRequestException('Project start date and end date are required.');
+    }
+
+    const parsedStart = new Date(startDate);
+    const parsedEnd = new Date(endDate);
+
+    if (Number.isNaN(parsedStart.getTime()) || Number.isNaN(parsedEnd.getTime())) {
+      throw new BadRequestException('Project dates are invalid.');
+    }
+
+    const normalizedStart = new Date(parsedStart);
+    normalizedStart.setHours(0, 0, 0, 0);
+
+    const normalizedEnd = new Date(parsedEnd);
+    normalizedEnd.setHours(23, 59, 59, 999);
+
+    if (normalizedStart > normalizedEnd) {
+      throw new BadRequestException('Project end date must be after the start date.');
+    }
+
+    return {
+      start: normalizedStart,
+      end: normalizedEnd,
+    };
+  }
 
   /**
    * Create a new project (for backward compatibility - accepts officeId in request)
@@ -73,6 +101,7 @@ export class ProjectsService {
       console.log(`[POST /projects] Step 2: User found - ID = ${user.id}, OfficeId = ${userOfficeId}`);
 
       const { projectManagerUserId, name, description, status, budget, startDate, endDate, clientName } = createProjectDto;
+      const timeline = this.normalizeProjectTimeline(startDate, endDate);
 
       // Step 3: Validate project manager exists
       console.log(`[POST /projects] Step 3: Validating project manager: ${projectManagerUserId}`);
@@ -107,8 +136,8 @@ export class ProjectsService {
         name,
         description,
         budget: budget ? String(budget) : null,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
+        startDate: timeline.start,
+        endDate: timeline.end,
         clientName: clientName || null,
         officeId: userOfficeId,
         createdByUserId: user.id,
@@ -424,6 +453,28 @@ export class ProjectsService {
       if (updateProjectDto.name !== undefined) updateData.name = updateProjectDto.name;
       if (updateProjectDto.description !== undefined) updateData.description = updateProjectDto.description;
       if (updateProjectDto.status !== undefined) updateData.status = updateProjectDto.status;
+      if (updateProjectDto.clientName !== undefined) updateData.clientName = updateProjectDto.clientName;
+      if (updateProjectDto.budget !== undefined) updateData.budget = updateProjectDto.budget ? String(updateProjectDto.budget) : null;
+
+      const nextStartDate = updateProjectDto.startDate ?? project.startDate;
+      const nextEndDate = updateProjectDto.endDate ?? project.endDate;
+      if (updateProjectDto.startDate !== undefined || updateProjectDto.endDate !== undefined) {
+        const timeline = this.normalizeProjectTimeline(nextStartDate, nextEndDate);
+        const hasTasksOutsideTimeline = await this.projectsRepository.hasTasksOutsideTimeline(
+          project.id,
+          timeline.start,
+          timeline.end,
+        );
+
+        if (hasTasksOutsideTimeline) {
+          throw new BadRequestException(
+            'Cannot update project dates because some tasks would fall outside the new project timeline.',
+          );
+        }
+
+        updateData.startDate = timeline.start;
+        updateData.endDate = timeline.end;
+      }
 
       if (updateProjectDto.projectManagerUserId) {
         const pm = await this.projectsHelper.validateUserExists(

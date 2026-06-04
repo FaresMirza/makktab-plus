@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useReactToPrint } from 'react-to-print'
 import {
   ArrowRight,
+  ChartNoAxesGantt,
   Plus,
   Trash2,
   Upload,
@@ -39,7 +40,12 @@ import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table
 import { TaskDetailDialog } from '@/components/office/TaskDetailDialog'
 import { ProjectReport } from '@/components/office/ProjectReport'
 import type { Task, TaskStatus } from '@/api/types'
-import { formatDate, formatDateTime, getApiErrorMessage } from '@/lib/utils'
+import {
+  formatDate,
+  formatDateTime,
+  getApiErrorMessage,
+  toDateInputValue,
+} from '@/lib/utils'
 
 const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
   TODO: 'قيد الانتظار',
@@ -52,14 +58,16 @@ interface NewTaskForm {
   title: string
   description: string
   assignedToUserId: string
-  dueDate: string
+  startAt: string
+  endAt: string
 }
 
 const emptyTask: NewTaskForm = {
   title: '',
   description: '',
   assignedToUserId: '',
-  dueDate: '',
+  startAt: '',
+  endAt: '',
 }
 
 export function OfficeProjectDetailPage() {
@@ -180,6 +188,12 @@ export function OfficeProjectDetailPage() {
               <FileText className="h-4 w-4" />
               تقرير المشروع (PDF)
             </Button>
+            <Link to={`/office/projects/${p.publicId}/gantt`}>
+              <Button variant="outline">
+                <ChartNoAxesGantt className="h-4 w-4" />
+                الجانت شارت
+              </Button>
+            </Link>
             {canManage && p.status !== 'COMPLETED' && (
               <Button onClick={() => completeProject.mutate()} loading={completeProject.isPending}>
                 <CheckCircle2 className="h-4 w-4" />
@@ -212,6 +226,12 @@ export function OfficeProjectDetailPage() {
             </Badge>
           </div>
         </CardContent></Card>
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted">مدة المشروع</div>
+          <div className="text-sm font-medium mt-1">
+            {formatDate(p.startDate)} - {formatDate(p.endDate)}
+          </div>
+        </CardContent></Card>
       </div>
 
       {/* Tasks */}
@@ -238,7 +258,7 @@ export function OfficeProjectDetailPage() {
                 <TH>العنوان</TH>
                 <TH>المسؤول</TH>
                 <TH>الحالة</TH>
-                <TH>الاستحقاق</TH>
+                <TH>الجدولة</TH>
                 {canManage && <TH className="text-left">إجراءات</TH>}
               </TR>
             </THead>
@@ -270,7 +290,10 @@ export function OfficeProjectDetailPage() {
                           {TASK_STATUS_LABEL[t.status]}
                         </Badge>
                       </TD>
-                      <TD className="text-xs text-muted">{formatDate(t.dueDate)}</TD>
+                      <TD className="text-xs text-muted">
+                        <div>{formatDateTime(t.startAt)}</div>
+                        <div>{formatDateTime(t.endAt)}</div>
+                      </TD>
                       {canManage && (
                         <TD className="text-left" onClick={(e) => e.stopPropagation()}>
                           <Button
@@ -365,8 +388,12 @@ export function OfficeProjectDetailPage() {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault()
-            if (!taskForm.title || !taskForm.assignedToUserId) {
-              toast.error('العنوان والمسؤول حقول مطلوبة')
+            if (!taskForm.title || !taskForm.assignedToUserId || !taskForm.startAt || !taskForm.endAt) {
+              toast.error('العنوان والمسؤول وموعدا البداية والنهاية حقول مطلوبة')
+              return
+            }
+            if (new Date(taskForm.startAt) >= new Date(taskForm.endAt)) {
+              toast.error('وقت نهاية المهمة يجب أن يكون بعد وقت البداية')
               return
             }
             if (!user?.sub) {
@@ -379,9 +406,9 @@ export function OfficeProjectDetailPage() {
               projectId: publicId!,
               createdByUserId: user.sub,
               assignedToUserId: taskForm.assignedToUserId,
-              // Status omitted — backend defaults to TODO; the assignee
-              // is the one who flips it to IN_PROGRESS / DONE.
-              dueDate: taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : undefined,
+              startAt: new Date(taskForm.startAt).toISOString(),
+              endAt: new Date(taskForm.endAt).toISOString(),
+              dueDate: new Date(taskForm.endAt).toISOString(),
             })
           }}
         >
@@ -408,17 +435,28 @@ export function OfficeProjectDetailPage() {
                 ))}
               </Select>
             </div>
-            <div className="sm:col-span-2">
-              <Label>تاريخ الاستحقاق</Label>
+            <div>
+              <Label>بداية المهمة</Label>
               <Input
-                type="date"
-                min={new Date().toISOString().split('T')[0]}
-                value={taskForm.dueDate}
-                onChange={(e) => setTaskForm((f) => ({ ...f, dueDate: e.target.value }))}
+                type="datetime-local"
+                min={`${toDateInputValue(p.startDate)}T00:00`}
+                max={`${toDateInputValue(p.endDate)}T23:59`}
+                value={taskForm.startAt}
+                onChange={(e) => setTaskForm((f) => ({ ...f, startAt: e.target.value }))}
               />
-              <div className="text-xs text-muted mt-1">
-                لا يمكن اختيار تاريخ في الماضي.
-              </div>
+            </div>
+            <div>
+              <Label>نهاية المهمة</Label>
+              <Input
+                type="datetime-local"
+                min={taskForm.startAt || `${toDateInputValue(p.startDate)}T00:00`}
+                max={`${toDateInputValue(p.endDate)}T23:59`}
+                value={taskForm.endAt}
+                onChange={(e) => setTaskForm((f) => ({ ...f, endAt: e.target.value }))}
+              />
+            </div>
+            <div className="sm:col-span-2 rounded-2xl bg-brand-soft px-3 py-3 text-xs text-muted">
+              نطاق المشروع الحالي من {formatDate(p.startDate)} إلى {formatDate(p.endDate)}.
             </div>
           </div>
           <div className="flex justify-start gap-2 pt-2">

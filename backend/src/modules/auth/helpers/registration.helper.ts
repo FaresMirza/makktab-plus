@@ -30,6 +30,18 @@ export class RegistrationHelper {
         }
     }
 
+    async validateRegistrationNumberUnique(registrationNumber: string) {
+        const inOffices = await this.registrationRepository.registrationNumberExistsInOffices(registrationNumber);
+        if (inOffices) {
+            throw new ConflictException('An office with this registration number already exists.');
+        }
+
+        const inRequests = await this.registrationRepository.registrationNumberExistsInRequests(registrationNumber);
+        if (inRequests) {
+            throw new ConflictException('A pending office request already uses this registration number.');
+        }
+    }
+
     async generateVerificationCode(): Promise<{ rawCode: string; codeHash: string }> {
         const code = randomInt(100000, 999999).toString();
         const codeHash = await bcrypt.hash(code, AUTH_CONSTANTS.SALT_ROUNDS);

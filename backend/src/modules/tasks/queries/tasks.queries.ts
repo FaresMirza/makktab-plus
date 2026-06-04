@@ -45,13 +45,15 @@ export class TasksRepository {
             project: {
                 select: {
                     id: true,
-                    publicId: true,
-                    name: true,
-                    description: true,
-                    status: true,
-                    office: {
-                        select: {
-                            id: true,
+                        publicId: true,
+                        name: true,
+                        description: true,
+                        status: true,
+                        startDate: true,
+                        endDate: true,
+                        office: {
+                            select: {
+                                id: true,
                             publicId: true,
                             name: true,
                         },

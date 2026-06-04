@@ -9,12 +9,14 @@ datasource db {
 }
 
 model Office {
-  id          Int          @id @default(autoincrement())
-  publicId    String       @unique @default(uuid())
-  name        String
-  ownerUserId Int          @unique
-  status      OfficeStatus
-  createdAt   DateTime     @default(now())
+  id                 Int          @id @default(autoincrement())
+  publicId           String       @unique @default(uuid())
+  name               String
+  city               String?
+  registrationNumber String?
+  ownerUserId        Int          @unique
+  status             OfficeStatus
+  createdAt          DateTime     @default(now())
 
   owner    User      @relation("OfficeOwner", fields: [ownerUserId], references: [id])
   users    User[]
@@ -34,6 +36,7 @@ model OfficeRequest {
   phone                 String
   username              String
   city                  String
+  registrationNumber    String
   passwordHash          String
   emailVerified         Boolean   @default(false)
   verificationCodeHash  String?
@@ -44,16 +47,16 @@ model OfficeRequest {
 }
 
 model User {
-  id                 Int        @id @default(autoincrement())
-  publicId           String     @unique @default(uuid())
-  fullName           String
-  email              String
-  phone              String
-  username           String     @unique
-  passwordHash       String
-  refreshTokenHash   String?
-  lastPasswordChange DateTime?
-  roles              String[]
+  id                       Int        @id @default(autoincrement())
+  publicId                 String     @unique @default(uuid())
+  fullName                 String
+  email                    String
+  phone                    String
+  username                 String     @unique
+  passwordHash             String
+  refreshTokenHash         String?
+  lastPasswordChange       DateTime?
+  roles                    String[]
   status                   UserStatus
   lockedUntil              DateTime?
   activationTokenHash      String?
@@ -137,6 +140,8 @@ model Task {
   title            String
   description      String?
   status           TaskStatus
+  startAt          DateTime?
+  endAt            DateTime?
   dueDate          DateTime?
   completedAt      DateTime?
   createdAt        DateTime   @default(now())
