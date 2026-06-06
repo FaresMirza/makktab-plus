@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Power, PowerOff, Search } from 'lucide-react'
-import { activateOffice, deactivateOffice, getAdminOffices } from '@/api/admins'
+import { Power, PowerOff, Search, Trash2 } from 'lucide-react'
+import { activateOffice, deactivateOffice, deleteOfficePermanently, getAdminOffices } from '@/api/admins'
+import { useAuth } from '@/auth/AuthContext'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { Card, CardContent } from '@/components/ui/Card'
+import { Dialog } from '@/components/ui/Dialog'
 import { Input } from '@/components/ui/Input'
 import { CenteredSpinner } from '@/components/ui/Spinner'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -12,9 +15,11 @@ import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table
 import { formatDate, getApiErrorMessage } from '@/lib/utils'
 
 export function AdminOfficesPage() {
+  const { user } = useAuth()
   const qc = useQueryClient()
   const { data, isLoading } = useQuery({ queryKey: ['admin', 'offices'], queryFn: getAdminOffices })
   const [search, setSearch] = useState('')
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const activate = useMutation({
     mutationFn: (id: string) => activateOffice(id),
@@ -34,8 +39,19 @@ export function AdminOfficesPage() {
     onError: (e) => toast.error(getApiErrorMessage(e)),
   })
 
+  const remove = useMutation({
+    mutationFn: (id: string) => deleteOfficePermanently(id),
+    onSuccess: () => {
+      toast.success('تم حذف المكتب نهائياً')
+      qc.invalidateQueries({ queryKey: ['admin', 'offices'] })
+      setConfirmDelete(null)
+    },
+    onError: (e) => toast.error(getApiErrorMessage(e)),
+  })
+
   if (isLoading) return <CenteredSpinner />
 
+  const canDelete = user?.roles?.includes('super_admin') ?? false
   const offices = (data ?? []).filter((o) => {
     if (!search) return true
     const q = search.toLowerCase()
@@ -47,6 +63,7 @@ export function AdminOfficesPage() {
       o.owner?.email?.toLowerCase().includes(q)
     )
   })
+  const officeToDelete = offices.find((office) => office.publicId === confirmDelete) ?? null
 
   return (
     <div>
@@ -96,32 +113,76 @@ export function AdminOfficesPage() {
                 </TD>
                 <TD className="text-xs text-muted">{formatDate(office.createdAt)}</TD>
                 <TD className="text-left">
-                  {office.status === 'ACTIVE' ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => deactivate.mutate(office.publicId)}
-                      loading={deactivate.isPending && deactivate.variables === office.publicId}
-                    >
-                      <PowerOff className="h-4 w-4" />
-                      تعليق
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      onClick={() => activate.mutate(office.publicId)}
-                      loading={activate.isPending && activate.variables === office.publicId}
-                    >
-                      <Power className="h-4 w-4" />
-                      تفعيل
-                    </Button>
-                  )}
+                  <div className="flex items-center justify-end gap-2">
+                    {office.status === 'ACTIVE' ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => deactivate.mutate(office.publicId)}
+                        loading={deactivate.isPending && deactivate.variables === office.publicId}
+                      >
+                        <PowerOff className="h-4 w-4" />
+                        تعليق
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={() => activate.mutate(office.publicId)}
+                        loading={activate.isPending && activate.variables === office.publicId}
+                      >
+                        <Power className="h-4 w-4" />
+                        تفعيل
+                      </Button>
+                    )}
+                    {canDelete ? (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => setConfirmDelete(office.publicId)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        حذف
+                      </Button>
+                    ) : null}
+                  </div>
                 </TD>
               </TR>
             ))
           )}
         </TBody>
       </Table>
+
+      <Dialog
+        open={!!confirmDelete}
+        onClose={() => setConfirmDelete(null)}
+        title="حذف المكتب نهائياً"
+        description="سيتم حذف المكتب من قاعدة البيانات مع البيانات المرتبطة به."
+      >
+        <Card className="bg-elevated/40 mb-4">
+          <CardContent className="p-4 text-sm text-muted">
+            {officeToDelete ? (
+              <>
+                سيتم حذف مكتب <span className="font-medium text-accent">{officeToDelete.name}</span> مع
+                المستخدمين والمشاريع والمهام والسجلات المرتبطة به. لا يمكن التراجع عن هذا الإجراء.
+              </>
+            ) : (
+              'لا يمكن التراجع عن هذا الإجراء.'
+            )}
+          </CardContent>
+        </Card>
+        <div className="flex justify-start gap-2">
+          <Button
+            variant="danger"
+            onClick={() => confirmDelete && remove.mutate(confirmDelete)}
+            loading={remove.isPending}
+          >
+            حذف نهائي
+          </Button>
+          <Button variant="outline" onClick={() => setConfirmDelete(null)}>
+            إلغاء
+          </Button>
+        </div>
+      </Dialog>
     </div>
   )
 }

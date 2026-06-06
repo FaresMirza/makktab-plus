@@ -103,6 +103,70 @@ export class AdminsRepository {
     }
 
     /**
+     * Office snapshot for irreversible deletion checks and cleanup.
+     */
+    async findOfficeByPublicIdForPermanentDelete(publicId: string) {
+        return this.prisma.office.findUnique({
+            where: { publicId },
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        publicId: true,
+                        fullName: true,
+                        email: true,
+                        roles: true,
+                        offices: {
+                            select: {
+                                id: true,
+                                publicId: true,
+                                name: true,
+                            },
+                        },
+                        ownedOffice: {
+                            select: {
+                                id: true,
+                                publicId: true,
+                                name: true,
+                            },
+                        },
+                    },
+                },
+                users: {
+                    select: {
+                        id: true,
+                        publicId: true,
+                        fullName: true,
+                        email: true,
+                        roles: true,
+                        offices: {
+                            select: {
+                                id: true,
+                                publicId: true,
+                                name: true,
+                            },
+                        },
+                        ownedOffice: {
+                            select: {
+                                id: true,
+                                publicId: true,
+                                name: true,
+                            },
+                        },
+                    },
+                },
+                projects: {
+                    select: {
+                        id: true,
+                        publicId: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+    }
+
+    /**
      * Update office status by internal id
      */
     async updateOfficeStatus(id: number, status: OfficeStatus) {
@@ -110,6 +174,91 @@ export class AdminsRepository {
             where: { id },
             data: { status },
             include: this.officeListInclude,
+        });
+    }
+
+    async permanentlyDeleteOfficeWithRelations(
+        officeId: number,
+        projectIds: number[],
+        userIds: number[],
+    ) {
+        return this.prisma.$transaction(async (tx) => {
+            await tx.adminAuditLog.deleteMany({
+                where: { targetOfficeId: officeId },
+            });
+            await tx.otpCode.deleteMany({
+                where: { officeId },
+            });
+            await tx.taskAuditLog.deleteMany({
+                where: { officeId },
+            });
+            await tx.projectAuditLog.deleteMany({
+                where: { officeId },
+            });
+
+            if (projectIds.length > 0) {
+                await tx.projectFile.deleteMany({
+                    where: {
+                        projectId: { in: projectIds },
+                    },
+                });
+                await tx.task.deleteMany({
+                    where: {
+                        projectId: { in: projectIds },
+                    },
+                });
+                await tx.project.deleteMany({
+                    where: {
+                        id: { in: projectIds },
+                    },
+                });
+            }
+
+            await tx.office.update({
+                where: { id: officeId },
+                data: {
+                    users: {
+                        set: [],
+                    },
+                },
+            });
+
+            await tx.office.delete({
+                where: { id: officeId },
+            });
+
+            if (userIds.length > 0) {
+                await tx.otpCode.deleteMany({
+                    where: {
+                        userId: { in: userIds },
+                    },
+                });
+                await tx.authAuditLog.deleteMany({
+                    where: {
+                        userId: { in: userIds },
+                    },
+                });
+                await tx.adminAuditLog.deleteMany({
+                    where: {
+                        adminUserId: { in: userIds },
+                    },
+                });
+                await tx.projectAuditLog.deleteMany({
+                    where: {
+                        actorUserId: { in: userIds },
+                    },
+                });
+                await tx.taskAuditLog.deleteMany({
+                    where: {
+                        actorUserId: { in: userIds },
+                    },
+                });
+                await tx.user.deleteMany({
+                    where: {
+                        id: { in: userIds },
+                    },
+                });
+            }
         });
     }
 

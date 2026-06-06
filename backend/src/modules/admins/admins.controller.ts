@@ -210,6 +210,17 @@ export class AdminsController {
     }
 
     /**
+     * Permanently delete an office and its tenant data
+     * DELETE /admins/offices/:id
+     */
+    @Delete('offices/:id')
+    @Roles('super_admin')
+    @HttpCode(HttpStatus.OK)
+    deleteOffice(@Param('id') id: string) {
+        return this.adminsService.deleteOfficePermanently(id);
+    }
+
+    /**
      * Get all pending office requests
      * GET /admins/office-requests
      */

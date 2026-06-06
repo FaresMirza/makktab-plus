@@ -29,6 +29,13 @@ export const deactivateOffice = (id: string) =>
     })
     .then((r) => r.data)
 
+export const deleteOfficePermanently = (id: string) =>
+  api
+    .delete<{ message: string }>(`/admins/offices/${id}`, {
+      headers: fpHeaders(),
+    })
+    .then((r) => r.data)
+
 // Office requests (registration approvals) ─────────────────────
 
 export const getOfficeRequests = () =>

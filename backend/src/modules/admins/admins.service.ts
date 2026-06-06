@@ -67,6 +67,49 @@ export class AdminsService {
     }
 
     /**
+     * Permanently delete an office and every tenant record tied only to it.
+     */
+    async deleteOfficePermanently(publicId: string) {
+        const office = await this.adminsRepository.findOfficeByPublicIdForPermanentDelete(publicId);
+        if (!office) {
+            throw new NotFoundException(`Office with ID ${publicId} not found`);
+        }
+
+        const relatedUsers = [office.owner, ...office.users].filter(
+            (user, index, arr) => arr.findIndex((candidate) => candidate.id === user.id) === index,
+        );
+
+        const protectedAdmins = relatedUsers.filter((user) =>
+            user.roles.some((role) => role === 'super_admin') ||
+            user.email === 'admin@makktabplus.online',
+        );
+        if (protectedAdmins.length > 0) {
+            throw new BadRequestException(
+                'Cannot permanently delete an office linked to protected platform admin users.',
+            );
+        }
+
+        const sharedUsers = relatedUsers.filter((user) => {
+            const belongsToOtherOffice = user.offices.some((candidate) => candidate.id !== office.id);
+            const ownsAnotherOffice = !!user.ownedOffice && user.ownedOffice.id !== office.id;
+            return belongsToOtherOffice || ownsAnotherOffice;
+        });
+        if (sharedUsers.length > 0) {
+            throw new BadRequestException(
+                'Cannot permanently delete office because some related users belong to other offices.',
+            );
+        }
+
+        await this.adminsRepository.permanentlyDeleteOfficeWithRelations(
+            office.id,
+            office.projects.map((project) => project.id),
+            relatedUsers.map((user) => user.id),
+        );
+
+        return { message: `Office "${office.name}" permanently deleted` };
+    }
+
+    /**
      * Get all pending office requests
      */
     async getPendingRequests() {
