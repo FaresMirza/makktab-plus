@@ -25,6 +25,7 @@ export class TasksService {
     project: { startDate: Date | null; endDate: Date | null },
     startAt?: string | Date | null,
     endAt?: string | Date | null,
+    dueDate?: string | Date | null,
   ) {
     if (!project.startDate || !project.endDate) {
       throw new BadRequestException('Project timeline must be set before adding task dates.');
@@ -52,10 +53,24 @@ export class TasksService {
       throw new BadRequestException('Task dates must stay within the parent project timeline.');
     }
 
+    let parsedDueDate = parsedEnd;
+    if (dueDate) {
+      parsedDueDate = new Date(dueDate);
+      if (Number.isNaN(parsedDueDate.getTime())) {
+        throw new BadRequestException('Task due date is invalid.');
+      }
+      if (parsedDueDate < projectStart || parsedDueDate > projectEnd) {
+        throw new BadRequestException('Task due date must stay within the parent project timeline.');
+      }
+      if (parsedDueDate < parsedEnd) {
+        throw new BadRequestException('Task due date cannot be before the task end time.');
+      }
+    }
+
     return {
       startAt: parsedStart,
       endAt: parsedEnd,
-      dueDate: parsedEnd,
+      dueDate: parsedDueDate,
     };
   }
 
@@ -105,7 +120,7 @@ export class TasksService {
       projectManagerUserId: project.projectManagerUserId,
     });
 
-    const timeline = this.normalizeTaskTimeline(project, startAt, endAt);
+    const timeline = this.normalizeTaskTimeline(project, startAt, endAt, dueDate);
 
     return this.tasksRepository.create({
       title,
@@ -116,7 +131,7 @@ export class TasksService {
       status: status || TaskStatus.TODO,
       startAt: timeline.startAt,
       endAt: timeline.endAt,
-      dueDate: dueDate ? new Date(dueDate) : timeline.dueDate,
+      dueDate: timeline.dueDate,
     });
   }
 
@@ -269,13 +284,12 @@ export class TasksService {
         currentTask.project,
         updateTaskDto.startAt ?? currentTask.startAt,
         updateTaskDto.endAt ?? currentTask.endAt,
+        updateTaskDto.dueDate ?? currentTask.dueDate,
       );
 
       updateData.startAt = timeline.startAt;
       updateData.endAt = timeline.endAt;
-      updateData.dueDate = updateTaskDto.dueDate
-        ? new Date(updateTaskDto.dueDate)
-        : timeline.dueDate;
+      updateData.dueDate = timeline.dueDate;
     }
 
     if (updateTaskDto.assignedToUserId) {

@@ -35,6 +35,13 @@ export class ProjectsService {
     const normalizedEnd = new Date(parsedEnd);
     normalizedEnd.setHours(23, 59, 59, 999);
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (normalizedStart < today || normalizedEnd < today) {
+      throw new BadRequestException('Project dates cannot be in the past.');
+    }
+
     if (normalizedStart > normalizedEnd) {
       throw new BadRequestException('Project end date must be after the start date.');
     }
@@ -58,13 +65,14 @@ export class ProjectsService {
     const office = await this.projectsHelper.validateOfficeExists(officeId);
     const creator = await this.projectsHelper.validateUserExists(createdByUserId, 'Creator');
     const projectManager = await this.projectsHelper.validateUserExists(projectManagerUserId, 'Project manager');
+    const timeline = this.normalizeProjectTimeline(startDate, endDate);
 
     const project = await this.projectsRepository.create({
       name,
       description,
       budget: budget ? String(budget) : null,
-      startDate: startDate ? new Date(startDate) : null,
-      endDate: endDate ? new Date(endDate) : null,
+      startDate: timeline.start,
+      endDate: timeline.end,
       clientName: clientName || null,
       officeId: office.id,
       createdByUserId: creator.id,
@@ -152,7 +160,12 @@ export class ProjectsService {
       console.error(`[POST /projects] Error creating project for user ${userPublicId}:`, error);
       this.logger.error(`Error creating project for user ${userPublicId}:`, error);
 
-      if (error instanceof NotFoundException || error instanceof ForbiddenException || error instanceof ConflictException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException ||
+        error instanceof ConflictException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
 

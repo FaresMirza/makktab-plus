@@ -15,7 +15,7 @@ import { Select } from '@/components/ui/Select'
 import { CenteredSpinner } from '@/components/ui/Spinner'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table'
-import { formatDate, getApiErrorMessage } from '@/lib/utils'
+import { formatDate, getApiErrorMessage, toDateInputValue } from '@/lib/utils'
 
 const emptyForm: CreateProjectPayload = {
   name: '',
@@ -63,6 +63,7 @@ export function OfficeProjectsPage() {
 
   const list = projects.data?.data ?? []
   const userList = users.data?.data ?? []
+  const todayDate = toDateInputValue(new Date())
 
   return (
     <div>
@@ -149,6 +150,10 @@ export function OfficeProjectsPage() {
               toast.error('الاسم والمدير وتواريخ المشروع حقول مطلوبة')
               return
             }
+            if (form.startDate < todayDate || form.endDate < todayDate) {
+              toast.error('لا يمكن اختيار تاريخ سابق لليوم في المشروع')
+              return
+            }
             if (new Date(form.startDate) > new Date(form.endDate)) {
               toast.error('تاريخ نهاية المشروع يجب أن يكون بعد البداية')
               return
@@ -181,6 +186,7 @@ export function OfficeProjectsPage() {
               <Label>تاريخ البدء</Label>
               <Input
                 type="date"
+                min={todayDate}
                 value={form.startDate ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
               />
@@ -189,7 +195,7 @@ export function OfficeProjectsPage() {
               <Label>تاريخ الانتهاء</Label>
               <Input
                 type="date"
-                min={form.startDate || undefined}
+                min={form.startDate || todayDate}
                 value={form.endDate ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
               />

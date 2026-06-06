@@ -165,6 +165,8 @@ export function OfficeProjectDetailPage() {
   if (!project.data) return <div className="text-muted">المشروع غير موجود</div>
 
   const p = project.data
+  const projectStartMin = `${toDateInputValue(p.startDate)}T00:00`
+  const projectEndMax = `${toDateInputValue(p.endDate)}T23:59`
   const taskList = tasks.data?.data ?? []
   const fileList = files.data ?? []
   const userList = users.data?.data ?? []
@@ -396,6 +398,15 @@ export function OfficeProjectDetailPage() {
               toast.error('وقت نهاية المهمة يجب أن يكون بعد وقت البداية')
               return
             }
+            if (
+              taskForm.startAt < projectStartMin ||
+              taskForm.startAt > projectEndMax ||
+              taskForm.endAt < projectStartMin ||
+              taskForm.endAt > projectEndMax
+            ) {
+              toast.error('يجب أن تكون مواعيد المهمة ضمن مدة المشروع')
+              return
+            }
             if (!user?.sub) {
               toast.error('لم يتم العثور على المستخدم')
               return
@@ -439,8 +450,8 @@ export function OfficeProjectDetailPage() {
               <Label>بداية المهمة</Label>
               <Input
                 type="datetime-local"
-                min={`${toDateInputValue(p.startDate)}T00:00`}
-                max={`${toDateInputValue(p.endDate)}T23:59`}
+                min={projectStartMin}
+                max={projectEndMax}
                 value={taskForm.startAt}
                 onChange={(e) => setTaskForm((f) => ({ ...f, startAt: e.target.value }))}
               />
@@ -449,8 +460,8 @@ export function OfficeProjectDetailPage() {
               <Label>نهاية المهمة</Label>
               <Input
                 type="datetime-local"
-                min={taskForm.startAt || `${toDateInputValue(p.startDate)}T00:00`}
-                max={`${toDateInputValue(p.endDate)}T23:59`}
+                min={taskForm.startAt || projectStartMin}
+                max={projectEndMax}
                 value={taskForm.endAt}
                 onChange={(e) => setTaskForm((f) => ({ ...f, endAt: e.target.value }))}
               />
