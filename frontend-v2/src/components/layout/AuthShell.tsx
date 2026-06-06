@@ -12,16 +12,13 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <div className="flex flex-col items-center mb-8">
           <div className="rounded-[2rem] border border-border bg-surface/80 px-6 py-4 shadow-soft backdrop-blur">
             <div className="flex flex-col items-center">
-          <img
-            src="/icon.png"
-            alt="Makktab Plus"
-            className="h-16 w-16 rounded-2xl object-cover shadow-soft"
-          />
-          <h1 className="text-2xl font-semibold text-accent mt-4">Makktab Plus</h1>
-          <p className="text-sm text-muted mt-1">منصة إدارة المكاتب الذكية</p>
-          <div className="mt-4 inline-flex rounded-full bg-brand-soft px-3 py-1 text-xs text-accent">
-            هوية أوضح. متابعة أدق. تسليم أسرع.
-          </div>
+              <img
+                src="/icon.png"
+                alt="Makktab Plus"
+                className="h-16 w-16 rounded-2xl object-cover shadow-soft"
+              />
+              <h1 className="text-2xl font-semibold text-accent mt-4">Makktab Plus</h1>
+              <p className="text-sm text-muted mt-1">منصة إدارة المكاتب الذكية</p>
             </div>
           </div>
         </div>
