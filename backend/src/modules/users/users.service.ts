@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -44,6 +44,43 @@ export class UsersService {
     ].filter(Boolean) as number[];
     if (!targetOfficeIds.includes(callerOfficeId!)) {
       throw new ForbiddenException('User is in a different office');
+    }
+  }
+
+  private async assertCanChangeRoles(actorPublicId: string, targetPublicId: string, roles: string[], user: JwtUser) {
+    if (roles.length === 0) {
+      throw new BadRequestException('At least one role is required');
+    }
+
+    if (this.tenantHelper.isPlatformAdmin(user)) return;
+
+    const actor = await this.usersRepository.findByPublicId(actorPublicId);
+    const target = await this.usersRepository.findByPublicId(targetPublicId);
+    if (!actor || !target) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (actor.publicId === target.publicId) {
+      throw new ForbiddenException('Cannot change your own roles');
+    }
+
+    const actorOfficeId = actor.ownedOffice?.id;
+    const targetOfficeIds = [
+      target.ownedOffice?.id,
+      ...(target.offices ?? []).map((office: any) => office.id),
+    ].filter(Boolean) as number[];
+
+    if (!actorOfficeId || !targetOfficeIds.includes(actorOfficeId)) {
+      throw new ForbiddenException('Only the office owner can change employee roles');
+    }
+
+    if (target.roles.some((role: string) => ['owner', 'admin', 'super_admin'].includes(role))) {
+      throw new ForbiddenException('Cannot change roles for this user');
+    }
+
+    const allowedRoles = ['employee', 'manager'];
+    if (roles.length !== 1 || !allowedRoles.includes(roles[0])) {
+      throw new BadRequestException('Office owners can only assign employee or manager roles');
     }
   }
 
@@ -182,6 +219,10 @@ export class UsersService {
     }
 
     const updateData: any = { ...rest };
+    if (rest.roles !== undefined) {
+      await this.assertCanChangeRoles(user.userId, publicId, rest.roles, user);
+      updateData.roles = rest.roles;
+    }
     if (email) updateData.email = email;
     if (username) updateData.username = username;
     if (password) {

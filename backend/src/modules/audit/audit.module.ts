@@ -1,8 +1,10 @@
 
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma/prisma.module';
+import { AuditController } from './audit.controller';
 import { AuditRepository } from './queries/audit.queries';
 import { AuditHelper } from './helpers/audit.helper'; // Assuming helper might be useful
+import { AuditService } from './audit.service';
 // Import other repositories if AuditHelper needs them (Users, Offices, etc.)
 // Based on audit.helper.ts imports: UsersRepository, OfficesRepository, ProjectsRepository, TasksRepository.
 // I need to import the modules that provide these, or the repositories directly if they are exported from modules.
@@ -23,7 +25,8 @@ import { TasksModule } from '../tasks/tasks.module';
         ProjectsModule,
         TasksModule
     ],
-    providers: [AuditRepository, AuditHelper],
-    exports: [AuditRepository, AuditHelper],
+    controllers: [AuditController],
+    providers: [AuditRepository, AuditHelper, AuditService],
+    exports: [AuditRepository, AuditHelper, AuditService],
 })
 export class AuditModule { }

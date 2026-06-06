@@ -16,6 +16,7 @@ import { OfficeProjectDetailPage } from '@/pages/office/ProjectDetailPage'
 import { OfficeProjectGanttPage } from '@/pages/office/ProjectGanttPage'
 import { OfficeTasksPage } from '@/pages/office/MyTasksPage'
 import { OfficeUsersPage } from '@/pages/office/UsersPage'
+import { OfficeAuditPage } from '@/pages/office/AuditPage'
 import { ChangePasswordPage } from '@/pages/office/ChangePasswordPage'
 import { useAuth } from '@/auth/AuthContext'
 
@@ -50,6 +51,7 @@ export function App() {
           <Route path="projects/:publicId/gantt" element={<OfficeProjectGanttPage />} />
           <Route path="tasks" element={<OfficeTasksPage />} />
           <Route path="users" element={<OfficeUsersPage />} />
+          <Route path="audit" element={<OfficeAuditPage />} />
           <Route path="password" element={<ChangePasswordPage />} />
         </Route>
       </Route>

@@ -33,7 +33,7 @@ const adminItems: Item[] = [
   { to: '/admin/audit', label: 'سجل التدقيق', icon: FileText },
 ]
 
-const officeItems: Item[] = [
+const baseOfficeItems: Item[] = [
   { to: '/office', label: 'لوحة التحكم', icon: LayoutDashboard },
   { to: '/office/projects', label: 'المشاريع', icon: FolderKanban },
   { to: '/office/tasks', label: 'مهامي', icon: ListChecks },
@@ -49,6 +49,9 @@ interface Props {
 export function Sidebar({ open, onClose }: Props) {
   const { user, logout } = useAuth()
   const [confirmLogout, setConfirmLogout] = useState(false)
+  const officeItems = user?.roles?.some((role) => role === 'owner' || role === 'manager')
+    ? [...baseOfficeItems.slice(0, 4), { to: '/office/audit', label: 'سجل النشاط', icon: FileText }, ...baseOfficeItems.slice(4)]
+    : baseOfficeItems
   const items = user?.role === 'super_admin' ? adminItems : officeItems
 
   return (

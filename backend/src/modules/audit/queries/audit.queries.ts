@@ -62,4 +62,29 @@ export class AuditRepository {
         });
     }
 
+    async findOfficeAuthLogs(officeId: number, take = 100) {
+        return this.prisma.authAuditLog.findMany({
+            where: {
+                user: {
+                    OR: [
+                        { offices: { some: { id: officeId } } },
+                        { ownedOffice: { id: officeId } },
+                    ],
+                },
+            },
+            orderBy: { createdAt: 'desc' },
+            take,
+            include: {
+                user: {
+                    select: {
+                        publicId: true,
+                        fullName: true,
+                        username: true,
+                        email: true,
+                    },
+                },
+            },
+        });
+    }
+
 }

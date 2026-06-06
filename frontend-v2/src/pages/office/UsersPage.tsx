@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { createUser, deactivateUser, listUsers, type CreateUserPayload } from '@/api/users'
+import { createUser, deactivateUser, listUsers, updateUser, type CreateUserPayload } from '@/api/users'
 import { useAuth } from '@/auth/AuthContext'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -17,6 +17,11 @@ import { getApiErrorMessage } from '@/lib/utils'
 
 type RoleChoice = 'employee' | 'manager'
 
+const ROLE_LABELS: Record<RoleChoice, string> = {
+  employee: 'موظف',
+  manager: 'مدير',
+}
+
 const empty: CreateUserPayload & { roleChoice: RoleChoice } = {
   fullName: '',
   email: '',
@@ -28,6 +33,7 @@ const empty: CreateUserPayload & { roleChoice: RoleChoice } = {
 export function OfficeUsersPage() {
   const { user } = useAuth()
   const canManage = user?.role === 'office_owner' || user?.role === 'super_admin'
+  const canChangeRoles = !!user?.roles?.includes('owner')
   const qc = useQueryClient()
   const users = useQuery({ queryKey: ['users'], queryFn: () => listUsers() })
   const [open, setOpen] = useState(false)
@@ -53,9 +59,34 @@ export function OfficeUsersPage() {
     onError: (e) => toast.error(getApiErrorMessage(e)),
   })
 
+  const changeRole = useMutation({
+    mutationFn: ({ id, role }: { id: string; role: RoleChoice }) =>
+      updateUser(id, { roles: [role] }),
+    onSuccess: () => {
+      toast.success('تم تحديث الدور')
+      qc.invalidateQueries({ queryKey: ['users'] })
+    },
+    onError: (e) => toast.error(getApiErrorMessage(e)),
+  })
+
   if (users.isLoading) return <CenteredSpinner />
 
   const list = users.data?.data ?? []
+
+  const getRoleChoice = (roles?: string[]): RoleChoice | null => {
+    if (roles?.includes('manager')) return 'manager'
+    if (roles?.includes('employee')) return 'employee'
+    return null
+  }
+
+  const getRoleLabel = (roles?: string[]) => {
+    if (roles?.includes('owner')) return 'مالك المكتب'
+    if (roles?.includes('manager')) return ROLE_LABELS.manager
+    if (roles?.includes('employee')) return ROLE_LABELS.employee
+    if (roles?.includes('super_admin')) return 'مسؤول أعلى'
+    if (roles?.includes('admin')) return 'مسؤول منصة'
+    return roles?.[0] || '—'
+  }
 
   return (
     <div>
@@ -79,13 +110,14 @@ export function OfficeUsersPage() {
             <TH>المستخدم</TH>
             <TH>البريد</TH>
             <TH>الهاتف</TH>
+            <TH>الدور</TH>
             <TH>الحالة</TH>
             {canManage && <TH className="text-left">إجراءات</TH>}
           </TR>
         </THead>
         <TBody>
           {list.length === 0 ? (
-            <EmptyRow colSpan={canManage ? 6 : 5} />
+            <EmptyRow colSpan={canManage ? 7 : 6} />
           ) : (
             list.map((u) => (
               <TR key={u.publicId}>
@@ -93,6 +125,29 @@ export function OfficeUsersPage() {
                 <TD className="text-muted">@{u.username}</TD>
                 <TD className="text-muted text-xs">{u.email}</TD>
                 <TD className="text-muted text-xs">{u.phone || '—'}</TD>
+                <TD>
+                  {canChangeRoles &&
+                  u.publicId !== user?.sub &&
+                  !u.roles.includes('owner') &&
+                  !u.roles.includes('admin') &&
+                  !u.roles.includes('super_admin') &&
+                  getRoleChoice(u.roles) ? (
+                    <Select
+                      value={getRoleChoice(u.roles) || 'employee'}
+                      onChange={(e) =>
+                        changeRole.mutate({ id: u.publicId, role: e.target.value as RoleChoice })
+                      }
+                      disabled={changeRole.isPending && changeRole.variables?.id === u.publicId}
+                    >
+                      <option value="employee">{ROLE_LABELS.employee}</option>
+                      <option value="manager">{ROLE_LABELS.manager}</option>
+                    </Select>
+                  ) : (
+                    <Badge tone={u.roles.includes('owner') ? 'info' : 'default'}>
+                      {getRoleLabel(u.roles)}
+                    </Badge>
+                  )}
+                </TD>
                 <TD>
                   <Badge
                     tone={

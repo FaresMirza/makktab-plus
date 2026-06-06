@@ -94,6 +94,16 @@ export interface AdminAuditLog {
   targetOffice?: { name: string }
 }
 
+export interface OfficeAuditLog {
+  id: string
+  event: string
+  reason?: string
+  ip?: string
+  userAgent?: string
+  createdAt: string
+  user?: { publicId: string; username: string; fullName?: string; email?: string }
+}
+
 export interface AdminStats {
   activeOfficesCount: number
   totalOfficesCount: number

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { Briefcase, ListChecks, CheckCircle2, Clock } from 'lucide-react'
+import { Briefcase, ListChecks, CheckCircle2, Clock, FileText } from 'lucide-react'
+import { getOfficeAuditLogs } from '@/api/audit'
 import { listProjects } from '@/api/projects'
 import { listTasks, listOverdueTasks } from '@/api/tasks'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -8,7 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { Badge } from '@/components/ui/Badge'
 import { Table, THead, TBody, TR, TH, TD, EmptyRow } from '@/components/ui/Table'
 import { useAuth } from '@/auth/AuthContext'
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatDateTime } from '@/lib/utils'
 import { Link } from 'react-router-dom'
 
 interface KpiProps {
@@ -37,6 +38,7 @@ function Kpi({ label, value, icon: Icon, hint }: KpiProps) {
 
 export function OfficeDashboardPage() {
   const { user } = useAuth()
+  const canViewAudit = !!user?.roles?.some((role) => role === 'owner' || role === 'manager')
   const projects = useQuery({ queryKey: ['projects'], queryFn: () => listProjects() })
   const myTasks = useQuery({
     queryKey: ['tasks', 'mine', user?.sub],
@@ -44,6 +46,11 @@ export function OfficeDashboardPage() {
     enabled: !!user?.sub,
   })
   const overdue = useQuery({ queryKey: ['tasks', 'overdue'], queryFn: () => listOverdueTasks() })
+  const officeAudit = useQuery({
+    queryKey: ['office', 'audit'],
+    queryFn: getOfficeAuditLogs,
+    enabled: canViewAudit,
+  })
 
   if (projects.isLoading || myTasks.isLoading) return <CenteredSpinner />
 
@@ -131,6 +138,44 @@ export function OfficeDashboardPage() {
           </Table>
         </div>
       </div>
+
+      {canViewAudit && (
+        <div className="mt-8">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted" />
+              <h3 className="text-sm font-medium text-muted uppercase tracking-wide">سجل نشاط المكتب</h3>
+            </div>
+            <Link to="/office/audit" className="text-sm text-accent hover:underline">
+              عرض الكل
+            </Link>
+          </div>
+          <Table>
+            <THead>
+              <TR>
+                <TH>الحدث</TH>
+                <TH>المستخدم</TH>
+                <TH>عنوان IP</TH>
+                <TH>التاريخ</TH>
+              </TR>
+            </THead>
+            <TBody>
+              {(officeAudit.data ?? []).slice(0, 5).length === 0 ? (
+                <EmptyRow colSpan={4} label="لا توجد سجلات بعد" />
+              ) : (
+                officeAudit.data!.slice(0, 5).map((log) => (
+                  <TR key={log.id}>
+                    <TD className="font-medium">{log.event}</TD>
+                    <TD>{log.user?.fullName || log.user?.username || '—'}</TD>
+                    <TD className="text-xs text-muted">{log.ip || '—'}</TD>
+                    <TD className="text-xs text-muted">{formatDateTime(log.createdAt)}</TD>
+                  </TR>
+                ))
+              )}
+            </TBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }
